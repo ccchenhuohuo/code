@@ -82,9 +82,6 @@ mc_predictions = {}
 plt.style.use('ggplot')
 colors = plt.cm.tab10.colors  # 使用matplotlib的tab10调色板
 
-# 设置字体为支持中文的字体
-rcParams['font.family'] = 'Microsoft YaHei'  # 或者 'Arial Unicode MS'
-
 # 按 Ticker 分组，对每只股票分别预测
 unique_tickers = df_market['Ticker'].unique()
 
