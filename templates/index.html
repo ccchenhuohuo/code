@@ -1,0 +1,641 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>多功能网页</title>
+
+  <!-- 引入 Chart.js (CDN) -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0; padding: 0;
+      background-color: #f5f5f5;
+    }
+    nav {
+      background-color: #333;
+      padding: 10px;
+    }
+    nav ul {
+      list-style-type: none;
+      padding: 0; margin: 0;
+      display: flex; justify-content: space-around;
+    }
+    nav ul li a {
+      color: white; text-decoration: none;
+      padding: 10px 20px;
+    }
+    nav ul li a:hover {
+      background-color: #555;
+    }
+    .content {
+      padding: 20px;
+      text-align: center;
+      background-color: #fff;
+      margin: 20px auto;
+      max-width: 1000px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    }
+    form {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 10px;
+      margin-top: 20px;
+    }
+    input, button {
+      padding: 10px;
+      width: 250px;
+      outline: none;
+    }
+    button {
+      cursor: pointer;
+      background-color: #4CAF50;
+      color: white; border: none;
+      transition: background-color 0.2s;
+    }
+    button:hover {
+      background-color: #45a049;
+    }
+    a {
+      color: #007BFF;
+      cursor: pointer;
+    }
+    a:hover {
+      color: #0056b3;
+    }
+    /* 后台管理样式 */
+    #adminPanel table {
+      width: 80%;
+      margin: 20px auto;
+      border-collapse: collapse;
+    }
+    #adminPanel th, #adminPanel td {
+      border: 1px solid #ccc;
+      padding: 10px; text-align: left;
+    }
+    #adminPanel tr:hover {
+      background-color: #f5f5f5;
+      cursor: pointer;
+    }
+    #adminSearch {
+      margin: 20px; padding: 8px; width: 300px;
+    }
+    .back-btn {
+      margin: 20px; padding: 8px 16px;
+      background-color: #333; color: #fff;
+      border: none; cursor: pointer;
+    }
+    .back-btn:hover {
+      background-color: #555;
+    }
+
+    /* =============== AI助手 - ChatGPT风格 =============== */
+    #ai-assistant {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 10px;
+    }
+    .chat-window {
+      width: 100%;
+      max-width: 800px;
+      height: 500px;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+      overflow-y: auto;
+      padding: 10px;
+      background-color: #fafafa;
+    }
+    .chat-message {
+      display: flex;
+      margin: 10px 0;
+      max-width: 80%;
+    }
+    .chat-message.user {
+      justify-content: flex-end;
+      margin-left: auto;
+    }
+    .chat-bubble {
+      padding: 10px 15px;
+      border-radius: 8px;
+      line-height: 1.4;
+    }
+    .user .chat-bubble {
+      background-color: #4caf50;
+      color: #fff;
+      border-bottom-right-radius: 0;
+    }
+    .ai .chat-bubble {
+      background-color: #e2e2e2;
+      color: #333;
+      border-bottom-left-radius: 0;
+    }
+    .chat-input-container {
+      display: flex;
+      width: 100%;
+      max-width: 800px;
+      margin-top: 10px;
+    }
+    .chat-input {
+      flex: 1;
+      padding: 10px;
+      border: 1px solid #ccc;
+      border-radius: 4px 0 0 4px;
+      outline: none;
+    }
+    .chat-send-btn {
+      padding: 10px 20px;
+      border: 1px solid #4caf50;
+      background-color: #4caf50;
+      color: #fff;
+      cursor: pointer;
+      border-radius: 0 4px 4px 0;
+    }
+    .chat-send-btn:hover {
+      background-color: #45a049;
+    }
+
+    /* =============== 预警信息 - 简单直观 =============== */
+    #alerts .alert-container {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 50px;
+      margin-top: 20px;
+    }
+    .alert-box {
+      width: 150px;
+      height: 150px;
+      border-radius: 8px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      font-size: 20px;
+      font-weight: bold;
+      color: #fff;
+    }
+    .alert-title {
+      margin-top: 10px;
+      font-weight: normal;
+    }
+    /* 低: green, 中: orange, 高: red */
+    .low { background-color: #4caf50; }
+    .medium { background-color: #ffa500; }
+    .high { background-color: #f44336; }
+
+    /* =============== 订单信息样式 =============== */
+    #orders table {
+      width: 80%;
+      margin: 20px auto;
+      border-collapse: collapse;
+    }
+    #orders th, #orders td {
+      border: 1px solid #ccc;
+      padding: 10px; text-align: center;
+    }
+    #accountInfo {
+      margin: 20px;
+      font-size: 18px;
+    }
+  </style>
+</head>
+
+<body>
+
+  <!-- 用户登录界面 -->
+  <div id="login" class="content">
+    <h1>登录</h1>
+    <form id="loginForm">
+      <input type="text" placeholder="用户名" required />
+      <input type="password" placeholder="密码" required />
+      <button type="submit">登录</button>
+    </form>
+    <p>还没有账户？<a href="#" id="registerLink">立即注册</a></p>
+    <p><a href="#" id="adminEntryLink">管理员入口</a></p>
+  </div>
+
+  <!-- 用户注册界面 -->
+  <div id="register" class="content" style="display: none;">
+    <h1>注册</h1>
+    <form id="registerForm">
+      <input type="text" placeholder="用户名" required />
+      <input type="email" placeholder="邮箱" required />
+      <input type="password" placeholder="密码" required />
+      <input type="password" placeholder="确认密码" required />
+      <button type="submit">注册</button>
+    </form>
+    <p>已有账户？<a href="#" id="loginLink">返回登录</a></p>
+  </div>
+
+  <!-- 普通用户主界面 -->
+  <div id="main" style="display: none;">
+    <nav>
+      <ul>
+        <li><a href="#real-time">实时价格</a></li>
+        <li><a href="#history">历史价格</a></li>
+        <li><a href="#ai-assistant">AI助手</a></li>
+        <li><a href="#alerts">预警信息</a></li>
+        <li><a href="#orders">订单信息</a></li>
+        <li><a href="#" id="logoutLink">登出</a></li>
+      </ul>
+    </nav>
+
+    <!-- 实时价格 -->
+    <div id="real-time" class="content">
+      <h1>实时价格</h1>
+      <p>这里显示实时价格信息。（演示）</p>
+    </div>
+
+    <!-- 历史价格 -->
+    <div id="history" class="content" style="display: none;">
+      <h1>历史价格</h1>
+      <p>输入想要查看的股票代码（以逗号分隔），并从本地数据库读取2018年后的数据：</p>
+      <input type="text" id="stockInput" placeholder="如 000001.SZ, 600519.SH, AAPL 等">
+      <button onclick="fetchStockData()">获取数据</button>
+      <button onclick="clearStocks()">清空股票</button>
+      
+      <div id="chartContainer" style="height: 500px;">
+        <canvas id="stockChart"></canvas>
+      </div>
+    </div>
+
+    <!-- AI助手（ChatGPT风格） -->
+    <div id="ai-assistant" class="content" style="display: none;">
+      <h1>AI助手（类似ChatGPT）</h1>
+      <div class="chat-window" id="chatWindow">
+        <!-- 聊天消息动态插入 -->
+      </div>
+      <div class="chat-input-container">
+        <input type="text" class="chat-input" id="assistantInput" placeholder="请输入问题..." />
+        <button class="chat-send-btn" id="assistantSendBtn">发送</button>
+      </div>
+    </div>
+
+    <!-- 预警信息（简易展示） -->
+    <div id="alerts" class="content" style="display: none;">
+      <h1>预警信息</h1>
+      <p>输入股票代码后查询对应的估值/流动性（高/中/低）。</p>
+      <input type="text" id="stockAlertInput" placeholder="如 000001.SZ"/>
+      <button id="alertQueryBtn">查询</button>
+
+      <div class="alert-container">
+        <div>
+          <div class="alert-box low" id="valuationBox">估值</div>
+          <div class="alert-title" id="valuationText"></div>
+        </div>
+        <div>
+          <div class="alert-box low" id="liquidityBox">流动性</div>
+          <div class="alert-title" id="liquidityText"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 订单信息 -->
+    <div id="orders" class="content" style="display: none;">
+      <h1>订单信息</h1>
+      <div id="accountInfo">
+        用户账户：<strong>模拟账户</strong>，盈亏：<strong>+￥5,000</strong>
+      </div>
+      <table>
+        <thead>
+          <tr>
+            <th>订单编号</th>
+            <th>股票代码</th>
+            <th>买/卖</th>
+            <th>价格</th>
+            <th>数量</th>
+            <th>状态</th>
+          </tr>
+        </thead>
+        <tbody id="orderTableBody">
+          <!-- 示例订单数据 -->
+          <tr>
+            <td>1001</td>
+            <td>600519.SH</td>
+            <td>买入</td>
+            <td>1500.00</td>
+            <td>100</td>
+            <td>已完成</td>
+          </tr>
+          <tr>
+            <td>1002</td>
+            <td>000001.SZ</td>
+            <td>卖出</td>
+            <td>20.50</td>
+            <td>500</td>
+            <td>挂单中</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- 管理员登录界面 -->
+  <div id="adminLogin" class="content" style="display: none;">
+    <h1>管理员登录</h1>
+    <form id="adminLoginForm">
+      <input type="text" placeholder="管理员用户名" required />
+      <input type="password" placeholder="密码" required />
+      <button type="submit">登录</button>
+    </form>
+    <p><a href="#" id="backToUserLogin">返回用户登录</a></p>
+  </div>
+
+  <!-- 管理员后台界面 -->
+  <div id="adminPanel" style="display: none;">
+    <h1 style="text-align: center;">管理员后台</h1>
+    <input type="text" id="adminSearch" placeholder="输入邮箱搜索用户">
+    <table>
+      <thead>
+        <tr>
+          <th>用户名</th>
+          <th>邮箱</th>
+          <th>注册日期</th>
+        </tr>
+      </thead>
+      <tbody id="userTableBody">
+        <!-- 用户数据将在此动态填充 -->
+      </tbody>
+    </table>
+    <button class="back-btn" id="adminLogout">登出</button>
+  </div>
+
+  <!-- 用户详情页面（后台） -->
+  <div id="userDetail" class="content" style="display: none;">
+    <h1>用户详情</h1>
+    <div id="userDetailContent">
+      <!-- 用户详情信息 -->
+    </div>
+    <button class="back-btn" id="backToAdminPanel">返回后台</button>
+  </div>
+
+  <script>
+    /********************************************************
+     * 1. 模拟的用户数据（仅演示管理员后台）
+     ********************************************************/
+    const users = [
+      { username: "alice",   email: "alice@example.com",   registered: "2023-01-10", info: "Alice的详细信息……" },
+      { username: "bob",     email: "bob@example.com",     registered: "2023-02-15", info: "Bob的详细信息……" },
+      { username: "charlie", email: "charlie@example.com", registered: "2023-03-20", info: "Charlie的详细信息……" }
+    ];
+
+    /********************************************************
+     * 2. 页面切换：showContent()、showSectionInMain()
+     ********************************************************/
+    function showContent(id) {
+      document.querySelectorAll("body > div").forEach(div => {
+        div.style.display = "none";
+      });
+      document.getElementById(id).style.display = "block";
+    }
+    function showSectionInMain(id) {
+      document.querySelectorAll("#main .content").forEach(content => {
+        content.style.display = "none";
+      });
+      document.getElementById(id).style.display = "block";
+    }
+
+    /********************************************************
+     * 3. 普通用户：登录/注册/导航
+     ********************************************************/
+    document.getElementById("loginForm").addEventListener("submit", function(e) {
+      e.preventDefault();
+      showContent("main");
+      showSectionInMain("real-time");
+    });
+    document.getElementById("registerForm").addEventListener("submit", function(e) {
+      e.preventDefault();
+      alert("注册成功！请登录。");
+      showContent("login");
+    });
+    document.getElementById("registerLink").addEventListener("click", function(e) {
+      e.preventDefault();
+      showContent("register");
+    });
+    document.getElementById("loginLink").addEventListener("click", function(e) {
+      e.preventDefault();
+      showContent("login");
+    });
+    document.getElementById("logoutLink").addEventListener("click", function(e) {
+      e.preventDefault();
+      showContent("login");
+    });
+    document.querySelectorAll("#main nav a").forEach(link => {
+      link.addEventListener("click", function(e) {
+        e.preventDefault();
+        if (this.id === "logoutLink") {
+          showContent("login");
+        } else {
+          showSectionInMain(this.getAttribute("href").substring(1));
+        }
+      });
+    });
+
+    /********************************************************
+     * 4. 管理员入口 & 登录/后台逻辑
+     ********************************************************/
+    document.getElementById("adminEntryLink").addEventListener("click", function(e) {
+      e.preventDefault();
+      showContent("adminLogin");
+    });
+    document.getElementById("backToUserLogin").addEventListener("click", function(e) {
+      e.preventDefault();
+      showContent("login");
+    });
+    document.getElementById("adminLoginForm").addEventListener("submit", function(e) {
+      e.preventDefault();
+      showContent("adminPanel");
+      renderUserTable(users);
+    });
+    document.getElementById("adminLogout").addEventListener("click", function() {
+      showContent("adminLogin");
+    });
+    function renderUserTable(userList) {
+      const tbody = document.getElementById("userTableBody");
+      tbody.innerHTML = "";
+      userList.forEach((user, index) => {
+        const tr = document.createElement("tr");
+        tr.dataset.index = index;
+        tr.innerHTML = `
+          <td>${user.username}</td>
+          <td>${user.email}</td>
+          <td>${user.registered}</td>
+        `;
+        tr.addEventListener("click", function() {
+          showUserDetail(index);
+        });
+        tbody.appendChild(tr);
+      });
+    }
+    document.getElementById("adminSearch").addEventListener("input", function() {
+      const keyword = this.value.trim().toLowerCase();
+      const filtered = users.filter(user => user.email.toLowerCase().includes(keyword));
+      renderUserTable(filtered);
+    });
+    function showUserDetail(index) {
+      const user = users[index];
+      const detailDiv = document.getElementById("userDetailContent");
+      detailDiv.innerHTML = `
+        <p><strong>用户名：</strong> ${user.username}</p>
+        <p><strong>邮箱：</strong> ${user.email}</p>
+        <p><strong>注册日期：</strong> ${user.registered}</p>
+        <p><strong>详细信息：</strong> ${user.info}</p>
+      `;
+      showContent("userDetail");
+    }
+    document.getElementById("backToAdminPanel").addEventListener("click", function() {
+      showContent("adminPanel");
+    });
+
+    /********************************************************
+     * 5. 历史价格：获取股票数据 & 绘图 (Chart.js)
+     ********************************************************/
+    let selectedStocks = [];
+    let chart = null;
+    async function fetchStockData() {
+      let inputField = document.getElementById("stockInput");
+      let stocks = inputField.value.toUpperCase().split(",").map(s => s.trim()).filter(s => s !== "");
+      if (stocks.length === 0) {
+        alert("请输入至少一个股票代码！");
+        return;
+      }
+      selectedStocks = [...new Set([...selectedStocks, ...stocks])];
+      inputField.value = "";
+      try {
+        const response = await fetch("/get_stock_data", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ stocks: selectedStocks })
+        });
+        const data = await response.json();
+        updateChart(data);
+      } catch (error) {
+        console.error("数据获取失败:", error);
+        alert("无法获取股票数据，请确认后端已运行并可访问数据库！");
+      }
+    }
+    function clearStocks() {
+      selectedStocks = [];
+      if (chart) {
+        chart.destroy();
+        chart = null;
+      }
+    }
+    function updateChart(stockData) {
+      let ctx = document.getElementById("stockChart").getContext("2d");
+      if (chart) { chart.destroy(); }
+      let datasets = [];
+      let colors = ["red", "blue", "green", "purple", "orange", "brown", "pink", "navy"];
+      Object.keys(stockData).forEach((stock, index) => {
+        if (stockData[stock].error) {
+          alert(`股票 ${stock} 获取数据失败: ${stockData[stock].error}`);
+          return;
+        }
+        let prices = Object.values(stockData[stock]).map(val => parseFloat(val));
+        datasets.push({
+          label: stock,
+          data: prices,
+          borderColor: colors[index % colors.length],
+          fill: false,
+          tension: 0.1
+        });
+      });
+      let firstStock = selectedStocks.length > 0 ? selectedStocks[0] : null;
+      let labels = firstStock ? Object.keys(stockData[firstStock]) : [];
+      chart = new Chart(ctx, {
+        type: "line",
+        data: { labels: labels, datasets: datasets },
+        options: {
+          responsive: true,
+          scales: {
+            x: { title: { display: true, text: "日期" } },
+            y: { type: "linear", title: { display: true, text: "收盘价" }, beginAtZero: false }
+          }
+        }
+      });
+    }
+
+    /********************************************************
+     * 6. AI助手：ChatGPT风格布局 + 真正接口示例
+     ********************************************************/
+    const chatWindow = document.getElementById("chatWindow");
+    const assistantInput = document.getElementById("assistantInput");
+    const assistantSendBtn = document.getElementById("assistantSendBtn");
+
+    assistantSendBtn.addEventListener("click", () => {
+      const userText = assistantInput.value.trim();
+      if (!userText) return;
+      // 显示用户消息
+      appendMessage(userText, "user");
+      assistantInput.value = "";
+
+      // 发送到后端
+      fetch("/gemini_assistant", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ command: userText })
+      })
+      .then(res => res.json())
+      .then(data => {
+        appendMessage(data.response, "ai");
+      })
+      .catch(err => {
+        console.error(err);
+        appendMessage("出错啦，请稍后再试。", "ai");
+      });
+    });
+
+    function appendMessage(text, role) {
+      const msgDiv = document.createElement("div");
+      msgDiv.classList.add("chat-message", role);
+      const bubble = document.createElement("div");
+      bubble.classList.add("chat-bubble");
+      bubble.innerText = text;
+      msgDiv.appendChild(bubble);
+      chatWindow.appendChild(msgDiv);
+      chatWindow.scrollTop = chatWindow.scrollHeight;
+    }
+
+    /********************************************************
+     * 7. 预警信息：高/中/低，用彩色块直观显示
+     ********************************************************/
+    document.getElementById("alertQueryBtn").addEventListener("click", async () => {
+      const stockCode = document.getElementById("stockAlertInput").value.trim();
+      if (!stockCode) return alert("请输入股票代码！");
+
+      try {
+        const res = await fetch("/get_alert_levels", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ stock: stockCode })
+        });
+        const data = await res.json();
+        const { valuation, liquidity } = data; // "高" "中" or "低"
+        
+        updateAlertBox("valuationBox", "valuationText", valuation, "估值");
+        updateAlertBox("liquidityBox", "liquidityText", liquidity, "流动性");
+      } catch (err) {
+        console.error(err);
+        alert("获取预警信息失败。");
+      }
+    });
+
+    function updateAlertBox(boxId, textId, level, label) {
+      const box = document.getElementById(boxId);
+      const text = document.getElementById(textId);
+
+      // 重置class
+      box.classList.remove("low", "medium", "high");
+      let colorClass = "medium";
+      if (level === "低") colorClass = "low";
+      else if (level === "高") colorClass = "high";
+
+      box.classList.add(colorClass);
+      text.innerText = `${label}：${level}`;
+    }
+  </script>
+</body>
+</html>
