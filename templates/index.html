@@ -245,26 +245,104 @@
 
     <!-- 实时价格 -->
     <div id="real-time" class="content">
-      <h1>实时价格</h1>
-      <p>这里显示实时价格信息。（演示）</p>
+      <h1>实时价格 股票详细信息查询</h1>
       
-      <!-- 添加从预警信息移过来的内容 -->
-      <div class="alert-section" style="margin-top: 30px; border-top: 1px solid #eee; padding-top: 20px;">
-        <h3>预警信息</h3>
-        <div style="margin: 20px 0;">
-          <input type="text" id="stockAlertInput" placeholder="输入股票代码" style="width: 200px; display: inline-block;">
-          <button id="alertQueryBtn" style="width: auto; display: inline-block; margin-left: 10px;">查询</button>
+      <!-- 搜索框和查询按钮 -->
+      <div class="search-container" style="margin: 20px 0;">
+        <input type="text" id="stockSymbolInput" placeholder="输入股票代码 (例如: AAPL)" style="width: 300px; padding: 10px; border: 1px solid #ddd; border-radius: 4px;">
+        <button id="searchButton" style="padding: 10px 20px; background-color: #4285f4; color: white; border: none; border-radius: 4px; margin-left: 10px; cursor: pointer;">查询</button>
+      </div>
+      
+      <!-- 股票信息显示区域 -->
+      <div id="stockInfoContainer" style="background-color: #f8f9fa; padding: 20px; border-radius: 8px; margin-top: 20px;">
+        <!-- 公司名称和股价信息 -->
+        <div style="text-align: center; margin-bottom: 20px;">
+          <h2 id="companyName" style="margin-bottom: 10px;">undefined Corporation</h2>
+          <div style="font-size: 24px; font-weight: bold;">
+            <span id="currentPrice">$100</span>
+            <span id="priceChange" style="color: green; margin-left: 10px;">+0 (+0%)</span>
+          </div>
         </div>
         
-        <div class="alert-container" style="display: flex; justify-content: center; gap: 20px;">
-          <div>
-            <div id="valuationBox" class="alert-box medium" style="width: 100px; height: 100px; border-radius: 8px;"></div>
-            <p id="valuationText" class="alert-title" style="margin-top: 10px;">估值：中</p>
+        <!-- 交易信息和预警信息并排显示 -->
+        <div style="display: flex; justify-content: space-between; margin-top: 20px;">
+          <!-- 左侧：交易信息 -->
+          <div style="width: 48%; background-color: white; padding: 15px; border-radius: 8px; box-shadow: 0 1px 3px rgba(0,0,0,0.1);">
+            <h3 style="margin-top: 0; border-bottom: 1px solid #eee; padding-bottom: 10px;">交易信息</h3>
+            <div style="display: flex; justify-content: space-between; margin: 10px 0;">
+              <div>
+                <p style="margin: 5px 0; color: #666;">开盘价</p>
+                <p id="openPrice" style="margin: 5px 0; font-weight: bold;">$100</p>
+              </div>
+              <div>
+                <p style="margin: 5px 0; color: #666;">最高价</p>
+                <p id="highPrice" style="margin: 5px 0; font-weight: bold;">$100</p>
+              </div>
+            </div>
+            <div style="display: flex; justify-content: space-between; margin: 10px 0;">
+              <div>
+                <p style="margin: 5px 0; color: #666;">最低价</p>
+                <p id="lowPrice" style="margin: 5px 0; font-weight: bold;">$100</p>
+              </div>
+              <div>
+                <p style="margin: 5px 0; color: #666;">成交量</p>
+                <p id="volume" style="margin: 5px 0; font-weight: bold;">0</p>
+              </div>
+            </div>
+            <div style="display: flex; justify-content: space-between; margin: 10px 0;">
+              <div>
+                <p style="margin: 5px 0; color: #666;">市值</p>
+                <p id="marketCap" style="margin: 5px 0; font-weight: bold;">$0</p>
+              </div>
+              <div>
+                <p style="margin: 5px 0; color: #666;">52周最高</p>
+                <p id="week52High" style="margin: 5px 0; font-weight: bold;">$0</p>
+              </div>
+            </div>
           </div>
-          <div>
-            <div id="liquidityBox" class="alert-box medium" style="width: 100px; height: 100px; border-radius: 8px;"></div>
-            <p id="liquidityText" class="alert-title" style="margin-top: 10px;">流动性：中</p>
+          
+          <!-- 右侧：预警信息 -->
+          <div style="width: 48%; background-color: white; padding: 15px; border-radius: 8px; box-shadow: 0 1px 3px rgba(0,0,0,0.1);">
+            <h3 style="margin-top: 0; border-bottom: 1px solid #eee; padding-bottom: 10px;">预警信息</h3>
+            <div style="display: flex; justify-content: space-around; margin-top: 20px;">
+              <div style="text-align: center;">
+                <div id="valuationBox" style="width: 100px; height: 100px; background-color: #FFC107; border-radius: 8px; display: flex; justify-content: center; align-items: center; color: white; font-weight: bold; font-size: 18px;">估值</div>
+                <p style="margin-top: 10px; font-weight: bold;">中</p>
+              </div>
+              <div style="text-align: center;">
+                <div id="liquidityBox" style="width: 100px; height: 100px; background-color: #FFC107; border-radius: 8px; display: flex; justify-content: center; align-items: center; color: white; font-weight: bold; font-size: 18px;">流动性</div>
+                <p style="margin-top: 10px; font-weight: bold;">中</p>
+              </div>
+            </div>
           </div>
+        </div>
+        
+        <!-- 基本面数据选项卡 -->
+        <div style="margin-top: 30px;">
+          <div style="border-bottom: 2px solid #4285f4; display: inline-block; padding: 10px 20px; font-weight: bold; color: #4285f4;">基本面数据</div>
+          
+          <table style="width: 100%; border-collapse: collapse; margin-top: 20px;">
+            <thead>
+              <tr style="background-color: #f8f9fa;">
+                <th style="padding: 12px; text-align: left; border-bottom: 1px solid #ddd;">指标</th>
+                <th style="padding: 12px; text-align: right; border-bottom: 1px solid #ddd;">数值</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td style="padding: 12px; border-bottom: 1px solid #eee;">市盈率 (P/E)</td>
+                <td id="peRatio" style="padding: 12px; text-align: right; border-bottom: 1px solid #eee;">0</td>
+              </tr>
+              <tr>
+                <td style="padding: 12px; border-bottom: 1px solid #eee;">市净率 (P/B)</td>
+                <td id="pbRatio" style="padding: 12px; text-align: right; border-bottom: 1px solid #eee;">0</td>
+              </tr>
+              <tr>
+                <td style="padding: 12px; border-bottom: 1px solid #eee;">股息率</td>
+                <td id="dividendYield" style="padding: 12px; text-align: right; border-bottom: 1px solid #eee;">0%</td>
+              </tr>
+            </tbody>
+          </table>
         </div>
       </div>
     </div>
@@ -646,57 +724,110 @@
     /********************************************************
      * 7. 预警信息：高/中/低，用彩色块直观显示
      ********************************************************/
-    document.getElementById("alertQueryBtn").addEventListener("click", async () => {
-      const stockCode = document.getElementById("stockAlertInput").value.trim();
-      if (!stockCode) return alert("请输入股票代码！");
-
-      try {
-        const res = await fetch("/get_alert_levels", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ stock: stockCode })
-        });
-        const data = await res.json();
-        const { valuation, liquidity } = data; // "高" "中" or "低"
-        
-        updateAlertBox("valuationBox", "valuationText", valuation, "估值");
-        updateAlertBox("liquidityBox", "liquidityText", liquidity, "流动性");
-      } catch (err) {
-        console.error(err);
-        alert("获取预警信息失败。");
+    document.getElementById("searchButton").addEventListener("click", function() {
+      const stockSymbol = document.getElementById("stockSymbolInput").value.trim();
+      if (!stockSymbol) {
+        alert("请输入股票代码");
+        return;
       }
+      
+      // 显示加载状态
+      document.getElementById("companyName").textContent = "加载中...";
+      
+      // 发送请求获取股票数据
+      fetch(`/get_stock_details?symbol=${stockSymbol}`)
+        .then(response => response.json())
+        .then(data => {
+          if (data.error) {
+            alert(data.error);
+            return;
+          }
+          
+          // 更新公司信息
+          document.getElementById("companyName").textContent = data.name || `${stockSymbol} Corporation`;
+          document.getElementById("currentPrice").textContent = `$${data.price}`;
+          
+          // 更新价格变化
+          const priceChangeElement = document.getElementById("priceChange");
+          const priceChange = data.change || 0;
+          const priceChangePercent = data.changePercent || 0;
+          priceChangeElement.textContent = `${priceChange >= 0 ? "+" : ""}${priceChange} (${priceChangePercent >= 0 ? "+" : ""}${priceChangePercent}%)`;
+          priceChangeElement.style.color = priceChange >= 0 ? "green" : "red";
+          
+          // 更新交易信息
+          document.getElementById("openPrice").textContent = `$${data.open || 0}`;
+          document.getElementById("highPrice").textContent = `$${data.high || 0}`;
+          document.getElementById("lowPrice").textContent = `$${data.low || 0}`;
+          document.getElementById("volume").textContent = data.volume || 0;
+          document.getElementById("marketCap").textContent = `$${data.marketCap || 0}`;
+          document.getElementById("week52High").textContent = `$${data.week52High || 0}`;
+          
+          // 更新基本面数据
+          document.getElementById("peRatio").textContent = data.peRatio || 0;
+          document.getElementById("pbRatio").textContent = data.pbRatio || 0;
+          document.getElementById("dividendYield").textContent = `${data.dividendYield || 0}%`;
+          
+          // 获取预警信息
+          fetch("/get_alert_levels", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ stock: stockSymbol })
+          })
+          .then(res => res.json())
+          .then(alertData => {
+            const { valuation, liquidity } = alertData;
+            
+            // 更新预警信息显示
+            updateAlertBox("valuationBox", valuation, "估值");
+            updateAlertBox("liquidityBox", liquidity, "流动性");
+          })
+          .catch(err => {
+            console.error("获取预警信息失败:", err);
+          });
+        })
+        .catch(error => {
+          console.error("获取股票数据失败:", error);
+          alert("获取股票数据失败，请稍后再试");
+        });
     });
 
-    function updateAlertBox(boxId, textId, level, label) {
+    function updateAlertBox(boxId, level, label) {
       const box = document.getElementById(boxId);
-      const text = document.getElementById(textId);
-
-      // 重置class
-      box.classList.remove("low", "medium", "high");
-      let colorClass = "medium";
-      if (level === "低") colorClass = "low";
-      else if (level === "高") colorClass = "high";
-
-      box.classList.add(colorClass);
-      text.innerText = `${label}：${level}`;
+      
+      // 设置颜色
+      let color = "#FFC107"; // 默认黄色（中）
+      if (level === "低") {
+        color = "#4CAF50"; // 绿色
+      } else if (level === "高") {
+        color = "#F44336"; // 红色
+      }
+      
+      box.style.backgroundColor = color;
+      box.textContent = label;
+      
+      // 更新文本
+      const textElement = box.nextElementSibling;
+      if (textElement) {
+        textElement.textContent = level;
+      }
     }
 
     // 处理预警设置表单
-    document.getElementById('setAlarmBtn').addEventListener('click', function() {
-      const stock = document.getElementById('stockSymbolSelect').value;
-      const price = document.getElementById('targetPrice').value;
-      const email = document.getElementById('emailNotification').value;
-      const type = document.getElementById('alertType').value;
+    document.getElementById("setAlarmBtn").addEventListener("click", function() {
+      const stock = document.getElementById("stockSymbolSelect").value;
+      const price = document.getElementById("targetPrice").value;
+      const email = document.getElementById("emailNotification").value;
+      const type = document.getElementById("alertType").value;
       
       if (!stock || !price || !email || !type) {
-        alert('请填写所有字段');
+        alert("请填写所有字段");
         return;
       }
       
       // 验证邮箱格式
       const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
       if (!emailRegex.test(email)) {
-        alert('请输入有效的电子邮件地址');
+        alert("请输入有效的电子邮件地址");
         return;
       }
       
@@ -706,32 +837,32 @@
       
       // 实际项目中，您应该发送到后端API
       /*
-      fetch('/api/set_price_alert', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+      fetch("/api/set_price_alert", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ stock, targetPrice: price, email, alertType: type })
       })
       .then(response => response.json())
       .then(data => {
         if (data.success) {
-          alert('预警设置成功！');
+          alert("预警设置成功！");
           resetAlarmForm();
         } else {
-          alert('设置预警失败: ' + data.message);
+          alert("设置预警失败: " + data.message);
         }
       })
       .catch(error => {
-        console.error('Error:', error);
-        alert('设置预警时发生错误');
+        console.error("Error:", error);
+        alert("设置预警时发生错误");
       });
       */
     });
 
-    document.getElementById('resetAlarmBtn').addEventListener('click', function() {
-      document.getElementById('stockSymbolSelect').value = '';
-      document.getElementById('targetPrice').value = '';
-      document.getElementById('emailNotification').value = '';
-      document.getElementById('alertType').value = '';
+    document.getElementById("resetAlarmBtn").addEventListener("click", function() {
+      document.getElementById("stockSymbolSelect").value = "";
+      document.getElementById("targetPrice").value = "";
+      document.getElementById("emailNotification").value = "";
+      document.getElementById("alertType").value = "";
     });
   </script>
 </body>
