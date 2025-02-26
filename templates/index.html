@@ -3,9 +3,9 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>多功能网页</title>
+  <title>ISOM4007</title>
 
-  <!-- 引入 Chart.js (CDN) -->
+  <!-- Introduction of Chart.js (CDN) -->
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
   <style>
@@ -66,7 +66,7 @@
     a:hover {
       color: #0056b3;
     }
-    /* 后台管理样式 */
+    /* Backend management style */
     #adminPanel table {
       width: 80%;
       margin: 20px auto;
@@ -92,7 +92,7 @@
       background-color: #555;
     }
 
-    /* =============== AI助手 - ChatGPT风格 =============== */
+    /* =============== AI Assistant - ChatGPT style =============== */
     #ai-assistant {
       display: flex;
       flex-direction: column;
@@ -158,7 +158,7 @@
       background-color: #45a049;
     }
 
-    /* =============== 预警信息 - 简单直观 =============== */
+    /* =============== Early warning information - simple and intuitive =============== */
     #alerts .alert-container {
       display: flex;
       justify-content: center;
@@ -181,12 +181,12 @@
       margin-top: 10px;
       font-weight: normal;
     }
-    /* 低: green, 中: orange, 高: red */
+    /* Low: green, Medium: orange, High: red */
     .low { background-color: #4caf50; }
     .medium { background-color: #ffa500; }
     .high { background-color: #f44336; }
 
-    /* =============== 订单信息样式 =============== */
+    /* =============== Order information style =============== */
     #orders table {
       width: 80%;
       margin: 20px auto;
@@ -205,57 +205,57 @@
 
 <body>
 
-  <!-- 用户登录界面 -->
+  <!-- User login interface -->
   <div id="login" class="content">
-    <h1>登录</h1>
+    <h1>Login</h1>
     <form id="loginForm">
-      <input type="text" placeholder="用户名" required />
-      <input type="password" placeholder="密码" required />
-      <button type="submit">登录</button>
+      <input type="text" placeholder="Username" required />
+      <input type="password" placeholder="Password" required />
+      <button type="submit">Login</button>
     </form>
-    <p>还没有账户？<a href="#" id="registerLink">立即注册</a></p>
-    <p><a href="#" id="adminEntryLink">管理员入口</a></p>
+    <p>No account? <a href="#" id="registerLink">Register now</a></p>
+    <p><a href="#" id="adminEntryLink">Admin entry</a></p>
   </div>
 
-  <!-- 用户注册界面 -->
+  <!-- User registration interface -->
   <div id="register" class="content" style="display: none;">
-    <h1>注册</h1>
+    <h1>Register</h1>
     <form id="registerForm">
-      <input type="text" placeholder="用户名" required />
-      <input type="email" placeholder="邮箱" required />
-      <input type="password" placeholder="密码" required />
-      <input type="password" placeholder="确认密码" required />
-      <button type="submit">注册</button>
+      <input type="text" placeholder="Username" required />
+      <input type="email" placeholder="Email" required />
+      <input type="password" placeholder="Password" required />
+      <input type="password" placeholder="Confirm password" required />
+      <button type="submit">Register</button>
     </form>
-    <p>已有账户？<a href="#" id="loginLink">返回登录</a></p>
+    <p>Already have an account? <a href="#" id="loginLink">Back to login</a></p>
   </div>
 
-  <!-- 普通用户主界面 -->
+  <!-- Normal user main interface -->
   <div id="main" style="display: none;">
     <nav>
       <ul>
-        <li><a href="#real-time">实时价格</a></li>
-        <li><a href="#history">历史价格</a></li>
-        <li><a href="#ai-assistant">AI助手</a></li>
-        <li><a href="#alerts">预警信息</a></li>
-        <li><a href="#orders">订单信息</a></li>
-        <li><a href="#" id="logoutLink">登出</a></li>
+        <li><a href="#real-time">Real-time price</a></li>
+        <li><a href="#history">History price</a></li>
+        <li><a href="#ai-assistant">AI assistant</a></li>
+        <li><a href="#alerts">Early warning information</a></li>
+        <li><a href="#orders">Order information</a></li>
+        <li><a href="#" id="logoutLink">Logout</a></li>
       </ul>
     </nav>
 
-    <!-- 实时价格 -->
+    <!-- Real-time price -->
     <div id="real-time" class="content">
-      <h1>实时价格 股票详细信息查询</h1>
+      <h1>Real-time price Stock detailed information query</h1>
       
-      <!-- 搜索框和查询按钮 -->
+      <!-- Search box and query button -->
       <div class="search-container" style="margin: 20px 0;">
-        <input type="text" id="stockSymbolInput" placeholder="输入股票代码 (例如: AAPL)" style="width: 300px; padding: 10px; border: 1px solid #ddd; border-radius: 4px;">
-        <button id="searchButton" style="padding: 10px 20px; background-color: #4285f4; color: white; border: none; border-radius: 4px; margin-left: 10px; cursor: pointer;">查询</button>
+        <input type="text" id="stockSymbolInput" placeholder="Enter stock code (e.g., AAPL)" style="width: 300px; padding: 10px; border: 1px solid #ddd; border-radius: 4px;">
+        <button id="searchButton" style="padding: 10px 20px; background-color: #4285f4; color: white; border: none; border-radius: 4px; margin-left: 10px; cursor: pointer;">Search</button>
       </div>
       
-      <!-- 股票信息显示区域 -->
+      <!-- Stock information display area -->
       <div id="stockInfoContainer" style="background-color: #f8f9fa; padding: 20px; border-radius: 8px; margin-top: 20px;">
-        <!-- 公司名称和股价信息 -->
+        <!-- Company name and stock price information -->
         <div style="text-align: center; margin-bottom: 20px;">
           <h2 id="companyName" style="margin-bottom: 10px;">undefined Corporation</h2>
           <div style="font-size: 24px; font-weight: bold;">
@@ -264,188 +264,188 @@
           </div>
         </div>
         
-        <!-- 交易信息和预警信息并排显示 -->
+        <!-- Transaction information and early warning information side by side -->
         <div style="display: flex; justify-content: space-between; margin-top: 20px;">
-          <!-- 左侧：交易信息 -->
+          <!-- Left: transaction information -->
           <div style="width: 48%; background-color: white; padding: 15px; border-radius: 8px; box-shadow: 0 1px 3px rgba(0,0,0,0.1);">
-            <h3 style="margin-top: 0; border-bottom: 1px solid #eee; padding-bottom: 10px;">交易信息</h3>
+            <h3 style="margin-top: 0; border-bottom: 1px solid #eee; padding-bottom: 10px;">Transaction information</h3>
             <div style="display: flex; justify-content: space-between; margin: 10px 0;">
               <div>
-                <p style="margin: 5px 0; color: #666;">开盘价</p>
+                <p style="margin: 5px 0; color: #666;">Opening price</p>
                 <p id="openPrice" style="margin: 5px 0; font-weight: bold;">$100</p>
               </div>
               <div>
-                <p style="margin: 5px 0; color: #666;">最高价</p>
+                <p style="margin: 5px 0; color: #666;">The highest price</p>
                 <p id="highPrice" style="margin: 5px 0; font-weight: bold;">$100</p>
               </div>
             </div>
             <div style="display: flex; justify-content: space-between; margin: 10px 0;">
               <div>
-                <p style="margin: 5px 0; color: #666;">最低价</p>
+                <p style="margin: 5px 0; color: #666;">The lowest price</p>
                 <p id="lowPrice" style="margin: 5px 0; font-weight: bold;">$100</p>
               </div>
               <div>
-                <p style="margin: 5px 0; color: #666;">成交量</p>
+                <p style="margin: 5px 0; color: #666;">Volume</p>
                 <p id="volume" style="margin: 5px 0; font-weight: bold;">0</p>
               </div>
             </div>
             <div style="display: flex; justify-content: space-between; margin: 10px 0;">
               <div>
-                <p style="margin: 5px 0; color: #666;">市值</p>
+                <p style="margin: 5px 0; color: #666;">Market cap</p>
                 <p id="marketCap" style="margin: 5px 0; font-weight: bold;">$0</p>
               </div>
               <div>
-                <p style="margin: 5px 0; color: #666;">52周最高</p>
+                <p style="margin: 5px 0; color: #666;">52-week highest</p>
                 <p id="week52High" style="margin: 5px 0; font-weight: bold;">$0</p>
               </div>
             </div>
           </div>
           
-          <!-- 右侧：预警信息 -->
+          <!-- Right: early warning information -->
           <div style="width: 48%; background-color: white; padding: 15px; border-radius: 8px; box-shadow: 0 1px 3px rgba(0,0,0,0.1);">
-            <h3 style="margin-top: 0; border-bottom: 1px solid #eee; padding-bottom: 10px;">预警信息</h3>
+            <h3 style="margin-top: 0; border-bottom: 1px solid #eee; padding-bottom: 10px;">Early warning information</h3>
             <div style="display: flex; justify-content: space-around; margin-top: 20px;">
               <div style="text-align: center;">
-                <div id="valuationBox" style="width: 100px; height: 100px; background-color: #FFC107; border-radius: 8px; display: flex; justify-content: center; align-items: center; color: white; font-weight: bold; font-size: 18px;">估值</div>
-                <p style="margin-top: 10px; font-weight: bold;">中</p>
+                <div id="valuationBox" style="width: 100px; height: 100px; background-color: #FFC107; border-radius: 8px; display: flex; justify-content: center; align-items: center; color: white; font-weight: bold; font-size: 18px;">Valuation</div>
+                <p style="margin-top: 10px; font-weight: bold;">Medium</p>
               </div>
               <div style="text-align: center;">
-                <div id="liquidityBox" style="width: 100px; height: 100px; background-color: #FFC107; border-radius: 8px; display: flex; justify-content: center; align-items: center; color: white; font-weight: bold; font-size: 18px;">流动性</div>
-                <p style="margin-top: 10px; font-weight: bold;">中</p>
+                <div id="liquidityBox" style="width: 100px; height: 100px; background-color: #FFC107; border-radius: 8px; display: flex; justify-content: center; align-items: center; color: white; font-weight: bold; font-size: 18px;">Liquidity</div>
+                <p style="margin-top: 10px; font-weight: bold;">Medium</p>
               </div>
             </div>
           </div>
         </div>
         
-        <!-- 基本面数据选项卡 -->
+        <!-- Fundamental data options tab -->
         <div style="margin-top: 30px;">
-          <!-- 选项卡导航 -->
+          <!-- Options tab navigation -->
           <div style="border-bottom: 1px solid #ddd; margin-bottom: 20px;">
-            <button id="basicDataTab" class="data-tab active" style="margin-right: 10px; padding: 10px 20px; background-color: #4285f4; color: white; border: none; border-radius: 4px 4px 0 0; cursor: pointer;">基本面数据</button>
-            <button id="balanceSheetTab" class="data-tab" style="margin-right: 10px; padding: 10px 20px; background-color: #f1f1f1; color: #333; border: none; border-radius: 4px 4px 0 0; cursor: pointer;">资产负债数据</button>
-            <button id="incomeStatementTab" class="data-tab" style="padding: 10px 20px; background-color: #f1f1f1; color: #333; border: none; border-radius: 4px 4px 0 0; cursor: pointer;">利润表</button>
+            <button id="basicDataTab" class="data-tab active" style="margin-right: 10px; padding: 10px 20px; background-color: #4285f4; color: white; border: none; border-radius: 4px 4px 0 0; cursor: pointer;">Fundamental data</button>
+            <button id="balanceSheetTab" class="data-tab" style="margin-right: 10px; padding: 10px 20px; background-color: #f1f1f1; color: #333; border: none; border-radius: 4px 4px 0 0; cursor: pointer;">Balance sheet data</button>
+            <button id="incomeStatementTab" class="data-tab" style="padding: 10px 20px; background-color: #f1f1f1; color: #333; border: none; border-radius: 4px 4px 0 0; cursor: pointer;">Income statement</button>
           </div>
           
-          <!-- 基本面数据内容 -->
+          <!-- Fundamental data content -->
           <div id="basicDataContent" class="tab-content" style="display: block;">
             <table style="width: 100%; border-collapse: collapse;">
               <thead>
                 <tr style="background-color: #f8f9fa;">
-                  <th style="padding: 12px; text-align: left; border-bottom: 1px solid #ddd;">指标</th>
-                  <th style="padding: 12px; text-align: right; border-bottom: 1px solid #ddd;">数值</th>
+                  <th style="padding: 12px; text-align: left; border-bottom: 1px solid #ddd;">Indicator</th>
+                  <th style="padding: 12px; text-align: right; border-bottom: 1px solid #ddd;">Value</th>
                 </tr>
               </thead>
               <tbody>
                 <tr>
-                  <td style="padding: 12px; border-bottom: 1px solid #eee;">市值 (Market Cap)</td>
+                  <td style="padding: 12px; border-bottom: 1px solid #eee;">Market Cap</td>
                   <td id="marketCapValue" style="padding: 12px; text-align: right; border-bottom: 1px solid #eee;">$0</td>
                 </tr>
                 <tr>
-                  <td style="padding: 12px; border-bottom: 1px solid #eee;">市盈率 (P/E)</td>
+                  <td style="padding: 12px; border-bottom: 1px solid #eee;">PE Ratio</td>
                   <td id="peRatio" style="padding: 12px; text-align: right; border-bottom: 1px solid #eee;">0</td>
                 </tr>
                 <tr>
-                  <td style="padding: 12px; border-bottom: 1px solid #eee;">市净率 (P/B)</td>
+                  <td style="padding: 12px; border-bottom: 1px solid #eee;">P/B Ratio</td>
                   <td id="pbRatio" style="padding: 12px; text-align: right; border-bottom: 1px solid #eee;">0</td>
                 </tr>
                 <tr>
-                  <td style="padding: 12px; border-bottom: 1px solid #eee;">股息率 (Dividend Yield)</td>
+                  <td style="padding: 12px; border-bottom: 1px solid #eee;">Dividend Yield</td>
                   <td id="dividendYield" style="padding: 12px; text-align: right; border-bottom: 1px solid #eee;">0%</td>
                 </tr>
                 <tr>
-                  <td style="padding: 12px; border-bottom: 1px solid #eee;">营收 (Revenue)</td>
+                  <td style="padding: 12px; border-bottom: 1px solid #eee;">Revenue</td>
                   <td id="revenueValue" style="padding: 12px; text-align: right; border-bottom: 1px solid #eee;">$0</td>
                 </tr>
                 <tr>
-                  <td style="padding: 12px; border-bottom: 1px solid #eee;">净利润 (Net Income)</td>
+                  <td style="padding: 12px; border-bottom: 1px solid #eee;">Net Income</td>
                   <td id="netIncomeValue" style="padding: 12px; text-align: right; border-bottom: 1px solid #eee;">$0</td>
                 </tr>
                 <tr>
-                  <td style="padding: 12px; border-bottom: 1px solid #eee;">经营现金流 (Operating Cash Flow)</td>
+                  <td style="padding: 12px; border-bottom: 1px solid #eee;">Operating Cash Flow</td>
                   <td id="operatingCashFlowValue" style="padding: 12px; text-align: right; border-bottom: 1px solid #eee;">$0</td>
                 </tr>
               </tbody>
             </table>
           </div>
           
-          <!-- 资产负债数据内容 -->
+          <!-- Balance sheet data content -->
           <div id="balanceSheetContent" class="tab-content" style="display: none;">
             <table style="width: 100%; border-collapse: collapse;">
               <thead>
                 <tr style="background-color: #f8f9fa;">
-                  <th style="padding: 12px; text-align: left; border-bottom: 1px solid #ddd;">指标</th>
-                  <th style="padding: 12px; text-align: right; border-bottom: 1px solid #ddd;">数值</th>
+                  <th style="padding: 12px; text-align: left; border-bottom: 1px solid #ddd;">Indicator</th>
+                  <th style="padding: 12px; text-align: right; border-bottom: 1px solid #ddd;">Value</th>
                 </tr>
               </thead>
               <tbody>
                 <tr>
-                  <td style="padding: 12px; border-bottom: 1px solid #eee;">流动资产 (Current Assets)</td>
+                  <td style="padding: 12px; border-bottom: 1px solid #eee;">Current Assets</td>
                   <td id="currentAssetsValue" style="padding: 12px; text-align: right; border-bottom: 1px solid #eee;">$0</td>
                 </tr>
                 <tr>
-                  <td style="padding: 12px; border-bottom: 1px solid #eee;">非流动资产 (Non-Current Assets)</td>
+                  <td style="padding: 12px; border-bottom: 1px solid #eee;">Non-Current Assets</td>
                   <td id="nonCurrentAssetsValue" style="padding: 12px; text-align: right; border-bottom: 1px solid #eee;">$0</td>
                 </tr>
                 <tr>
-                  <td style="padding: 12px; border-bottom: 1px solid #eee;">流动负债 (Current Liabilities)</td>
+                  <td style="padding: 12px; border-bottom: 1px solid #eee;">Current Liabilities</td>
                   <td id="currentLiabilitiesValue" style="padding: 12px; text-align: right; border-bottom: 1px solid #eee;">$0</td>
                 </tr>
                 <tr>
-                  <td style="padding: 12px; border-bottom: 1px solid #eee;">非流动负债 (Non-Current Liabilities)</td>
+                  <td style="padding: 12px; border-bottom: 1px solid #eee;">Non-Current Liabilities</td>
                   <td id="nonCurrentLiabilitiesValue" style="padding: 12px; text-align: right; border-bottom: 1px solid #eee;">$0</td>
                 </tr>
                 <tr>
-                  <td style="padding: 12px; border-bottom: 1px solid #eee;">总资产 (Total Assets)</td>
+                  <td style="padding: 12px; border-bottom: 1px solid #eee;">Total Assets</td>
                   <td id="totalAssetsValue" style="padding: 12px; text-align: right; border-bottom: 1px solid #eee;">$0</td>
                 </tr>
                 <tr>
-                  <td style="padding: 12px; border-bottom: 1px solid #eee;">总负债 (Total Liabilities)</td>
+                  <td style="padding: 12px; border-bottom: 1px solid #eee;">Total Liabilities</td>
                   <td id="totalLiabilitiesValue" style="padding: 12px; text-align: right; border-bottom: 1px solid #eee;">$0</td>
                 </tr>
                 <tr>
-                  <td style="padding: 12px; border-bottom: 1px solid #eee;">股东权益 (Shareholders' Equity)</td>
+                  <td style="padding: 12px; border-bottom: 1px solid #eee;">Shareholders' Equity</td>
                   <td id="shareholdersEquityValue" style="padding: 12px; text-align: right; border-bottom: 1px solid #eee;">$0</td>
                 </tr>
               </tbody>
             </table>
           </div>
           
-          <!-- 利润表内容 -->
+          <!-- Income statement content -->
           <div id="incomeStatementContent" class="tab-content" style="display: none;">
             <table style="width: 100%; border-collapse: collapse;">
               <thead>
                 <tr style="background-color: #f8f9fa;">
-                  <th style="padding: 12px; text-align: left; border-bottom: 1px solid #ddd;">指标</th>
-                  <th style="padding: 12px; text-align: right; border-bottom: 1px solid #ddd;">数值</th>
+                  <th style="padding: 12px; text-align: left; border-bottom: 1px solid #ddd;">Indicator</th>
+                  <th style="padding: 12px; text-align: right; border-bottom: 1px solid #ddd;">Value</th>
                 </tr>
               </thead>
               <tbody>
                 <tr>
-                  <td style="padding: 12px; border-bottom: 1px solid #eee;">营收 (Revenue)</td>
+                  <td style="padding: 12px; border-bottom: 1px solid #eee;">Revenue</td>
                   <td id="revenueIncomeValue" style="padding: 12px; text-align: right; border-bottom: 1px solid #eee;">$0</td>
                 </tr>
                 <tr>
-                  <td style="padding: 12px; border-bottom: 1px solid #eee;">营收成本 (Cost of Revenue)</td>
+                  <td style="padding: 12px; border-bottom: 1px solid #eee;">Cost of Revenue</td>
                   <td id="costOfRevenueValue" style="padding: 12px; text-align: right; border-bottom: 1px solid #eee;">$0</td>
                 </tr>
                 <tr>
-                  <td style="padding: 12px; border-bottom: 1px solid #eee;">毛利润 (Gross Profit)</td>
+                  <td style="padding: 12px; border-bottom: 1px solid #eee;">Gross Profit</td>
                   <td id="grossProfitValue" style="padding: 12px; text-align: right; border-bottom: 1px solid #eee;">$0</td>
                 </tr>
                 <tr>
-                  <td style="padding: 12px; border-bottom: 1px solid #eee;">营业利润 (Operating Income)</td>
+                  <td style="padding: 12px; border-bottom: 1px solid #eee;">Operating Income</td>
                   <td id="operatingIncomeValue" style="padding: 12px; text-align: right; border-bottom: 1px solid #eee;">$0</td>
                 </tr>
                 <tr>
-                  <td style="padding: 12px; border-bottom: 1px solid #eee;">税前利润 (Income Before Tax)</td>
+                  <td style="padding: 12px; border-bottom: 1px solid #eee;">Income Before Tax</td>
                   <td id="incomeBeforeTaxValue" style="padding: 12px; text-align: right; border-bottom: 1px solid #eee;">$0</td>
                 </tr>
                 <tr>
-                  <td style="padding: 12px; border-bottom: 1px solid #eee;">净利润 (Net Income)</td>
+                  <td style="padding: 12px; border-bottom: 1px solid #eee;">Net Income</td>
                   <td id="netIncomeStatementValue" style="padding: 12px; text-align: right; border-bottom: 1px solid #eee;">$0</td>
                 </tr>
                 <tr>
-                  <td style="padding: 12px; border-bottom: 1px solid #eee;">每股收益 (EPS)</td>
+                  <td style="padding: 12px; border-bottom: 1px solid #eee;">EPS</td>
                   <td id="epsValue" style="padding: 12px; text-align: right; border-bottom: 1px solid #eee;">$0</td>
                 </tr>
               </tbody>
@@ -453,248 +453,248 @@
           </div>
         </div>
         
-        <!-- 下单界面 -->
+        <!-- Order interface -->
         <div style="margin-top: 30px;">
-          <div style="border-bottom: 2px solid #4285f4; display: inline-block; padding: 10px 20px; font-weight: bold; color: #4285f4;">下单操作</div>
+          <div style="border-bottom: 2px solid #4285f4; display: inline-block; padding: 10px 20px; font-weight: bold; color: #4285f4;">Order operation</div>
           
           <div style="background-color: white; padding: 20px; border-radius: 8px; box-shadow: 0 1px 3px rgba(0,0,0,0.1); margin-top: 20px;">
-            <!-- 订单类型选择 -->
+            <!-- Order type selection -->
             <div style="margin-bottom: 20px; display: flex; justify-content: center;">
               <div style="display: inline-block;">
-                <button id="realOrderTypeBtn" class="order-type-btn active" style="padding: 10px 20px; background-color: #4285f4; color: white; border: none; border-radius: 4px 0 0 4px; cursor: pointer;">实时单</button>
-                <button id="limitOrderTypeBtn" class="order-type-btn" style="padding: 10px 20px; background-color: #f1f1f1; color: #333; border: none; border-radius: 0 4px 4px 0; cursor: pointer;">挂单</button>
+                <button id="realOrderTypeBtn" class="order-type-btn active" style="padding: 10px 20px; background-color: #4285f4; color: white; border: none; border-radius: 4px 0 0 4px; cursor: pointer;">Real-time order</button>
+                <button id="limitOrderTypeBtn" class="order-type-btn" style="padding: 10px 20px; background-color: #f1f1f1; color: #333; border: none; border-radius: 0 4px 4px 0; cursor: pointer;">Limit order</button>
               </div>
             </div>
             
-            <!-- 买入/卖出选择 -->
+            <!-- Buy/sell selection -->
             <div style="margin-bottom: 20px; display: flex; justify-content: center;">
               <div style="display: inline-block;">
-                <button id="buyBtn" class="trade-type-btn active" style="padding: 10px 20px; background-color: #4CAF50; color: white; border: none; border-radius: 4px 0 0 4px; cursor: pointer;">买入</button>
-                <button id="sellBtn" class="trade-type-btn" style="padding: 10px 20px; background-color: #f1f1f1; color: #333; border: none; border-radius: 0 4px 4px 0; cursor: pointer;">卖出</button>
+                <button id="buyBtn" class="trade-type-btn active" style="padding: 10px 20px; background-color: #4CAF50; color: white; border: none; border-radius: 4px 0 0 4px; cursor: pointer;">Buy</button>
+                <button id="sellBtn" class="trade-type-btn" style="padding: 10px 20px; background-color: #f1f1f1; color: #333; border: none; border-radius: 0 4px 4px 0; cursor: pointer;">Sell</button>
               </div>
             </div>
             
-            <!-- 股票代码 -->
+            <!-- Stock code -->
             <div style="margin-bottom: 15px;">
-              <label style="display: block; margin-bottom: 8px; font-weight: bold; text-align: left;">股票代码</label>
-              <input type="text" id="orderStockSymbol" placeholder="输入股票代码" style="width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 4px;" value="">
+              <label style="display: block; margin-bottom: 8px; font-weight: bold; text-align: left;">Stock code</label>
+              <input type="text" id="orderStockSymbol" placeholder="Enter ticker symbol" style="width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 4px;" value="">
             </div>
             
-            <!-- 价格 -->
+            <!-- Price -->
             <div style="margin-bottom: 15px;">
-              <label style="display: block; margin-bottom: 8px; font-weight: bold; text-align: left;">价格 ($)</label>
-              <input type="number" id="orderPrice" placeholder="输入价格" style="width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 4px;" step="0.01">
+              <label style="display: block; margin-bottom: 8px; font-weight: bold; text-align: left;">Price ($)</label>
+              <input type="number" id="orderPrice" placeholder="Enter price" style="width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 4px;" step="0.01">
             </div>
             
-            <!-- 数量 -->
+            <!-- Quantity -->
             <div style="margin-bottom: 15px;">
-              <label style="display: block; margin-bottom: 8px; font-weight: bold; text-align: left;">数量</label>
-              <input type="number" id="orderQuantity" placeholder="输入数量" style="width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 4px;" min="1" step="1">
+              <label style="display: block; margin-bottom: 8px; font-weight: bold; text-align: left;">Quantity</label>
+              <input type="number" id="orderQuantity" placeholder="Enter quantity" style="width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 4px;" min="1" step="1">
             </div>
             
-            <!-- 按钮 -->
+            <!-- Button -->
             <div style="display: flex; gap: 10px; margin-top: 20px;">
-              <button id="placeOrderBtn" style="background-color: #4285f4; color: white; padding: 12px 20px; border: none; border-radius: 4px; cursor: pointer; flex: 1;">下单</button>
-              <button id="viewOrdersBtn" style="background-color: #6c757d; color: white; padding: 12px 20px; border: none; border-radius: 4px; cursor: pointer; flex: 1;">查看订单</button>
+              <button id="placeOrderBtn" style="background-color: #4285f4; color: white; padding: 12px 20px; border: none; border-radius: 4px; cursor: pointer; flex: 1;">Place order</button>
+              <button id="viewOrdersBtn" style="background-color: #6c757d; color: white; padding: 12px 20px; border: none; border-radius: 4px; cursor: pointer; flex: 1;">View orders</button>
             </div>
           </div>
         </div>
       </div>
     </div>
 
-    <!-- 历史价格 -->
+    <!-- Historical price -->
     <div id="history" class="content" style="display: none;">
-      <h1>历史价格</h1>
-      <p>输入想要查看的股票代码（以逗号分隔），并从本地数据库读取2018年后的数据：</p>
-      <input type="text" id="stockInput" placeholder="如 000001.SZ, 600519.SH, AAPL 等">
-      <button onclick="fetchStockData()">获取数据</button>
-      <button onclick="clearStocks()">清空股票</button>
+      <h1>Historical price</h1>
+      <p>Enter the stock code you want to view (separated by commas), and read data after 2018 from the local database:</p>
+      <input type="text" id="stockInput" placeholder="e.g., 000001.SZ, 600519.SH, AAPL">
+      <button onclick="fetchStockData()">Get data</button>
+      <button onclick="clearStocks()">Clear stocks</button>
       
       <div id="chartContainer" style="height: 500px;">
         <canvas id="stockChart"></canvas>
       </div>
     </div>
 
-    <!-- AI助手（ChatGPT风格） -->
+    <!-- AI assistant (similar to ChatGPT) -->
     <div id="ai-assistant" class="content" style="display: none;">
-      <h1>AI助手（类似ChatGPT）</h1>
+      <h1>AI assistant (similar to ChatGPT)</h1>
       <div class="chat-window" id="chatWindow">
-        <!-- 聊天消息动态插入 -->
+        <!-- Chat messages dynamically inserted -->
       </div>
       <div class="chat-input-container">
-        <input type="text" class="chat-input" id="assistantInput" placeholder="请输入问题..." />
-        <button class="chat-send-btn" id="assistantSendBtn">发送</button>
+        <input type="text" class="chat-input" id="assistantInput" placeholder="Please enter your question..." />
+        <button class="chat-send-btn" id="assistantSendBtn">Send</button>
       </div>
     </div>
 
-    <!-- 预警信息（简易展示） -->
+    <!-- Alert information (simple display) -->
     <div id="alerts" class="content">
-      <h1>股票价格预警</h1>
+      <h1>Stock price alert</h1>
       
       <div style="max-width: 600px; margin: 0 auto; text-align: left;">
         <div style="margin-bottom: 20px;">
-          <label style="display: block; margin-bottom: 8px; font-weight: bold;">股票符号</label>
+          <label style="display: block; margin-bottom: 8px; font-weight: bold;">Stock symbol</label>
           <select id="stockSymbolSelect" style="width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 4px;">
-            <option value="">选择股票</option>
+            <option value="">Select stock</option>
             <option value="AAPL">Apple (AAPL)</option>
             <option value="MSFT">Microsoft (MSFT)</option>
             <option value="GOOGL">Google (GOOGL)</option>
             <option value="AMZN">Amazon (AMZN)</option>
-            <!-- 可以通过JavaScript动态填充更多选项 -->
+            <!-- More options can be dynamically filled through JavaScript -->
           </select>
         </div>
         
         <div style="margin-bottom: 20px;">
-          <label style="display: block; margin-bottom: 8px; font-weight: bold;">目标价格</label>
-          <input type="number" id="targetPrice" placeholder="输入目标价格" style="width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 4px;" step="0.01">
+          <label style="display: block; margin-bottom: 8px; font-weight: bold;">Target price</label>
+          <input type="number" id="targetPrice" placeholder="Enter target price" style="width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 4px;" step="0.01">
         </div>
         
         <div style="margin-bottom: 20px;">
-          <label style="display: block; margin-bottom: 8px; font-weight: bold;">电子邮件通知</label>
-          <input type="email" id="emailNotification" placeholder="输入您的邮箱" style="width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 4px;">
+          <label style="display: block; margin-bottom: 8px; font-weight: bold;">Email notification</label>
+          <input type="email" id="emailNotification" placeholder="Enter your email" style="width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 4px;">
         </div>
         
         <div style="margin-bottom: 20px;">
-          <label style="display: block; margin-bottom: 8px; font-weight: bold;">预警类型</label>
+          <label style="display: block; margin-bottom: 8px; font-weight: bold;">Alert type</label>
           <select id="alertType" style="width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 4px;">
-            <option value="">选择预警类型</option>
-            <option value="above">价格高于目标</option>
-            <option value="below">价格低于目标</option>
+            <option value="">Select alert type</option>
+            <option value="above">Price above target</option>
+            <option value="below">Price below target</option>
           </select>
         </div>
         
         <div style="display: flex; gap: 10px; margin-top: 30px;">
-          <button id="setAlarmBtn" style="background-color: #4285f4; color: white; padding: 10px 20px; border: none; border-radius: 4px; cursor: pointer;">设置预警</button>
-          <button id="resetAlarmBtn" style="background-color: #6c757d; color: white; padding: 10px 20px; border: none; border-radius: 4px; cursor: pointer;">重置</button>
+          <button id="setAlarmBtn" style="background-color: #4285f4; color: white; padding: 10px 20px; border: none; border-radius: 4px; cursor: pointer;">Set alarm</button>
+          <button id="resetAlarmBtn" style="background-color: #6c757d; color: white; padding: 10px 20px; border: none; border-radius: 4px; cursor: pointer;">Reset</button>
         </div>
       </div>
     </div>
 
-    <!-- 订单信息 -->
+    <!-- Order information -->
     <div id="orders" class="content" style="display: none;">
-      <h1>订单信息</h1>
-      <!-- 交易时间信息 -->
+      <h1>Order information</h1>
+      <!-- Trading time information -->
       <div style="background-color: #f8f9fa; padding: 10px; margin-bottom: 15px; border-radius: 4px; text-align: center;">
-        <strong>交易时间（美国东部时间）：</strong> 周一至周五 9:30 AM - 4:00 PM
+        <strong>Trading time (Eastern Time):</strong> Monday to Friday 9:30 AM - 4:00 PM
       </div>
       
       <div id="accountInfo">
-        用户账户：<strong>模拟账户</strong>，盈亏：<strong>+￥5,000</strong>
+        <strong>User account:</strong> <strong>Simulated account</strong>, profit and loss: <strong>+￥5,000</strong>
       </div>
       
-      <!-- 订单类型切换按钮 -->
+      <!-- Order type switch button -->
       <div style="margin: 20px 0; text-align: center;">
-        <button id="realtimeOrderBtn" class="order-tab-btn active" style="padding: 10px 20px; background-color: #4285f4; color: white; border: none; border-radius: 4px 0 0 4px; cursor: pointer;">实时单</button>
-        <button id="limitOrderBtn" class="order-tab-btn" style="padding: 10px 20px; background-color: #f1f1f1; color: #333; border: none; border-radius: 0 4px 4px 0; cursor: pointer;">挂单</button>
+        <button id="realtimeOrderBtn" class="order-tab-btn active" style="padding: 10px 20px; background-color: #4285f4; color: white; border: none; border-radius: 4px 0 0 4px; cursor: pointer;">Real-time order</button>
+        <button id="limitOrderBtn" class="order-tab-btn" style="padding: 10px 20px; background-color: #f1f1f1; color: #333; border: none; border-radius: 0 4px 4px 0; cursor: pointer;">Limit order</button>
       </div>
       
-      <!-- 实时单说明 -->
+      <!-- Realtime order information -->
       <div id="realtimeOrderInfo" class="order-tab-content" style="background-color: #e9f5ff; padding: 10px; margin-bottom: 15px; border-radius: 4px;">
-        <p style="margin: 0;"><strong>实时单说明：</strong>在当前交易日内完成交易，如当天未成交则自动取消。</p>
+        <p style="margin: 0;"><strong>Realtime order information:</strong> Complete the transaction on the current trading day, if not completed on the same day, it will be automatically cancelled.</p>
       </div>
       
-      <!-- 挂单说明 -->
+      <!-- Limit order information -->
       <div id="limitOrderInfo" class="order-tab-content" style="background-color: #fff4e5; padding: 10px; margin-bottom: 15px; border-radius: 4px; display: none;">
-        <p style="margin: 0;"><strong>挂单说明：</strong>不限交易日，一直挂着直到成交或手动取消。</p>
+        <p style="margin: 0;"><strong>Limit order information:</strong> No trading day limit, always on until completed or manually cancelled.</p>
       </div>
       
-      <!-- 实时单表格 -->
+      <!-- Realtime order table -->
       <div id="realtimeOrderTable" class="order-tables">
-        <h3>实时单</h3>
+        <h3>Realtime order</h3>
         <table>
           <thead>
             <tr>
-              <th>订单编号</th>
-              <th>股票代码</th>
-              <th>买/卖</th>
-              <th>价格</th>
-              <th>数量</th>
-              <th>状态</th>
-              <th>下单时间</th>
-              <th>操作</th>
+              <th>Order number</th>
+              <th>Stock code</th>
+              <th>Buy/Sell</th>
+              <th>Price</th>
+              <th>Quantity</th>
+              <th>Status</th>
+              <th>Order time</th>
+              <th>Operation</th>
             </tr>
           </thead>
           <tbody>
             <tr>
               <td>2001</td>
               <td>AAPL</td>
-              <td>买入</td>
+              <td>Buy</td>
               <td>197.25</td>
               <td>50</td>
-              <td>待成交</td>
+              <td>Pending</td>
               <td>2023-07-16 10:15:30</td>
-              <td><button class="cancel-btn" style="background-color: #f44336; color: white; border: none; border-radius: 4px; padding: 5px 10px; cursor: pointer;">撤销</button></td>
+              <td><button class="cancel-btn" style="background-color: #f44336; color: white; border: none; border-radius: 4px; padding: 5px 10px; cursor: pointer;">Cancel</button></td>
             </tr>
             <tr>
               <td>2002</td>
               <td>MSFT</td>
-              <td>卖出</td>
+              <td>Sell</td>
               <td>425.40</td>
               <td>20</td>
-              <td>已成交</td>
+              <td>Completed</td>
               <td>2023-07-16 09:45:12</td>
-              <td><button class="cancel-btn" style="background-color: #f44336; color: white; border: none; border-radius: 4px; padding: 5px 10px; cursor: pointer;" disabled>撤销</button></td>
+              <td><button class="cancel-btn" style="background-color: #f44336; color: white; border: none; border-radius: 4px; padding: 5px 10px; cursor: pointer;" disabled>Cancel</button></td>
             </tr>
             <tr>
               <td>2003</td>
               <td>GOOGL</td>
-              <td>买入</td>
+              <td>Buy</td>
               <td>182.60</td>
               <td>30</td>
-              <td>已取消</td>
+              <td>Cancelled</td>
               <td>2023-07-15 15:30:00</td>
-              <td><button class="cancel-btn" style="background-color: #f44336; color: white; border: none; border-radius: 4px; padding: 5px 10px; cursor: pointer;" disabled>撤销</button></td>
+              <td><button class="cancel-btn" style="background-color: #f44336; color: white; border: none; border-radius: 4px; padding: 5px 10px; cursor: pointer;" disabled>Cancel</button></td>
             </tr>
           </tbody>
         </table>
       </div>
       
-      <!-- 挂单表格 -->
+      <!-- Limit order table -->
       <div id="limitOrderTable" class="order-tables" style="display: none;">
-        <h3>挂单</h3>
+        <h3>Limit order</h3>
         <table>
           <thead>
             <tr>
-              <th>订单编号</th>
-              <th>股票代码</th>
-              <th>买/卖</th>
-              <th>价格</th>
-              <th>数量</th>
-              <th>状态</th>
-              <th>下单时间</th>
-              <th>操作</th>
+              <th>Order number</th>
+              <th>Stock code</th>
+              <th>Buy/Sell</th>
+              <th>Price</th>
+              <th>Quantity</th>
+              <th>Status</th>
+              <th>Order time</th>
+              <th>Operation</th>
             </tr>
           </thead>
           <tbody>
             <tr>
               <td>3001</td>
               <td>NVDA</td>
-              <td>买入</td>
+              <td>Buy</td>
               <td>102.75</td>
               <td>15</td>
-              <td>挂单中</td>
+              <td>Pending</td>
               <td>2023-07-10 14:20:45</td>
-              <td><button class="cancel-btn" style="background-color: #f44336; color: white; border: none; border-radius: 4px; padding: 5px 10px; cursor: pointer;">撤销</button></td>
+              <td><button class="cancel-btn" style="background-color: #f44336; color: white; border: none; border-radius: 4px; padding: 5px 10px; cursor: pointer;">Cancel</button></td>
             </tr>
             <tr>
               <td>3002</td>
               <td>AMZN</td>
-              <td>买入</td>
+              <td>Buy</td>
               <td>175.00</td>
               <td>10</td>
-              <td>挂单中</td>
+              <td>Pending</td>
               <td>2023-07-12 11:05:30</td>
-              <td><button class="cancel-btn" style="background-color: #f44336; color: white; border: none; border-radius: 4px; padding: 5px 10px; cursor: pointer;">撤销</button></td>
+              <td><button class="cancel-btn" style="background-color: #f44336; color: white; border: none; border-radius: 4px; padding: 5px 10px; cursor: pointer;">Cancel</button></td>
             </tr>
             <tr>
               <td>3003</td>
               <td>META</td>
-              <td>卖出</td>
+              <td>Sell</td>
               <td>500.00</td>
               <td>5</td>
-              <td>挂单中</td>
+              <td>Pending</td>
               <td>2023-07-14 13:40:10</td>
-              <td><button class="cancel-btn" style="background-color: #f44336; color: white; border: none; border-radius: 4px; padding: 5px 10px; cursor: pointer;">撤销</button></td>
+              <td><button class="cancel-btn" style="background-color: #f44336; color: white; border: none; border-radius: 4px; padding: 5px 10px; cursor: pointer;">Cancel</button></td>
             </tr>
           </tbody>
         </table>
@@ -702,57 +702,57 @@
     </div>
   </div>
 
-  <!-- 管理员登录界面 -->
+  <!-- Admin login interface -->
   <div id="adminLogin" class="content" style="display: none;">
-    <h1>管理员登录</h1>
+    <h1>Admin login</h1>
     <form id="adminLoginForm">
-      <input type="text" placeholder="管理员用户名" required />
-      <input type="password" placeholder="密码" required />
-      <button type="submit">登录</button>
+      <input type="text" placeholder="Admin username" required />
+      <input type="password" placeholder="Password" required />
+      <button type="submit">Login</button>
     </form>
-    <p><a href="#" id="backToUserLogin">返回用户登录</a></p>
+    <p><a href="#" id="backToUserLogin">Back to user login</a></p>
   </div>
 
-  <!-- 管理员后台界面 -->
+  <!-- Admin backend interface -->
   <div id="adminPanel" style="display: none;">
-    <h1 style="text-align: center;">管理员后台</h1>
-    <input type="text" id="adminSearch" placeholder="输入邮箱搜索用户">
+    <h1 style="text-align: center;">Admin panel</h1>
+    <input type="text" id="adminSearch" placeholder="Input email to search user">
     <table>
       <thead>
         <tr>
-          <th>用户名</th>
-          <th>邮箱</th>
-          <th>注册日期</th>
+          <th>Username</th>
+          <th>Email</th>
+          <th>Registered date</th>
         </tr>
       </thead>
       <tbody id="userTableBody">
-        <!-- 用户数据将在此动态填充 -->
+        <!-- User data will be dynamically filled here -->
       </tbody>
     </table>
-    <button class="back-btn" id="adminLogout">登出</button>
+    <button class="back-btn" id="adminLogout">Logout</button>
   </div>
 
-  <!-- 用户详情页面（后台） -->
+  <!-- User details page (backend) -->
   <div id="userDetail" class="content" style="display: none;">
-    <h1>用户详情</h1>
+    <h1>User details</h1>
     <div id="userDetailContent">
-      <!-- 用户详情信息 -->
+      <!-- User details information -->
     </div>
-    <button class="back-btn" id="backToAdminPanel">返回后台</button>
+    <button class="back-btn" id="backToAdminPanel">Back to admin panel</button>
   </div>
 
   <script>
     /********************************************************
-     * 1. 模拟的用户数据（仅演示管理员后台）
+     * 1. Simulated user data (only for admin panel demonstration)
      ********************************************************/
     const users = [
-      { username: "alice",   email: "alice@example.com",   registered: "2023-01-10", info: "Alice的详细信息……" },
-      { username: "bob",     email: "bob@example.com",     registered: "2023-02-15", info: "Bob的详细信息……" },
-      { username: "charlie", email: "charlie@example.com", registered: "2023-03-20", info: "Charlie的详细信息……" }
+      { username: "alice",   email: "alice@example.com",   registered: "2023-01-10", info: "Alice's detailed information……" },
+      { username: "bob",     email: "bob@example.com",     registered: "2023-02-15", info: "Bob's detailed information……" },
+      { username: "charlie", email: "charlie@example.com", registered: "2023-03-20", info: "Charlie's detailed information……" }
     ];
 
     /********************************************************
-     * 2. 页面切换：showContent()、showSectionInMain()
+     * 2. Page switching: showContent()、showSectionInMain()
      ********************************************************/
     function showContent(id) {
       document.querySelectorAll("body > div").forEach(div => {
@@ -768,7 +768,7 @@
     }
 
     /********************************************************
-     * 3. 普通用户：登录/注册/导航
+     * 3. Ordinary users: login/register/navigation
      ********************************************************/
     document.getElementById("loginForm").addEventListener("submit", function(e) {
       e.preventDefault();
@@ -777,7 +777,7 @@
     });
     document.getElementById("registerForm").addEventListener("submit", function(e) {
       e.preventDefault();
-      alert("注册成功！请登录。");
+      alert("Registration successful! Please login.");
       showContent("login");
     });
     document.getElementById("registerLink").addEventListener("click", function(e) {
@@ -804,7 +804,7 @@
     });
 
     /********************************************************
-     * 4. 管理员入口 & 登录/后台逻辑
+     * 4. Admin entry & login/backend logic
      ********************************************************/
     document.getElementById("adminEntryLink").addEventListener("click", function(e) {
       e.preventDefault();
@@ -848,10 +848,10 @@
       const user = users[index];
       const detailDiv = document.getElementById("userDetailContent");
       detailDiv.innerHTML = `
-        <p><strong>用户名：</strong> ${user.username}</p>
-        <p><strong>邮箱：</strong> ${user.email}</p>
-        <p><strong>注册日期：</strong> ${user.registered}</p>
-        <p><strong>详细信息：</strong> ${user.info}</p>
+        <p><strong>Username:</strong> ${user.username}</p>
+        <p><strong>Email:</strong> ${user.email}</p>
+        <p><strong>Registered date:</strong> ${user.registered}</p>
+        <p><strong>Detailed information:</strong> ${user.info}</p>
       `;
       showContent("userDetail");
     }
@@ -860,7 +860,7 @@
     });
 
     /********************************************************
-     * 5. 历史价格：获取股票数据 & 绘图 (Chart.js)
+     * 5. Historical price: get stock data & plot (Chart.js)
      ********************************************************/
     let selectedStocks = [];
     let chart = null;
@@ -868,7 +868,7 @@
       let inputField = document.getElementById("stockInput");
       let stocks = inputField.value.toUpperCase().split(",").map(s => s.trim()).filter(s => s !== "");
       if (stocks.length === 0) {
-        alert("请输入至少一个股票代码！");
+        alert("Please enter at least one stock code!");
         return;
       }
       selectedStocks = [...new Set([...selectedStocks, ...stocks])];
@@ -882,8 +882,8 @@
         const data = await response.json();
         updateChart(data);
       } catch (error) {
-        console.error("数据获取失败:", error);
-        alert("无法获取股票数据，请确认后端已运行并可访问数据库！");
+        console.error("Data retrieval failed:", error);
+        alert("Failed to retrieve stock data. Please ensure the backend is running and accessible to the database!");
       }
     }
     function clearStocks() {
@@ -900,7 +900,7 @@
       let colors = ["red", "blue", "green", "purple", "orange", "brown", "pink", "navy"];
       Object.keys(stockData).forEach((stock, index) => {
         if (stockData[stock].error) {
-          alert(`股票 ${stock} 获取数据失败: ${stockData[stock].error}`);
+          alert(`Failed to retrieve stock data for ${stock}: ${stockData[stock].error}`);
           return;
         }
         let prices = Object.values(stockData[stock]).map(val => parseFloat(val));
@@ -928,7 +928,7 @@
     }
 
     /********************************************************
-     * 6. AI助手：ChatGPT风格布局 + 真正接口示例
+     * 6. AI assistant: ChatGPT style layout + real interface example
      ********************************************************/
     const chatWindow = document.getElementById("chatWindow");
     const assistantInput = document.getElementById("assistantInput");
@@ -937,11 +937,11 @@
     assistantSendBtn.addEventListener("click", () => {
       const userText = assistantInput.value.trim();
       if (!userText) return;
-      // 显示用户消息
+      // Display user message
       appendMessage(userText, "user");
       assistantInput.value = "";
 
-      // 发送到后端
+      // Send to backend
       fetch("/gemini_assistant", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -969,19 +969,19 @@
     }
 
     /********************************************************
-     * 7. 预警信息：高/中/低，用彩色块直观显示
+     * 7. Alert information: high/medium/low, displayed in colorful blocks直观显示
      ********************************************************/
     document.getElementById("searchButton").addEventListener("click", function() {
       const stockSymbol = document.getElementById("stockSymbolInput").value.trim();
       if (!stockSymbol) {
-        alert("请输入股票代码");
+        alert("Please enter a stock code");
         return;
       }
       
-      // 显示加载状态
-      document.getElementById("companyName").textContent = "加载中...";
+      // Display loading status
+      document.getElementById("companyName").textContent = "Loading...";
       
-      // 发送请求获取股票数据
+      // Send request to get stock data
       fetch(`/get_stock_details?symbol=${stockSymbol}`)
         .then(response => response.json())
         .then(data => {
@@ -990,18 +990,18 @@
             return;
           }
           
-          // 更新公司信息
+          // Update company information
           document.getElementById("companyName").textContent = data.name || `${stockSymbol} Corporation`;
           document.getElementById("currentPrice").textContent = `$${data.price}`;
           
-          // 更新价格变化
+          // Update price change
           const priceChangeElement = document.getElementById("priceChange");
           const priceChange = data.change || 0;
           const priceChangePercent = data.changePercent || 0;
           priceChangeElement.textContent = `${priceChange >= 0 ? "+" : ""}${priceChange} (${priceChangePercent >= 0 ? "+" : ""}${priceChangePercent}%)`;
           priceChangeElement.style.color = priceChange >= 0 ? "green" : "red";
           
-          // 更新交易信息
+          // Update transaction information
           document.getElementById("openPrice").textContent = `$${data.open || 0}`;
           document.getElementById("highPrice").textContent = `$${data.high || 0}`;
           document.getElementById("lowPrice").textContent = `$${data.low || 0}`;
@@ -1009,15 +1009,15 @@
           document.getElementById("marketCap").textContent = `$${data.marketCap || 0}`;
           document.getElementById("week52High").textContent = `$${data.week52High || 0}`;
           
-          // 更新基本面数据
+          // Update fundamental data
           document.getElementById("peRatio").textContent = data.peRatio || 0;
           document.getElementById("pbRatio").textContent = data.pbRatio || 0;
           document.getElementById("dividendYield").textContent = `${data.dividendYield || 0}%`;
           
-          // 获取财务数据
+          // Get financial data
           fetchFinancialData(stockSymbol);
           
-          // 获取预警信息
+          // Get alert information
           fetch("/get_alert_levels", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
@@ -1027,42 +1027,42 @@
           .then(alertData => {
             const { valuation, liquidity } = alertData;
             
-            // 更新预警信息显示
-            updateAlertBox("valuationBox", valuation, "估值");
-            updateAlertBox("liquidityBox", liquidity, "流动性");
+            // Update alert information display
+            updateAlertBox("valuationBox", valuation, "Valuation");
+            updateAlertBox("liquidityBox", liquidity, "Liquidity");
           })
           .catch(err => {
-            console.error("获取预警信息失败:", err);
+            console.error("Failed to retrieve alert information:", err);
           });
         })
         .catch(error => {
-          console.error("获取股票数据失败:", error);
-          alert("获取股票数据失败，请稍后再试");
+          console.error("Failed to retrieve stock data:", error);
+          alert("Failed to retrieve stock data. Please try again later.");
         });
     });
 
     function updateAlertBox(boxId, level, label) {
       const box = document.getElementById(boxId);
       
-      // 设置颜色
-      let color = "#FFC107"; // 默认黄色（中）
-      if (level === "低") {
-        color = "#4CAF50"; // 绿色
-      } else if (level === "高") {
-        color = "#F44336"; // 红色
+      // Set color
+      let color = "#FFC107"; // Default yellow (medium)
+      if (level === "Low") {
+        color = "#4CAF50"; // Green
+      } else if (level === "High") {
+        color = "#F44336"; // Red
       }
       
       box.style.backgroundColor = color;
       box.textContent = label;
       
-      // 更新文本
+      // Update text
       const textElement = box.nextElementSibling;
       if (textElement) {
         textElement.textContent = level;
       }
     }
 
-    // 处理预警设置表单
+    // Process alert setting form
     document.getElementById("setAlarmBtn").addEventListener("click", function() {
       const stock = document.getElementById("stockSymbolSelect").value;
       const price = document.getElementById("targetPrice").value;
@@ -1070,22 +1070,22 @@
       const type = document.getElementById("alertType").value;
       
       if (!stock || !price || !email || !type) {
-        alert("请填写所有字段");
+        alert("Please fill in all fields");
         return;
       }
       
-      // 验证邮箱格式
+      // Validate email format
       const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
       if (!emailRegex.test(email)) {
-        alert("请输入有效的电子邮件地址");
+        alert("Please enter a valid email address");
         return;
       }
       
-      // 这里添加发送到后端的代码
-      // 示例：
-      alert(`预警已设置: ${stock} 在 ${price} 时通知 ${email}`);
+      // Add code to send to backend
+      // Example:
+      alert(`Alert set: ${stock} at ${price} notify ${email}`);
       
-      // 实际项目中，您应该发送到后端API
+      // In actual projects, you should send it to the backend API
       /*
       fetch("/api/set_price_alert", {
         method: "POST",
@@ -1095,15 +1095,15 @@
       .then(response => response.json())
       .then(data => {
         if (data.success) {
-          alert("预警设置成功！");
+          alert("Alert set successfully!");
           resetAlarmForm();
         } else {
-          alert("设置预警失败: " + data.message);
+          alert("Failed to set alert: " + data.message);
         }
       })
       .catch(error => {
         console.error("Error:", error);
-        alert("设置预警时发生错误");
+        alert("Error occurred when setting alert");
       });
       */
     });
@@ -1116,21 +1116,21 @@
     });
     
     /********************************************************
-     * 8. 订单信息：实时单和挂单的切换
+     * 8. Order information: real-time and limit order switching
      ********************************************************/
-    // 获取订单类型按钮
+    // Get order type buttons
     const realtimeOrderBtn = document.getElementById("realtimeOrderBtn");
     const limitOrderBtn = document.getElementById("limitOrderBtn");
     
-    // 获取相关内容区域
+    // Get related content areas
     const realtimeOrderInfo = document.getElementById("realtimeOrderInfo");
     const limitOrderInfo = document.getElementById("limitOrderInfo");
     const realtimeOrderTable = document.getElementById("realtimeOrderTable");
     const limitOrderTable = document.getElementById("limitOrderTable");
     
-    // 实时单按钮点击事件
+    // Real-time order button click event
     realtimeOrderBtn.addEventListener("click", function() {
-      // 更新按钮样式
+      // Update button style
       realtimeOrderBtn.classList.add("active");
       realtimeOrderBtn.style.backgroundColor = "#4285f4";
       realtimeOrderBtn.style.color = "white";
@@ -1138,16 +1138,16 @@
       limitOrderBtn.style.backgroundColor = "#f1f1f1";
       limitOrderBtn.style.color = "#333";
       
-      // 显示/隐藏相关内容
+      // Show/hide related content
       realtimeOrderInfo.style.display = "block";
       limitOrderInfo.style.display = "none";
       realtimeOrderTable.style.display = "block";
       limitOrderTable.style.display = "none";
     });
     
-    // 挂单按钮点击事件
+    // Limit order button click event
     limitOrderBtn.addEventListener("click", function() {
-      // 更新按钮样式
+      // Update button style
       limitOrderBtn.classList.add("active");
       limitOrderBtn.style.backgroundColor = "#4285f4";
       limitOrderBtn.style.color = "white";
@@ -1155,7 +1155,7 @@
       realtimeOrderBtn.style.backgroundColor = "#f1f1f1";
       realtimeOrderBtn.style.color = "#333";
       
-      // 显示/隐藏相关内容
+      // Show/hide related content
       limitOrderInfo.style.display = "block";
       realtimeOrderInfo.style.display = "none";
       limitOrderTable.style.display = "block";
@@ -1163,9 +1163,9 @@
     });
     
     /********************************************************
-     * 9. 实时价格页面下单界面
+     * 9. Real-time price page order interface
      ********************************************************/
-    // 获取下单界面的按钮和输入框
+    // Get buttons and input fields of the order interface
     const realOrderTypeBtn = document.getElementById("realOrderTypeBtn");
     const limitOrderTypeBtn = document.getElementById("limitOrderTypeBtn");
     const buyBtn = document.getElementById("buyBtn");
@@ -1176,19 +1176,19 @@
     const placeOrderBtn = document.getElementById("placeOrderBtn");
     const viewOrdersBtn = document.getElementById("viewOrdersBtn");
     
-    // 维护下单状态
+    // Maintain order state
     let orderState = {
-      orderType: "realtime", // "realtime" 或 "limit"
-      tradeType: "buy",      // "buy" 或 "sell"
+      orderType: "realtime", // "realtime" or "limit"
+      tradeType: "buy",      // "buy" or "sell"
     };
     
-    // 查询按钮点击事件 - 自动填充下单表单中的股票代码和参考价格
+    // Search button click event - automatically fill in the stock code and reference price in the order form
     document.getElementById("searchButton").addEventListener("click", function() {
       const stockSymbol = document.getElementById("stockSymbolInput").value.trim();
       if (stockSymbol) {
         orderStockSymbol.value = stockSymbol;
         
-        // 尝试获取当前价格作为参考
+        // Try to get the current price as a reference
         const currentPriceText = document.getElementById("currentPrice").textContent;
         if (currentPriceText) {
           const priceMatch = currentPriceText.match(/\$(\d+(\.\d+)?)/);
@@ -1199,9 +1199,9 @@
       }
     });
     
-    // 实时单按钮点击事件
+    // Real-time order button click event
     realOrderTypeBtn.addEventListener("click", function() {
-      // 更新按钮样式
+      // Update button style
       realOrderTypeBtn.classList.add("active");
       realOrderTypeBtn.style.backgroundColor = "#4285f4";
       realOrderTypeBtn.style.color = "white";
@@ -1209,13 +1209,13 @@
       limitOrderTypeBtn.style.backgroundColor = "#f1f1f1";
       limitOrderTypeBtn.style.color = "#333";
       
-      // 更新订单状态
+      // Update order state
       orderState.orderType = "realtime";
     });
     
-    // 挂单按钮点击事件
+    // Limit order button click event
     limitOrderTypeBtn.addEventListener("click", function() {
-      // 更新按钮样式
+      // Update button style
       limitOrderTypeBtn.classList.add("active");
       limitOrderTypeBtn.style.backgroundColor = "#4285f4";
       limitOrderTypeBtn.style.color = "white";
@@ -1223,13 +1223,13 @@
       realOrderTypeBtn.style.backgroundColor = "#f1f1f1";
       realOrderTypeBtn.style.color = "#333";
       
-      // 更新订单状态
+      // Update order state
       orderState.orderType = "limit";
     });
     
-    // 买入按钮点击事件
+    // Buy button click event
     buyBtn.addEventListener("click", function() {
-      // 更新按钮样式
+      // Update button style
       buyBtn.classList.add("active");
       buyBtn.style.backgroundColor = "#4CAF50";
       buyBtn.style.color = "white";
@@ -1237,13 +1237,13 @@
       sellBtn.style.backgroundColor = "#f1f1f1";
       sellBtn.style.color = "#333";
       
-      // 更新订单状态
+      // Update order state
       orderState.tradeType = "buy";
     });
     
-    // 卖出按钮点击事件
+    // Sell button click event
     sellBtn.addEventListener("click", function() {
-      // 更新按钮样式
+      // Update button style
       sellBtn.classList.add("active");
       sellBtn.style.backgroundColor = "#F44336";
       sellBtn.style.color = "white";
@@ -1251,69 +1251,69 @@
       buyBtn.style.backgroundColor = "#f1f1f1";
       buyBtn.style.color = "#333";
       
-      // 更新订单状态
+      // Update order state
       orderState.tradeType = "sell";
     });
     
-    // 下单按钮点击事件
+    // Place order button click event
     placeOrderBtn.addEventListener("click", function() {
       const stockSymbol = orderStockSymbol.value.trim();
       const price = orderPrice.value.trim();
       const quantity = orderQuantity.value.trim();
       
-      // 验证输入
+      // Validate input
       if (!stockSymbol || !price || !quantity) {
-        alert("请填写所有必填字段");
+        alert("Please fill in all required fields");
         return;
       }
       
       if (isNaN(price) || parseFloat(price) <= 0) {
-        alert("请输入有效的价格");
+        alert("Please enter a valid price");
         return;
       }
       
       if (isNaN(quantity) || parseInt(quantity) <= 0) {
-        alert("请输入有效的数量");
+        alert("Please enter a valid quantity");
         return;
       }
       
-      // 模拟下单成功，实际项目中应发送请求到后端
-      const orderTypeName = orderState.orderType === "realtime" ? "实时单" : "挂单";
-      const tradeTypeName = orderState.tradeType === "buy" ? "买入" : "卖出";
+      // Simulate order success, in actual projects, send request to backend
+      const orderTypeName = orderState.orderType === "realtime" ? "Real-time order" : "Limit order";
+      const tradeTypeName = orderState.tradeType === "buy" ? "Buy" : "Sell";
       
-      alert(`下单成功：${orderTypeName} ${tradeTypeName} ${stockSymbol} ${quantity}股，价格$${price}`);
+      alert(`Order successful: ${orderTypeName} ${tradeTypeName} ${stockSymbol} ${quantity} shares, price $${price}`);
       
-      // 跳转到订单信息页面并显示对应类型的订单
+      // Jump to order information page and display the corresponding type of order
       showSectionInMain("orders");
       
-      // 根据下单类型显示相应的订单列表
+      // Display the corresponding type of order list based on the order type
       if (orderState.orderType === "realtime") {
-        // 显示实时单
+        // Display real-time order
         realtimeOrderBtn.click();
         
-        // 添加新订单到实时单表格
+        // Add new order to real-time order table
         addNewOrder(
           "realtime", 
           stockSymbol, 
-          orderState.tradeType === "buy" ? "买入" : "卖出", 
+          orderState.tradeType === "buy" ? "Buy" : "Sell", 
           price, 
           quantity
         );
       } else {
-        // 显示挂单
+        // Display limit order
         limitOrderBtn.click();
         
-        // 添加新订单到挂单表格
+        // Add new order to limit order table
         addNewOrder(
           "limit", 
           stockSymbol, 
-          orderState.tradeType === "buy" ? "买入" : "卖出", 
+          orderState.tradeType === "buy" ? "Buy" : "Sell", 
           price, 
           quantity
         );
       }
       
-      // 实际项目中，应该调用后端API并处理响应
+      // In actual projects, should call backend API and handle response
       /*
       fetch("/api/place_order", {
         method: "POST",
@@ -1329,30 +1329,30 @@
       .then(response => response.json())
       .then(data => {
         if (data.success) {
-          alert("下单成功！");
+          alert("Order successful!");
           showSectionInMain("orders");
         } else {
-          alert("下单失败: " + data.message);
+          alert("Order failed: " + data.message);
         }
       })
       .catch(error => {
         console.error("Error:", error);
-        alert("下单时发生错误");
+        alert("Order failed: " + error);
       });
       */
     });
     
-    // 查看订单按钮点击事件 - 跳转到订单信息页面
+    // View order button click event - jump to order information page
     viewOrdersBtn.addEventListener("click", function() {
       showSectionInMain("orders");
     });
     
-    // 添加新订单到表格中
+    // Add new order to table
     function addNewOrder(type, stockSymbol, tradeType, price, quantity) {
-      // 生成随机订单号
+      // Generate random order ID
       const orderId = Math.floor(Math.random() * 1000) + 3000;
       
-      // 获取当前时间
+      // Get current time
       const now = new Date();
       const year = now.getFullYear();
       const month = String(now.getMonth() + 1).padStart(2, '0');
@@ -1362,7 +1362,7 @@
       const seconds = String(now.getSeconds()).padStart(2, '0');
       const orderTime = `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`;
       
-      // 创建新行
+      // Create new row
       const newRow = document.createElement("tr");
       newRow.innerHTML = `
         <td>${orderId}</td>
@@ -1375,14 +1375,14 @@
         <td><button class="cancel-btn" style="background-color: #f44336; color: white; border: none; border-radius: 4px; padding: 5px 10px; cursor: pointer;">撤销</button></td>
       `;
       
-      // 添加到相应表格
+      // Add to corresponding table
       if (type === "realtime") {
         document.querySelector("#realtimeOrderTable tbody").prepend(newRow);
       } else {
         document.querySelector("#limitOrderTable tbody").prepend(newRow);
       }
       
-      // 为新添加的撤销按钮绑定事件
+      // Bind event to cancel button
       newRow.querySelector(".cancel-btn").addEventListener("click", function() {
         cancelOrder(this);
       });
@@ -1390,35 +1390,35 @@
     
     // 初始化：为现有的撤销按钮添加点击事件
     document.addEventListener("DOMContentLoaded", function() {
-      // 为所有撤销按钮添加点击事件
+      // Bind event to all cancel buttons
       document.querySelectorAll(".cancel-btn").forEach(btn => {
         btn.addEventListener("click", function() {
           cancelOrder(this);
         });
       });
       
-      // 为基本面数据选项卡添加点击事件
+      // Initialize: bind click event to existing cancel buttons
       setupFinancialDataTabs();
     });
     
-    // 撤销订单函数
+    // Cancel order function
     function cancelOrder(button) {
-      // 获取当前行
+      // Get current row
       const row = button.closest("tr");
       
-      // 获取订单号和状态
+      // Get order ID and status
       const orderId = row.cells[0].textContent;
       const statusCell = row.cells[5];
       
-      // 确认是否要撤销
-      if (confirm(`确定要撤销订单 #${orderId} 吗？`)) {
-        // 更新状态为"已取消"
-        statusCell.textContent = "已取消";
+      // Confirm whether to cancel
+      if (confirm(`Are you sure you want to cancel order #${orderId}?`)) {
+        // Update status to "已取消"
+        statusCell.textContent = "Cancelled";
         
-        // 禁用撤销按钮
+        // Disable cancel button
         button.disabled = true;
         
-        // 实际项目中，应该调用后端API
+        // In actual projects, should call backend API
         /*
         fetch("/api/cancel_order", {
           method: "POST",
@@ -1428,24 +1428,24 @@
         .then(response => response.json())
         .then(data => {
           if (data.success) {
-            alert("订单已成功取消！");
-            statusCell.textContent = "已取消";
+            alert("Order has been successfully cancelled!");
+            statusCell.textContent = "Cancelled";
             button.disabled = true;
           } else {
-            alert("取消订单失败: " + data.message);
+            alert("Order cancellation failed: " + data.message);
           }
         })
         .catch(error => {
           console.error("Error:", error);
-          alert("取消订单时发生错误");
+          alert("Order cancellation failed: " + error);
         });
         */
         
-        alert(`订单 #${orderId} 已成功取消！`);
+        alert(`Order #${orderId} has been successfully cancelled!`);
       }
     }
     
-    // 设置基本面数据选项卡功能
+    // Set fundamental data tab functionality
     function setupFinancialDataTabs() {
       const tabs = {
         basicDataTab: {
@@ -1462,10 +1462,10 @@
         }
       };
       
-      // 为每个选项卡按钮添加点击事件
+      // Bind click event to each tab button
       Object.keys(tabs).forEach(tabId => {
         tabs[tabId].button.addEventListener("click", function() {
-          // 隐藏所有内容
+          // Hide all content
           Object.keys(tabs).forEach(key => {
             tabs[key].content.style.display = "none";
             tabs[key].button.style.backgroundColor = "#f1f1f1";
@@ -1473,7 +1473,7 @@
             tabs[key].button.classList.remove("active");
           });
           
-          // 显示当前选中的内容
+          // Display the currently selected content
           tabs[tabId].content.style.display = "block";
           tabs[tabId].button.style.backgroundColor = "#4285f4";
           tabs[tabId].button.style.color = "white";
@@ -1482,10 +1482,10 @@
       });
     }
     
-    // 获取股票财务数据
+    // Get stock financial data
     function fetchFinancialData(stockSymbol) {
-      // 在实际项目中，这里应该调用后端API获取财务数据
-      // 模拟数据
+      // In actual projects, here should call backend API to get financial data
+      // Simulate data
       const dummyData = {
         basicData: {
           marketCap: "$1,234,567,890",
@@ -1516,7 +1516,7 @@
         }
       };
       
-      // 更新基本面数据
+      // Update fundamental data
       document.getElementById("marketCapValue").textContent = dummyData.basicData.marketCap;
       document.getElementById("peRatio").textContent = dummyData.basicData.peRatio;
       document.getElementById("pbRatio").textContent = dummyData.basicData.pbRatio;
@@ -1525,7 +1525,7 @@
       document.getElementById("netIncomeValue").textContent = dummyData.basicData.netIncome;
       document.getElementById("operatingCashFlowValue").textContent = dummyData.basicData.operatingCashFlow;
       
-      // 更新资产负债数据
+      // Update balance sheet data
       document.getElementById("currentAssetsValue").textContent = dummyData.balanceSheet.currentAssets;
       document.getElementById("nonCurrentAssetsValue").textContent = dummyData.balanceSheet.nonCurrentAssets;
       document.getElementById("currentLiabilitiesValue").textContent = dummyData.balanceSheet.currentLiabilities;
@@ -1534,7 +1534,7 @@
       document.getElementById("totalLiabilitiesValue").textContent = dummyData.balanceSheet.totalLiabilities;
       document.getElementById("shareholdersEquityValue").textContent = dummyData.balanceSheet.shareholdersEquity;
       
-      // 更新利润表数据
+      // Update profit statement data
       document.getElementById("revenueIncomeValue").textContent = dummyData.incomeStatement.revenue;
       document.getElementById("costOfRevenueValue").textContent = dummyData.incomeStatement.costOfRevenue;
       document.getElementById("grossProfitValue").textContent = dummyData.incomeStatement.grossProfit;
