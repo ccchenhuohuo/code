@@ -344,6 +344,53 @@
             </tbody>
           </table>
         </div>
+        
+        <!-- 下单界面 -->
+        <div style="margin-top: 30px;">
+          <div style="border-bottom: 2px solid #4285f4; display: inline-block; padding: 10px 20px; font-weight: bold; color: #4285f4;">下单操作</div>
+          
+          <div style="background-color: white; padding: 20px; border-radius: 8px; box-shadow: 0 1px 3px rgba(0,0,0,0.1); margin-top: 20px;">
+            <!-- 订单类型选择 -->
+            <div style="margin-bottom: 20px; display: flex; justify-content: center;">
+              <div style="display: inline-block;">
+                <button id="realOrderTypeBtn" class="order-type-btn active" style="padding: 10px 20px; background-color: #4285f4; color: white; border: none; border-radius: 4px 0 0 4px; cursor: pointer;">实时单</button>
+                <button id="limitOrderTypeBtn" class="order-type-btn" style="padding: 10px 20px; background-color: #f1f1f1; color: #333; border: none; border-radius: 0 4px 4px 0; cursor: pointer;">挂单</button>
+              </div>
+            </div>
+            
+            <!-- 买入/卖出选择 -->
+            <div style="margin-bottom: 20px; display: flex; justify-content: center;">
+              <div style="display: inline-block;">
+                <button id="buyBtn" class="trade-type-btn active" style="padding: 10px 20px; background-color: #4CAF50; color: white; border: none; border-radius: 4px 0 0 4px; cursor: pointer;">买入</button>
+                <button id="sellBtn" class="trade-type-btn" style="padding: 10px 20px; background-color: #f1f1f1; color: #333; border: none; border-radius: 0 4px 4px 0; cursor: pointer;">卖出</button>
+              </div>
+            </div>
+            
+            <!-- 股票代码 -->
+            <div style="margin-bottom: 15px;">
+              <label style="display: block; margin-bottom: 8px; font-weight: bold; text-align: left;">股票代码</label>
+              <input type="text" id="orderStockSymbol" placeholder="输入股票代码" style="width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 4px;" value="">
+            </div>
+            
+            <!-- 价格 -->
+            <div style="margin-bottom: 15px;">
+              <label style="display: block; margin-bottom: 8px; font-weight: bold; text-align: left;">价格 ($)</label>
+              <input type="number" id="orderPrice" placeholder="输入价格" style="width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 4px;" step="0.01">
+            </div>
+            
+            <!-- 数量 -->
+            <div style="margin-bottom: 15px;">
+              <label style="display: block; margin-bottom: 8px; font-weight: bold; text-align: left;">数量</label>
+              <input type="number" id="orderQuantity" placeholder="输入数量" style="width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 4px;" min="1" step="1">
+            </div>
+            
+            <!-- 按钮 -->
+            <div style="display: flex; gap: 10px; margin-top: 20px;">
+              <button id="placeOrderBtn" style="background-color: #4285f4; color: white; padding: 12px 20px; border: none; border-radius: 4px; cursor: pointer; flex: 1;">下单</button>
+              <button id="viewOrdersBtn" style="background-color: #6c757d; color: white; padding: 12px 20px; border: none; border-radius: 4px; cursor: pointer; flex: 1;">查看订单</button>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
 
@@ -418,40 +465,124 @@
     <!-- 订单信息 -->
     <div id="orders" class="content" style="display: none;">
       <h1>订单信息</h1>
+      <!-- 交易时间信息 -->
+      <div style="background-color: #f8f9fa; padding: 10px; margin-bottom: 15px; border-radius: 4px; text-align: center;">
+        <strong>交易时间（美国东部时间）：</strong> 周一至周五 9:30 AM - 4:00 PM
+      </div>
+      
       <div id="accountInfo">
         用户账户：<strong>模拟账户</strong>，盈亏：<strong>+￥5,000</strong>
       </div>
-      <table>
-        <thead>
-          <tr>
-            <th>订单编号</th>
-            <th>股票代码</th>
-            <th>买/卖</th>
-            <th>价格</th>
-            <th>数量</th>
-            <th>状态</th>
-          </tr>
-        </thead>
-        <tbody id="orderTableBody">
-          <!-- 示例订单数据 -->
-          <tr>
-            <td>1001</td>
-            <td>600519.SH</td>
-            <td>买入</td>
-            <td>1500.00</td>
-            <td>100</td>
-            <td>已完成</td>
-          </tr>
-          <tr>
-            <td>1002</td>
-            <td>000001.SZ</td>
-            <td>卖出</td>
-            <td>20.50</td>
-            <td>500</td>
-            <td>挂单中</td>
-          </tr>
-        </tbody>
-      </table>
+      
+      <!-- 订单类型切换按钮 -->
+      <div style="margin: 20px 0; text-align: center;">
+        <button id="realtimeOrderBtn" class="order-tab-btn active" style="padding: 10px 20px; background-color: #4285f4; color: white; border: none; border-radius: 4px 0 0 4px; cursor: pointer;">实时单</button>
+        <button id="limitOrderBtn" class="order-tab-btn" style="padding: 10px 20px; background-color: #f1f1f1; color: #333; border: none; border-radius: 0 4px 4px 0; cursor: pointer;">挂单</button>
+      </div>
+      
+      <!-- 实时单说明 -->
+      <div id="realtimeOrderInfo" class="order-tab-content" style="background-color: #e9f5ff; padding: 10px; margin-bottom: 15px; border-radius: 4px;">
+        <p style="margin: 0;"><strong>实时单说明：</strong>在当前交易日内完成交易，如当天未成交则自动取消。</p>
+      </div>
+      
+      <!-- 挂单说明 -->
+      <div id="limitOrderInfo" class="order-tab-content" style="background-color: #fff4e5; padding: 10px; margin-bottom: 15px; border-radius: 4px; display: none;">
+        <p style="margin: 0;"><strong>挂单说明：</strong>不限交易日，一直挂着直到成交或手动取消。</p>
+      </div>
+      
+      <!-- 实时单表格 -->
+      <div id="realtimeOrderTable" class="order-tables">
+        <h3>实时单</h3>
+        <table>
+          <thead>
+            <tr>
+              <th>订单编号</th>
+              <th>股票代码</th>
+              <th>买/卖</th>
+              <th>价格</th>
+              <th>数量</th>
+              <th>状态</th>
+              <th>下单时间</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>2001</td>
+              <td>AAPL</td>
+              <td>买入</td>
+              <td>197.25</td>
+              <td>50</td>
+              <td>待成交</td>
+              <td>2023-07-16 10:15:30</td>
+            </tr>
+            <tr>
+              <td>2002</td>
+              <td>MSFT</td>
+              <td>卖出</td>
+              <td>425.40</td>
+              <td>20</td>
+              <td>已成交</td>
+              <td>2023-07-16 09:45:12</td>
+            </tr>
+            <tr>
+              <td>2003</td>
+              <td>GOOGL</td>
+              <td>买入</td>
+              <td>182.60</td>
+              <td>30</td>
+              <td>已取消</td>
+              <td>2023-07-15 15:30:00</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      
+      <!-- 挂单表格 -->
+      <div id="limitOrderTable" class="order-tables" style="display: none;">
+        <h3>挂单</h3>
+        <table>
+          <thead>
+            <tr>
+              <th>订单编号</th>
+              <th>股票代码</th>
+              <th>买/卖</th>
+              <th>价格</th>
+              <th>数量</th>
+              <th>状态</th>
+              <th>下单时间</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>3001</td>
+              <td>NVDA</td>
+              <td>买入</td>
+              <td>102.75</td>
+              <td>15</td>
+              <td>挂单中</td>
+              <td>2023-07-10 14:20:45</td>
+            </tr>
+            <tr>
+              <td>3002</td>
+              <td>AMZN</td>
+              <td>买入</td>
+              <td>175.00</td>
+              <td>10</td>
+              <td>挂单中</td>
+              <td>2023-07-12 11:05:30</td>
+            </tr>
+            <tr>
+              <td>3003</td>
+              <td>META</td>
+              <td>卖出</td>
+              <td>500.00</td>
+              <td>5</td>
+              <td>挂单中</td>
+              <td>2023-07-14 13:40:10</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
     </div>
   </div>
 
@@ -864,6 +995,273 @@
       document.getElementById("emailNotification").value = "";
       document.getElementById("alertType").value = "";
     });
+    
+    /********************************************************
+     * 8. 订单信息：实时单和挂单的切换
+     ********************************************************/
+    // 获取订单类型按钮
+    const realtimeOrderBtn = document.getElementById("realtimeOrderBtn");
+    const limitOrderBtn = document.getElementById("limitOrderBtn");
+    
+    // 获取相关内容区域
+    const realtimeOrderInfo = document.getElementById("realtimeOrderInfo");
+    const limitOrderInfo = document.getElementById("limitOrderInfo");
+    const realtimeOrderTable = document.getElementById("realtimeOrderTable");
+    const limitOrderTable = document.getElementById("limitOrderTable");
+    
+    // 实时单按钮点击事件
+    realtimeOrderBtn.addEventListener("click", function() {
+      // 更新按钮样式
+      realtimeOrderBtn.classList.add("active");
+      realtimeOrderBtn.style.backgroundColor = "#4285f4";
+      realtimeOrderBtn.style.color = "white";
+      limitOrderBtn.classList.remove("active");
+      limitOrderBtn.style.backgroundColor = "#f1f1f1";
+      limitOrderBtn.style.color = "#333";
+      
+      // 显示/隐藏相关内容
+      realtimeOrderInfo.style.display = "block";
+      limitOrderInfo.style.display = "none";
+      realtimeOrderTable.style.display = "block";
+      limitOrderTable.style.display = "none";
+    });
+    
+    // 挂单按钮点击事件
+    limitOrderBtn.addEventListener("click", function() {
+      // 更新按钮样式
+      limitOrderBtn.classList.add("active");
+      limitOrderBtn.style.backgroundColor = "#4285f4";
+      limitOrderBtn.style.color = "white";
+      realtimeOrderBtn.classList.remove("active");
+      realtimeOrderBtn.style.backgroundColor = "#f1f1f1";
+      realtimeOrderBtn.style.color = "#333";
+      
+      // 显示/隐藏相关内容
+      limitOrderInfo.style.display = "block";
+      realtimeOrderInfo.style.display = "none";
+      limitOrderTable.style.display = "block";
+      realtimeOrderTable.style.display = "none";
+    });
+    
+    /********************************************************
+     * 9. 实时价格页面下单界面
+     ********************************************************/
+    // 获取下单界面的按钮和输入框
+    const realOrderTypeBtn = document.getElementById("realOrderTypeBtn");
+    const limitOrderTypeBtn = document.getElementById("limitOrderTypeBtn");
+    const buyBtn = document.getElementById("buyBtn");
+    const sellBtn = document.getElementById("sellBtn");
+    const orderStockSymbol = document.getElementById("orderStockSymbol");
+    const orderPrice = document.getElementById("orderPrice");
+    const orderQuantity = document.getElementById("orderQuantity");
+    const placeOrderBtn = document.getElementById("placeOrderBtn");
+    const viewOrdersBtn = document.getElementById("viewOrdersBtn");
+    
+    // 维护下单状态
+    let orderState = {
+      orderType: "realtime", // "realtime" 或 "limit"
+      tradeType: "buy",      // "buy" 或 "sell"
+    };
+    
+    // 查询按钮点击事件 - 自动填充下单表单中的股票代码和参考价格
+    document.getElementById("searchButton").addEventListener("click", function() {
+      const stockSymbol = document.getElementById("stockSymbolInput").value.trim();
+      if (stockSymbol) {
+        orderStockSymbol.value = stockSymbol;
+        
+        // 尝试获取当前价格作为参考
+        const currentPriceText = document.getElementById("currentPrice").textContent;
+        if (currentPriceText) {
+          const priceMatch = currentPriceText.match(/\$(\d+(\.\d+)?)/);
+          if (priceMatch && priceMatch[1]) {
+            orderPrice.value = priceMatch[1];
+          }
+        }
+      }
+    });
+    
+    // 实时单按钮点击事件
+    realOrderTypeBtn.addEventListener("click", function() {
+      // 更新按钮样式
+      realOrderTypeBtn.classList.add("active");
+      realOrderTypeBtn.style.backgroundColor = "#4285f4";
+      realOrderTypeBtn.style.color = "white";
+      limitOrderTypeBtn.classList.remove("active");
+      limitOrderTypeBtn.style.backgroundColor = "#f1f1f1";
+      limitOrderTypeBtn.style.color = "#333";
+      
+      // 更新订单状态
+      orderState.orderType = "realtime";
+    });
+    
+    // 挂单按钮点击事件
+    limitOrderTypeBtn.addEventListener("click", function() {
+      // 更新按钮样式
+      limitOrderTypeBtn.classList.add("active");
+      limitOrderTypeBtn.style.backgroundColor = "#4285f4";
+      limitOrderTypeBtn.style.color = "white";
+      realOrderTypeBtn.classList.remove("active");
+      realOrderTypeBtn.style.backgroundColor = "#f1f1f1";
+      realOrderTypeBtn.style.color = "#333";
+      
+      // 更新订单状态
+      orderState.orderType = "limit";
+    });
+    
+    // 买入按钮点击事件
+    buyBtn.addEventListener("click", function() {
+      // 更新按钮样式
+      buyBtn.classList.add("active");
+      buyBtn.style.backgroundColor = "#4CAF50";
+      buyBtn.style.color = "white";
+      sellBtn.classList.remove("active");
+      sellBtn.style.backgroundColor = "#f1f1f1";
+      sellBtn.style.color = "#333";
+      
+      // 更新订单状态
+      orderState.tradeType = "buy";
+    });
+    
+    // 卖出按钮点击事件
+    sellBtn.addEventListener("click", function() {
+      // 更新按钮样式
+      sellBtn.classList.add("active");
+      sellBtn.style.backgroundColor = "#F44336";
+      sellBtn.style.color = "white";
+      buyBtn.classList.remove("active");
+      buyBtn.style.backgroundColor = "#f1f1f1";
+      buyBtn.style.color = "#333";
+      
+      // 更新订单状态
+      orderState.tradeType = "sell";
+    });
+    
+    // 下单按钮点击事件
+    placeOrderBtn.addEventListener("click", function() {
+      const stockSymbol = orderStockSymbol.value.trim();
+      const price = orderPrice.value.trim();
+      const quantity = orderQuantity.value.trim();
+      
+      // 验证输入
+      if (!stockSymbol || !price || !quantity) {
+        alert("请填写所有必填字段");
+        return;
+      }
+      
+      if (isNaN(price) || parseFloat(price) <= 0) {
+        alert("请输入有效的价格");
+        return;
+      }
+      
+      if (isNaN(quantity) || parseInt(quantity) <= 0) {
+        alert("请输入有效的数量");
+        return;
+      }
+      
+      // 模拟下单成功，实际项目中应发送请求到后端
+      const orderTypeName = orderState.orderType === "realtime" ? "实时单" : "挂单";
+      const tradeTypeName = orderState.tradeType === "buy" ? "买入" : "卖出";
+      
+      alert(`下单成功：${orderTypeName} ${tradeTypeName} ${stockSymbol} ${quantity}股，价格$${price}`);
+      
+      // 跳转到订单信息页面并显示对应类型的订单
+      showSectionInMain("orders");
+      
+      // 根据下单类型显示相应的订单列表
+      if (orderState.orderType === "realtime") {
+        // 显示实时单
+        realtimeOrderBtn.click();
+        
+        // 添加新订单到实时单表格
+        addNewOrder(
+          "realtime", 
+          stockSymbol, 
+          orderState.tradeType === "buy" ? "买入" : "卖出", 
+          price, 
+          quantity
+        );
+      } else {
+        // 显示挂单
+        limitOrderBtn.click();
+        
+        // 添加新订单到挂单表格
+        addNewOrder(
+          "limit", 
+          stockSymbol, 
+          orderState.tradeType === "buy" ? "买入" : "卖出", 
+          price, 
+          quantity
+        );
+      }
+      
+      // 实际项目中，应该调用后端API并处理响应
+      /*
+      fetch("/api/place_order", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          stockSymbol: stockSymbol,
+          price: parseFloat(price),
+          quantity: parseInt(quantity),
+          orderType: orderState.orderType,
+          tradeType: orderState.tradeType
+        })
+      })
+      .then(response => response.json())
+      .then(data => {
+        if (data.success) {
+          alert("下单成功！");
+          showSectionInMain("orders");
+        } else {
+          alert("下单失败: " + data.message);
+        }
+      })
+      .catch(error => {
+        console.error("Error:", error);
+        alert("下单时发生错误");
+      });
+      */
+    });
+    
+    // 查看订单按钮点击事件 - 跳转到订单信息页面
+    viewOrdersBtn.addEventListener("click", function() {
+      showSectionInMain("orders");
+    });
+    
+    // 添加新订单到表格中
+    function addNewOrder(type, stockSymbol, tradeType, price, quantity) {
+      // 生成随机订单号
+      const orderId = Math.floor(Math.random() * 1000) + 3000;
+      
+      // 获取当前时间
+      const now = new Date();
+      const year = now.getFullYear();
+      const month = String(now.getMonth() + 1).padStart(2, '0');
+      const day = String(now.getDate()).padStart(2, '0');
+      const hours = String(now.getHours()).padStart(2, '0');
+      const minutes = String(now.getMinutes()).padStart(2, '0');
+      const seconds = String(now.getSeconds()).padStart(2, '0');
+      const orderTime = `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`;
+      
+      // 创建新行
+      const newRow = document.createElement("tr");
+      newRow.innerHTML = `
+        <td>${orderId}</td>
+        <td>${stockSymbol}</td>
+        <td>${tradeType}</td>
+        <td>${price}</td>
+        <td>${quantity}</td>
+        <td>${type === "realtime" ? "待成交" : "挂单中"}</td>
+        <td>${orderTime}</td>
+      `;
+      
+      // 添加到相应表格
+      if (type === "realtime") {
+        document.querySelector("#realtimeOrderTable tbody").prepend(newRow);
+      } else {
+        document.querySelector("#limitOrderTable tbody").prepend(newRow);
+      }
+    }
   </script>
 </body>
 </html>
