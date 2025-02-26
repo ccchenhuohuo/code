@@ -319,30 +319,138 @@
         
         <!-- 基本面数据选项卡 -->
         <div style="margin-top: 30px;">
-          <div style="border-bottom: 2px solid #4285f4; display: inline-block; padding: 10px 20px; font-weight: bold; color: #4285f4;">基本面数据</div>
+          <!-- 选项卡导航 -->
+          <div style="border-bottom: 1px solid #ddd; margin-bottom: 20px;">
+            <button id="basicDataTab" class="data-tab active" style="margin-right: 10px; padding: 10px 20px; background-color: #4285f4; color: white; border: none; border-radius: 4px 4px 0 0; cursor: pointer;">基本面数据</button>
+            <button id="balanceSheetTab" class="data-tab" style="margin-right: 10px; padding: 10px 20px; background-color: #f1f1f1; color: #333; border: none; border-radius: 4px 4px 0 0; cursor: pointer;">资产负债数据</button>
+            <button id="incomeStatementTab" class="data-tab" style="padding: 10px 20px; background-color: #f1f1f1; color: #333; border: none; border-radius: 4px 4px 0 0; cursor: pointer;">利润表</button>
+          </div>
           
-          <table style="width: 100%; border-collapse: collapse; margin-top: 20px;">
-            <thead>
-              <tr style="background-color: #f8f9fa;">
-                <th style="padding: 12px; text-align: left; border-bottom: 1px solid #ddd;">指标</th>
-                <th style="padding: 12px; text-align: right; border-bottom: 1px solid #ddd;">数值</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr>
-                <td style="padding: 12px; border-bottom: 1px solid #eee;">市盈率 (P/E)</td>
-                <td id="peRatio" style="padding: 12px; text-align: right; border-bottom: 1px solid #eee;">0</td>
-              </tr>
-              <tr>
-                <td style="padding: 12px; border-bottom: 1px solid #eee;">市净率 (P/B)</td>
-                <td id="pbRatio" style="padding: 12px; text-align: right; border-bottom: 1px solid #eee;">0</td>
-              </tr>
-              <tr>
-                <td style="padding: 12px; border-bottom: 1px solid #eee;">股息率</td>
-                <td id="dividendYield" style="padding: 12px; text-align: right; border-bottom: 1px solid #eee;">0%</td>
-              </tr>
-            </tbody>
-          </table>
+          <!-- 基本面数据内容 -->
+          <div id="basicDataContent" class="tab-content" style="display: block;">
+            <table style="width: 100%; border-collapse: collapse;">
+              <thead>
+                <tr style="background-color: #f8f9fa;">
+                  <th style="padding: 12px; text-align: left; border-bottom: 1px solid #ddd;">指标</th>
+                  <th style="padding: 12px; text-align: right; border-bottom: 1px solid #ddd;">数值</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td style="padding: 12px; border-bottom: 1px solid #eee;">市值 (Market Cap)</td>
+                  <td id="marketCapValue" style="padding: 12px; text-align: right; border-bottom: 1px solid #eee;">$0</td>
+                </tr>
+                <tr>
+                  <td style="padding: 12px; border-bottom: 1px solid #eee;">市盈率 (P/E)</td>
+                  <td id="peRatio" style="padding: 12px; text-align: right; border-bottom: 1px solid #eee;">0</td>
+                </tr>
+                <tr>
+                  <td style="padding: 12px; border-bottom: 1px solid #eee;">市净率 (P/B)</td>
+                  <td id="pbRatio" style="padding: 12px; text-align: right; border-bottom: 1px solid #eee;">0</td>
+                </tr>
+                <tr>
+                  <td style="padding: 12px; border-bottom: 1px solid #eee;">股息率 (Dividend Yield)</td>
+                  <td id="dividendYield" style="padding: 12px; text-align: right; border-bottom: 1px solid #eee;">0%</td>
+                </tr>
+                <tr>
+                  <td style="padding: 12px; border-bottom: 1px solid #eee;">营收 (Revenue)</td>
+                  <td id="revenueValue" style="padding: 12px; text-align: right; border-bottom: 1px solid #eee;">$0</td>
+                </tr>
+                <tr>
+                  <td style="padding: 12px; border-bottom: 1px solid #eee;">净利润 (Net Income)</td>
+                  <td id="netIncomeValue" style="padding: 12px; text-align: right; border-bottom: 1px solid #eee;">$0</td>
+                </tr>
+                <tr>
+                  <td style="padding: 12px; border-bottom: 1px solid #eee;">经营现金流 (Operating Cash Flow)</td>
+                  <td id="operatingCashFlowValue" style="padding: 12px; text-align: right; border-bottom: 1px solid #eee;">$0</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          
+          <!-- 资产负债数据内容 -->
+          <div id="balanceSheetContent" class="tab-content" style="display: none;">
+            <table style="width: 100%; border-collapse: collapse;">
+              <thead>
+                <tr style="background-color: #f8f9fa;">
+                  <th style="padding: 12px; text-align: left; border-bottom: 1px solid #ddd;">指标</th>
+                  <th style="padding: 12px; text-align: right; border-bottom: 1px solid #ddd;">数值</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td style="padding: 12px; border-bottom: 1px solid #eee;">流动资产 (Current Assets)</td>
+                  <td id="currentAssetsValue" style="padding: 12px; text-align: right; border-bottom: 1px solid #eee;">$0</td>
+                </tr>
+                <tr>
+                  <td style="padding: 12px; border-bottom: 1px solid #eee;">非流动资产 (Non-Current Assets)</td>
+                  <td id="nonCurrentAssetsValue" style="padding: 12px; text-align: right; border-bottom: 1px solid #eee;">$0</td>
+                </tr>
+                <tr>
+                  <td style="padding: 12px; border-bottom: 1px solid #eee;">流动负债 (Current Liabilities)</td>
+                  <td id="currentLiabilitiesValue" style="padding: 12px; text-align: right; border-bottom: 1px solid #eee;">$0</td>
+                </tr>
+                <tr>
+                  <td style="padding: 12px; border-bottom: 1px solid #eee;">非流动负债 (Non-Current Liabilities)</td>
+                  <td id="nonCurrentLiabilitiesValue" style="padding: 12px; text-align: right; border-bottom: 1px solid #eee;">$0</td>
+                </tr>
+                <tr>
+                  <td style="padding: 12px; border-bottom: 1px solid #eee;">总资产 (Total Assets)</td>
+                  <td id="totalAssetsValue" style="padding: 12px; text-align: right; border-bottom: 1px solid #eee;">$0</td>
+                </tr>
+                <tr>
+                  <td style="padding: 12px; border-bottom: 1px solid #eee;">总负债 (Total Liabilities)</td>
+                  <td id="totalLiabilitiesValue" style="padding: 12px; text-align: right; border-bottom: 1px solid #eee;">$0</td>
+                </tr>
+                <tr>
+                  <td style="padding: 12px; border-bottom: 1px solid #eee;">股东权益 (Shareholders' Equity)</td>
+                  <td id="shareholdersEquityValue" style="padding: 12px; text-align: right; border-bottom: 1px solid #eee;">$0</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          
+          <!-- 利润表内容 -->
+          <div id="incomeStatementContent" class="tab-content" style="display: none;">
+            <table style="width: 100%; border-collapse: collapse;">
+              <thead>
+                <tr style="background-color: #f8f9fa;">
+                  <th style="padding: 12px; text-align: left; border-bottom: 1px solid #ddd;">指标</th>
+                  <th style="padding: 12px; text-align: right; border-bottom: 1px solid #ddd;">数值</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td style="padding: 12px; border-bottom: 1px solid #eee;">营收 (Revenue)</td>
+                  <td id="revenueIncomeValue" style="padding: 12px; text-align: right; border-bottom: 1px solid #eee;">$0</td>
+                </tr>
+                <tr>
+                  <td style="padding: 12px; border-bottom: 1px solid #eee;">营收成本 (Cost of Revenue)</td>
+                  <td id="costOfRevenueValue" style="padding: 12px; text-align: right; border-bottom: 1px solid #eee;">$0</td>
+                </tr>
+                <tr>
+                  <td style="padding: 12px; border-bottom: 1px solid #eee;">毛利润 (Gross Profit)</td>
+                  <td id="grossProfitValue" style="padding: 12px; text-align: right; border-bottom: 1px solid #eee;">$0</td>
+                </tr>
+                <tr>
+                  <td style="padding: 12px; border-bottom: 1px solid #eee;">营业利润 (Operating Income)</td>
+                  <td id="operatingIncomeValue" style="padding: 12px; text-align: right; border-bottom: 1px solid #eee;">$0</td>
+                </tr>
+                <tr>
+                  <td style="padding: 12px; border-bottom: 1px solid #eee;">税前利润 (Income Before Tax)</td>
+                  <td id="incomeBeforeTaxValue" style="padding: 12px; text-align: right; border-bottom: 1px solid #eee;">$0</td>
+                </tr>
+                <tr>
+                  <td style="padding: 12px; border-bottom: 1px solid #eee;">净利润 (Net Income)</td>
+                  <td id="netIncomeStatementValue" style="padding: 12px; text-align: right; border-bottom: 1px solid #eee;">$0</td>
+                </tr>
+                <tr>
+                  <td style="padding: 12px; border-bottom: 1px solid #eee;">每股收益 (EPS)</td>
+                  <td id="epsValue" style="padding: 12px; text-align: right; border-bottom: 1px solid #eee;">$0</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
         </div>
         
         <!-- 下单界面 -->
@@ -503,6 +611,7 @@
               <th>数量</th>
               <th>状态</th>
               <th>下单时间</th>
+              <th>操作</th>
             </tr>
           </thead>
           <tbody>
@@ -514,6 +623,7 @@
               <td>50</td>
               <td>待成交</td>
               <td>2023-07-16 10:15:30</td>
+              <td><button class="cancel-btn" style="background-color: #f44336; color: white; border: none; border-radius: 4px; padding: 5px 10px; cursor: pointer;">撤销</button></td>
             </tr>
             <tr>
               <td>2002</td>
@@ -523,6 +633,7 @@
               <td>20</td>
               <td>已成交</td>
               <td>2023-07-16 09:45:12</td>
+              <td><button class="cancel-btn" style="background-color: #f44336; color: white; border: none; border-radius: 4px; padding: 5px 10px; cursor: pointer;" disabled>撤销</button></td>
             </tr>
             <tr>
               <td>2003</td>
@@ -532,6 +643,7 @@
               <td>30</td>
               <td>已取消</td>
               <td>2023-07-15 15:30:00</td>
+              <td><button class="cancel-btn" style="background-color: #f44336; color: white; border: none; border-radius: 4px; padding: 5px 10px; cursor: pointer;" disabled>撤销</button></td>
             </tr>
           </tbody>
         </table>
@@ -550,6 +662,7 @@
               <th>数量</th>
               <th>状态</th>
               <th>下单时间</th>
+              <th>操作</th>
             </tr>
           </thead>
           <tbody>
@@ -561,6 +674,7 @@
               <td>15</td>
               <td>挂单中</td>
               <td>2023-07-10 14:20:45</td>
+              <td><button class="cancel-btn" style="background-color: #f44336; color: white; border: none; border-radius: 4px; padding: 5px 10px; cursor: pointer;">撤销</button></td>
             </tr>
             <tr>
               <td>3002</td>
@@ -570,6 +684,7 @@
               <td>10</td>
               <td>挂单中</td>
               <td>2023-07-12 11:05:30</td>
+              <td><button class="cancel-btn" style="background-color: #f44336; color: white; border: none; border-radius: 4px; padding: 5px 10px; cursor: pointer;">撤销</button></td>
             </tr>
             <tr>
               <td>3003</td>
@@ -579,6 +694,7 @@
               <td>5</td>
               <td>挂单中</td>
               <td>2023-07-14 13:40:10</td>
+              <td><button class="cancel-btn" style="background-color: #f44336; color: white; border: none; border-radius: 4px; padding: 5px 10px; cursor: pointer;">撤销</button></td>
             </tr>
           </tbody>
         </table>
@@ -897,6 +1013,9 @@
           document.getElementById("peRatio").textContent = data.peRatio || 0;
           document.getElementById("pbRatio").textContent = data.pbRatio || 0;
           document.getElementById("dividendYield").textContent = `${data.dividendYield || 0}%`;
+          
+          // 获取财务数据
+          fetchFinancialData(stockSymbol);
           
           // 获取预警信息
           fetch("/get_alert_levels", {
@@ -1253,6 +1372,7 @@
         <td>${quantity}</td>
         <td>${type === "realtime" ? "待成交" : "挂单中"}</td>
         <td>${orderTime}</td>
+        <td><button class="cancel-btn" style="background-color: #f44336; color: white; border: none; border-radius: 4px; padding: 5px 10px; cursor: pointer;">撤销</button></td>
       `;
       
       // 添加到相应表格
@@ -1261,6 +1381,167 @@
       } else {
         document.querySelector("#limitOrderTable tbody").prepend(newRow);
       }
+      
+      // 为新添加的撤销按钮绑定事件
+      newRow.querySelector(".cancel-btn").addEventListener("click", function() {
+        cancelOrder(this);
+      });
+    }
+    
+    // 初始化：为现有的撤销按钮添加点击事件
+    document.addEventListener("DOMContentLoaded", function() {
+      // 为所有撤销按钮添加点击事件
+      document.querySelectorAll(".cancel-btn").forEach(btn => {
+        btn.addEventListener("click", function() {
+          cancelOrder(this);
+        });
+      });
+      
+      // 为基本面数据选项卡添加点击事件
+      setupFinancialDataTabs();
+    });
+    
+    // 撤销订单函数
+    function cancelOrder(button) {
+      // 获取当前行
+      const row = button.closest("tr");
+      
+      // 获取订单号和状态
+      const orderId = row.cells[0].textContent;
+      const statusCell = row.cells[5];
+      
+      // 确认是否要撤销
+      if (confirm(`确定要撤销订单 #${orderId} 吗？`)) {
+        // 更新状态为"已取消"
+        statusCell.textContent = "已取消";
+        
+        // 禁用撤销按钮
+        button.disabled = true;
+        
+        // 实际项目中，应该调用后端API
+        /*
+        fetch("/api/cancel_order", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ orderId: orderId })
+        })
+        .then(response => response.json())
+        .then(data => {
+          if (data.success) {
+            alert("订单已成功取消！");
+            statusCell.textContent = "已取消";
+            button.disabled = true;
+          } else {
+            alert("取消订单失败: " + data.message);
+          }
+        })
+        .catch(error => {
+          console.error("Error:", error);
+          alert("取消订单时发生错误");
+        });
+        */
+        
+        alert(`订单 #${orderId} 已成功取消！`);
+      }
+    }
+    
+    // 设置基本面数据选项卡功能
+    function setupFinancialDataTabs() {
+      const tabs = {
+        basicDataTab: {
+          button: document.getElementById("basicDataTab"),
+          content: document.getElementById("basicDataContent")
+        },
+        balanceSheetTab: {
+          button: document.getElementById("balanceSheetTab"),
+          content: document.getElementById("balanceSheetContent")
+        },
+        incomeStatementTab: {
+          button: document.getElementById("incomeStatementTab"),
+          content: document.getElementById("incomeStatementContent")
+        }
+      };
+      
+      // 为每个选项卡按钮添加点击事件
+      Object.keys(tabs).forEach(tabId => {
+        tabs[tabId].button.addEventListener("click", function() {
+          // 隐藏所有内容
+          Object.keys(tabs).forEach(key => {
+            tabs[key].content.style.display = "none";
+            tabs[key].button.style.backgroundColor = "#f1f1f1";
+            tabs[key].button.style.color = "#333";
+            tabs[key].button.classList.remove("active");
+          });
+          
+          // 显示当前选中的内容
+          tabs[tabId].content.style.display = "block";
+          tabs[tabId].button.style.backgroundColor = "#4285f4";
+          tabs[tabId].button.style.color = "white";
+          tabs[tabId].button.classList.add("active");
+        });
+      });
+    }
+    
+    // 获取股票财务数据
+    function fetchFinancialData(stockSymbol) {
+      // 在实际项目中，这里应该调用后端API获取财务数据
+      // 模拟数据
+      const dummyData = {
+        basicData: {
+          marketCap: "$1,234,567,890",
+          peRatio: "25.4",
+          pbRatio: "3.2",
+          dividendYield: "1.8%",
+          revenue: "$45,678,900",
+          netIncome: "$5,678,900",
+          operatingCashFlow: "$7,890,123"
+        },
+        balanceSheet: {
+          currentAssets: "$12,345,678",
+          nonCurrentAssets: "$23,456,789",
+          currentLiabilities: "$8,765,432",
+          nonCurrentLiabilities: "$15,678,901",
+          totalAssets: "$35,802,467",
+          totalLiabilities: "$24,444,333",
+          shareholdersEquity: "$11,358,134"
+        },
+        incomeStatement: {
+          revenue: "$45,678,900",
+          costOfRevenue: "$25,678,900",
+          grossProfit: "$20,000,000",
+          operatingIncome: "$12,345,678",
+          incomeBeforeTax: "$11,234,567",
+          netIncome: "$9,876,543",
+          eps: "$3.45"
+        }
+      };
+      
+      // 更新基本面数据
+      document.getElementById("marketCapValue").textContent = dummyData.basicData.marketCap;
+      document.getElementById("peRatio").textContent = dummyData.basicData.peRatio;
+      document.getElementById("pbRatio").textContent = dummyData.basicData.pbRatio;
+      document.getElementById("dividendYield").textContent = dummyData.basicData.dividendYield;
+      document.getElementById("revenueValue").textContent = dummyData.basicData.revenue;
+      document.getElementById("netIncomeValue").textContent = dummyData.basicData.netIncome;
+      document.getElementById("operatingCashFlowValue").textContent = dummyData.basicData.operatingCashFlow;
+      
+      // 更新资产负债数据
+      document.getElementById("currentAssetsValue").textContent = dummyData.balanceSheet.currentAssets;
+      document.getElementById("nonCurrentAssetsValue").textContent = dummyData.balanceSheet.nonCurrentAssets;
+      document.getElementById("currentLiabilitiesValue").textContent = dummyData.balanceSheet.currentLiabilities;
+      document.getElementById("nonCurrentLiabilitiesValue").textContent = dummyData.balanceSheet.nonCurrentLiabilities;
+      document.getElementById("totalAssetsValue").textContent = dummyData.balanceSheet.totalAssets;
+      document.getElementById("totalLiabilitiesValue").textContent = dummyData.balanceSheet.totalLiabilities;
+      document.getElementById("shareholdersEquityValue").textContent = dummyData.balanceSheet.shareholdersEquity;
+      
+      // 更新利润表数据
+      document.getElementById("revenueIncomeValue").textContent = dummyData.incomeStatement.revenue;
+      document.getElementById("costOfRevenueValue").textContent = dummyData.incomeStatement.costOfRevenue;
+      document.getElementById("grossProfitValue").textContent = dummyData.incomeStatement.grossProfit;
+      document.getElementById("operatingIncomeValue").textContent = dummyData.incomeStatement.operatingIncome;
+      document.getElementById("incomeBeforeTaxValue").textContent = dummyData.incomeStatement.incomeBeforeTax;
+      document.getElementById("netIncomeStatementValue").textContent = dummyData.incomeStatement.netIncome;
+      document.getElementById("epsValue").textContent = dummyData.incomeStatement.eps;
     }
   </script>
 </body>
