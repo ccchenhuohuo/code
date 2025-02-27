@@ -132,5 +132,13 @@ def get_monthly_data():
     result = stock_api.get_monthly_data(symbol)
     return jsonify(result)
 
+@app.route('/api/fundamentals/<symbol>')
+def get_fundamentals(symbol):
+    if not symbol:
+        return jsonify({'error': 'Stock symbol is required'})
+    
+    result = stock_api.get_company_fundamentals(symbol)
+    return jsonify(result)
+
 if __name__ == '__main__':
     app.run(debug=True)
