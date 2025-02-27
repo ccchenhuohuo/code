@@ -1,32 +1,42 @@
-from flask import Flask, request, jsonify, render_template
+# Flask: Used to create a web application and handle HTTP requests
+from flask import Flask, request, jsonify, render_template, send_from_directory
+# SQLAlchemy: Used as an ORM (Object-Relational Mapping) tool for database operations
 from sqlalchemy import create_engine
 import pandas as pd
 import random
-import requests
+import google.generativeai as genai  # Modify the import method
+from stock_api import StockAPI
+import os
 
 app = Flask(__name__)
+stock_api = StockAPI()
 
-# =============== 数据库连接配置 ===============
-db_user = 'root'             # 替换为你的MySQL用户名
-db_password = 'Cyy-20030611' # 替换为你的MySQL密码
-db_host = 'localhost'        # 如果MySQL在本机，保持不变
-db_port = '3306'             # 默认MySQL端口
-db_name = 'stock_data'       # 替换为你的数据库名
+# =============== Database connection configuration ===============
+db_user = 'root'             # Replace with your MySQL user name
+db_password = 'Cyy-20030611' # Replace with your MySQL password
+db_host = 'localhost'        # Keep as is if MySQL is on the same machine
+db_port = '3306'             # Default MySQL port
+db_name = 'stock_data'       # Replace with your database name
 
 connection_string = f"mysql+mysqlconnector://{db_user}:{db_password}@{db_host}:{db_port}/{db_name}?charset=utf8"
 engine = create_engine(connection_string, echo=False)
 
-# =============== 你的AI API Key（示例） ===============
-OPENAI_API_KEY = "YOUR_API_KEY"  # 在真实场景下替换为你的Key并安全存储
+# =============== Gemini configuration ===============
+GEMINI_API_KEY = "AIzaSyDYcL5BBKz812t_66bbBq0h3xm9v6DOG-M"
+genai.configure(api_key=GEMINI_API_KEY)
+
+# Get the list of available models
+models = genai.list_models()
+model = genai.GenerativeModel('gemini-2.0-flash')
 
 @app.route('/')
 def index():
-    return render_template('index.html')
+    return send_from_directory('.', 'templates/index.html')
 
 @app.route('/get_stock_data', methods=['POST'])
 def get_stock_data():
     """
-    根据前端传入的股票代码列表，从本地数据库查询2018年后的收盘价
+    Receive the stock code list from the front end, query the closing price after 2018 from the local database
     """
     data = request.json
     stock_symbols = data.get("stocks", [])
@@ -54,58 +64,73 @@ def get_stock_data():
 @app.route('/gemini_assistant', methods=['POST'])
 def gemini_assistant():
     """
-    接收前端传来的文字命令，并调用真正的 AI 接口（此处以 OpenAI GPT-3.5 为例）
-    你也可以替换为自己Gemini接口或其他大模型API。
+    Receive the text command from the front end and call the Gemini AI interface for conversation
     """
     data = request.json
     command = data.get("command", "")
 
     if not command:
-        return jsonify({"response": "你没有输入任何内容。"})
-
-    # ============ 1. 构造对OpenAI接口的请求 =============
-    # 注意：如果你使用的是 Gemini 或其他AI，请按其官方文档替换
-    openai_api_url = "https://api.openai.com/v1/chat/completions"
-    headers = {
-        "Content-Type": "application/json",
-        "Authorization": f"Bearer {OPENAI_API_KEY}"
-    }
-    payload = {
-        "model": "gpt-3.5-turbo",
-        "messages": [
-            {"role": "system", "content": "你是一个乐于助人的AI助手。"},
-            {"role": "user", "content": command}
-        ]
-    }
+        return jsonify({"response": "You didn't input anything."})
 
     try:
-        response = requests.post(openai_api_url, headers=headers, json=payload, timeout=15)
-        if response.status_code == 200:
-            r_json = response.json()
-            ai_message = r_json["choices"][0]["message"]["content"]
-            return jsonify({"response": ai_message})
-        else:
-            # 如果OpenAI返回错误
-            return jsonify({"response": f"AI接口返回错误：{response.text}"})
+        # Create a chat session
+        chat = model.start_chat(history=[])
+        
+        # Send a message and get the response
+        response = chat.send_message(
+            command,
+            generation_config=genai.types.GenerationConfig(
+                temperature=0.7,
+                candidate_count=1,
+                max_output_tokens=2048,
+            )
+        )
+        
+        # Get the response text
+        response_text = response.text
+        
+        # If the response is empty, return an error message
+        if not response_text:
+            return jsonify({"response": "Sorry, I can't generate a response right now. Please try again later."})
+            
+        return jsonify({"response": response_text})
     except Exception as e:
-        return jsonify({"response": f"请求AI接口失败：{str(e)}"})
+        return jsonify({"response": f"Failed to request the Gemini AI interface: {str(e)}"})
 
 @app.route('/get_alert_levels', methods=['POST'])
 def get_alert_levels():
     """
-    接收股票代码，根据一定逻辑返回估值和流动性的高中低。
-    这里为了演示，随机返回。
+    Receive the stock code, return the high, medium, and low valuation and liquidity according to a certain logic.
+    Here, for demonstration purposes, the random return is used.
     """
     data = request.json
     stock = data.get("stock", "")
-    possible_levels = ["低", "中", "高"]
+    possible_levels = ["low", "medium", "high"]
 
-    # 真实项目中，你可根据数据库/算法判断估值与流动性
-    # 这里演示：全部随机
+    # In a real project, you can determine the valuation and liquidity based on the database/algorithm
+    # Here, for demonstration purposes, all are randomly returned
     valuation = random.choice(possible_levels)
     liquidity = random.choice(possible_levels)
 
     return jsonify({"valuation": valuation, "liquidity": liquidity})
+
+@app.route('/get_stock_details')
+def get_stock_details():
+    symbol = request.args.get('symbol', '')
+    if not symbol:
+        return jsonify({'error': 'Stock symbol is required'})
+    
+    result = stock_api.get_stock_details(symbol)
+    return jsonify(result)
+
+@app.route('/get_monthly_data')
+def get_monthly_data():
+    symbol = request.args.get('symbol', '')
+    if not symbol:
+        return jsonify({'error': 'Stock symbol is required'})
+    
+    result = stock_api.get_monthly_data(symbol)
+    return jsonify(result)
 
 if __name__ == '__main__':
     app.run(debug=True)

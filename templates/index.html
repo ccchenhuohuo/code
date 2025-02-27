@@ -517,9 +517,23 @@
 
     <!-- AI assistant (similar to ChatGPT) -->
     <div id="ai-assistant" class="content" style="display: none;">
-      <h1>AI assistant (similar to ChatGPT)</h1>
+      <h1>Gemini AI intelligent assistant</h1>
+      <div style="margin-bottom: 20px; text-align: center; color: #666;">
+        <p>This is an intelligent assistant driven by Google Gemini, which can answer your questions about stocks, financial markets, etc.</p>
+        <p>Try asking me:</p>
+        <ul style="list-style: none; padding: 0;">
+          <li>• "Can you explain what the price-to-earnings ratio (P/E ratio) is?"</li>
+          <li>• "How do you evaluate whether a stock is worth investing in?"</li>
+          <li>• "What is the recent market trend?"</li>
+        </ul>
+      </div>
       <div class="chat-window" id="chatWindow">
-        <!-- Chat messages dynamically inserted -->
+        <!-- Welcome message -->
+        <div class="chat-message ai">
+          <div class="chat-bubble">
+            Hello! I am Gemini AI assistant, glad to provide consulting services related to financial markets. What can I help you with?
+          </div>
+        </div>
       </div>
       <div class="chat-input-container">
         <input type="text" class="chat-input" id="assistantInput" placeholder="Please enter your question..." />
@@ -974,14 +988,14 @@
     document.getElementById("searchButton").addEventListener("click", function() {
       const stockSymbol = document.getElementById("stockSymbolInput").value.trim();
       if (!stockSymbol) {
-        alert("Please enter a stock code");
+        alert("请输入股票代码");
         return;
       }
       
-      // Display loading status
-      document.getElementById("companyName").textContent = "Loading...";
+      // 显示加载状态
+      document.getElementById("companyName").textContent = "加载中...";
       
-      // Send request to get stock data
+      // 发送请求获取股票数据
       fetch(`/get_stock_details?symbol=${stockSymbol}`)
         .then(response => response.json())
         .then(data => {
@@ -990,34 +1004,29 @@
             return;
           }
           
-          // Update company information
+          // 更新公司信息
           document.getElementById("companyName").textContent = data.name || `${stockSymbol} Corporation`;
-          document.getElementById("currentPrice").textContent = `$${data.price}`;
+          document.getElementById("currentPrice").textContent = `$${data.price.toFixed(2)}`;
           
-          // Update price change
+          // 更新价格变化
           const priceChangeElement = document.getElementById("priceChange");
-          const priceChange = data.change || 0;
-          const priceChangePercent = data.changePercent || 0;
-          priceChangeElement.textContent = `${priceChange >= 0 ? "+" : ""}${priceChange} (${priceChangePercent >= 0 ? "+" : ""}${priceChangePercent}%)`;
+          const priceChange = data.change;
+          const priceChangePercent = data.changePercent;
+          priceChangeElement.textContent = `${priceChange >= 0 ? "+" : ""}${priceChange.toFixed(2)} (${priceChangePercent >= 0 ? "+" : ""}${priceChangePercent.toFixed(2)}%)`;
           priceChangeElement.style.color = priceChange >= 0 ? "green" : "red";
           
-          // Update transaction information
-          document.getElementById("openPrice").textContent = `$${data.open || 0}`;
-          document.getElementById("highPrice").textContent = `$${data.high || 0}`;
-          document.getElementById("lowPrice").textContent = `$${data.low || 0}`;
-          document.getElementById("volume").textContent = data.volume || 0;
-          document.getElementById("marketCap").textContent = `$${data.marketCap || 0}`;
-          document.getElementById("week52High").textContent = `$${data.week52High || 0}`;
+          // 更新交易信息
+          document.getElementById("openPrice").textContent = `$${data.open.toFixed(2)}`;
+          document.getElementById("highPrice").textContent = `$${data.high.toFixed(2)}`;
+          document.getElementById("lowPrice").textContent = `$${data.low.toFixed(2)}`;
+          document.getElementById("volume").textContent = data.volume.toLocaleString();
+          document.getElementById("previousClose").textContent = `$${data.previous_close.toFixed(2)}`;
           
-          // Update fundamental data
-          document.getElementById("peRatio").textContent = data.peRatio || 0;
-          document.getElementById("pbRatio").textContent = data.pbRatio || 0;
-          document.getElementById("dividendYield").textContent = `${data.dividendYield || 0}%`;
+          // 自动填充订单表单中的股票代码和参考价格
+          orderStockSymbol.value = stockSymbol;
+          orderPrice.value = data.price.toFixed(2);
           
-          // Get financial data
-          fetchFinancialData(stockSymbol);
-          
-          // Get alert information
+          // 获取预警信息
           fetch("/get_alert_levels", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
@@ -1027,17 +1036,17 @@
           .then(alertData => {
             const { valuation, liquidity } = alertData;
             
-            // Update alert information display
-            updateAlertBox("valuationBox", valuation, "Valuation");
-            updateAlertBox("liquidityBox", liquidity, "Liquidity");
+            // 更新预警信息显示
+            updateAlertBox("valuationBox", valuation, "估值");
+            updateAlertBox("liquidityBox", liquidity, "流动性");
           })
           .catch(err => {
-            console.error("Failed to retrieve alert information:", err);
+            console.error("获取预警信息失败:", err);
           });
         })
         .catch(error => {
-          console.error("Failed to retrieve stock data:", error);
-          alert("Failed to retrieve stock data. Please try again later.");
+          console.error("获取股票数据失败:", error);
+          alert("获取股票数据失败，请稍后重试。");
         });
     });
 
