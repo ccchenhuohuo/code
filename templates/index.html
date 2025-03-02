@@ -72,8 +72,8 @@
       --text-light: #f0f2f5;
       
       /* Background Colors */
-      --bg-dark: #1a1f36;
-      --bg-medium: #2c3e50;
+      --bg-dark: #050A24;  /* 更深的蓝色 */
+      --bg-medium: #0B1433;  /* 更深的中间蓝色 */
       --bg-light: #f0f2f5;
       --bg-content: rgba(255, 255, 255, 0.85);
       
@@ -97,61 +97,35 @@
     body {
       font-family: 'Segoe UI', Arial, sans-serif;
       margin: 0; padding: 0;
-      background: var(--gradient-dark);
-      background-attachment: fixed;
-      color: var(--text-primary);
-      line-height: 1.6;
-    }
-    
-    /* Add additional CSS as necessary */
-  </style>
-
-  <style>
-    :root {
-      /* Base Colors */
-      --primary-color: #3a7bd5;
-      --primary-light: #6faae7;
-      --primary-dark: #0d47a1;
-      --secondary-color: #00c6ff;
-      --accent-color: #5f3dc4;
-      
-      /* Text Colors */
-      --text-primary: #333;
-      --text-secondary: #555;
-      --text-light: #f0f2f5;
-      
-      /* Background Colors */
-      --bg-dark: #1a1f36;
-      --bg-medium: #2c3e50;
-      --bg-light: #f0f2f5;
-      --bg-content: rgba(255, 255, 255, 0.85);
-      
-      /* Status Colors */
-      --success: #34c759;
-      --warning: #ff9500;
-      --danger: #ff3b30;
-      --info: #00c6ff;
-      
-      /* Card Effects */
-      --card-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
-      --card-hover-shadow: 0 12px 28px rgba(0, 0, 0, 0.18);
-      --card-border: 1px solid rgba(255, 255, 255, 0.18);
-      
-      /* Gradients */
-      --gradient-primary: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
-      --gradient-dark: linear-gradient(135deg, var(--bg-dark), var(--bg-medium));
-      --gradient-glass: linear-gradient(135deg, rgba(255, 255, 255, 0.3), rgba(255, 255, 255, 0.1));
-    }
-    
-    body {
-      font-family: 'Segoe UI', Arial, sans-serif;
-      margin: 0; padding: 0;
+      padding-bottom: 40px; /* 添加底部padding，为固定页脚留出空间 */
       background: var(--gradient-dark);
       background-attachment: fixed;
       color: var(--text-primary);
       line-height: 1.6;
       overflow-x: hidden;
       position: relative;
+    }
+    
+    /* 添加星空背景效果 */
+    body:before {
+      content: "";
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-image: 
+        radial-gradient(1px 1px at 20% 30%, rgba(255, 255, 255, 0.9), transparent),
+        radial-gradient(1.5px 1.5px at 40% 70%, rgba(255, 255, 255, 0.8), transparent),
+        radial-gradient(2px 2px at 30% 15%, rgba(255, 255, 255, 1), transparent),
+        radial-gradient(2.5px 2.5px at 70% 60%, rgba(255, 255, 255, 0.8), transparent),
+        radial-gradient(1px 1px at 90% 40%, rgba(255, 255, 255, 0.9), transparent),
+        radial-gradient(1.5px 1.5px at 10% 70%, rgba(255, 255, 255, 0.8), transparent);
+      background-repeat: repeat;
+      background-size: 250px 250px;
+      animation: twinkle 4s ease-in-out infinite alternate;
+      z-index: -1;
+      opacity: 0.7;
     }
     
     /* 添加流星背景效果 */
@@ -171,10 +145,75 @@
         radial-gradient(1px 1px at 35% 85%, white, transparent),
         radial-gradient(1.5px 1.5px at 85% 60%, white, transparent);
       background-repeat: repeat;
-      background-size: 250px 250px;
-      animation: stars 10s linear infinite;
+      background-size: 300px 300px;
+      animation: stars 15s linear infinite;
       z-index: -1;
       opacity: 0.5;
+    }
+    
+    /* 添加星云效果 */
+    .nebula {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      z-index: -2;
+      opacity: 0.15;
+      pointer-events: none;
+    }
+    
+    .nebula:before {
+      content: "";
+      position: absolute;
+      width: 60%;
+      height: 60%;
+      top: 20%;
+      left: 20%;
+      background: radial-gradient(
+        ellipse at center,
+        rgba(100, 125, 235, 0.3) 0%,
+        rgba(80, 100, 205, 0.2) 30%,
+        rgba(60, 75, 175, 0.1) 60%,
+        transparent 100%
+      );
+      border-radius: 50%;
+      filter: blur(30px);
+      animation: nebula-move 20s ease-in-out infinite alternate;
+    }
+    
+    .nebula:after {
+      content: "";
+      position: absolute;
+      width: 40%;
+      height: 40%;
+      top: 10%;
+      right: 15%;
+      background: radial-gradient(
+        ellipse at center,
+        rgba(180, 120, 230, 0.2) 0%,
+        rgba(140, 90, 200, 0.15) 40%,
+        rgba(100, 60, 170, 0.1) 70%,
+        transparent 100%
+      );
+      border-radius: 50%;
+      filter: blur(25px);
+      animation: nebula-move2 25s ease-in-out infinite alternate;
+    }
+    
+    @keyframes twinkle {
+      0%, 100% { opacity: 0.7; }
+      50% { opacity: 0.9; }
+    }
+    
+    @keyframes nebula-move {
+      0% { transform: translateX(-5%) translateY(-3%); }
+      100% { transform: translateX(5%) translateY(3%); }
+    }
+    
+    @keyframes nebula-move2 {
+      0% { transform: translateX(3%) translateY(5%); }
+      100% { transform: translateX(-3%) translateY(-5%); }
     }
     
     @keyframes stars {
@@ -182,7 +221,7 @@
         transform: translateY(0);
       }
       100% {
-        transform: translateY(-250px);
+        transform: translateY(-300px);
       }
     }
     
@@ -519,23 +558,31 @@
     /* =============== AI Assistant - Modern style =============== */
     #ai-assistant {
       width: 100%;
-      max-width: 1200px;
+      max-width: 1000px;
       margin: 20px auto;
       padding: 30px;
-      background: var(--bg-content);
-      border-radius: 20px;
-      box-shadow: var(--card-shadow);
+      background: linear-gradient(145deg, rgba(255,255,255,0.7), rgba(240,242,245,0.85));
+      border-radius: 24px;
+      box-shadow: var(--card-shadow), 0 10px 25px rgba(0,0,0,0.05);
       display: flex;
       flex-direction: column;
       align-items: center;
       border: var(--card-border);
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      transition: all 0.3s ease;
+    }
+
+    #ai-assistant:hover {
+      box-shadow: var(--card-shadow), 0 15px 35px rgba(0,0,0,0.08);
+      transform: translateY(-3px);
     }
 
     #ai-assistant h1 {
-      font-size: 32px;
-      font-weight: 700;
+      font-size: 36px;
+      font-weight: 800;
       text-align: center;
-      margin-bottom: 25px;
+      margin-bottom: 30px;
       background: var(--gradient-primary);
       background-size: 200% auto;
       color: transparent;
@@ -543,6 +590,7 @@
       background-clip: text;
       animation: shine 3s linear infinite;
       width: 100%;
+      letter-spacing: -0.5px;
     }
 
     #ai-assistant h1:hover {
@@ -624,26 +672,37 @@
       width: 100%;
       height: 500px;
       border: none;
-      border-radius: 15px;
-      background: rgba(255, 255, 255, 0.7);
-      padding: 20px;
+      border-radius: 18px;
+      background: rgba(255, 255, 255, 0.8);
+      padding: 25px;
       overflow-y: auto;
-      box-shadow: inset 0 2px 10px rgba(0, 0, 0, 0.05);
-      backdrop-filter: blur(5px);
-      -webkit-backdrop-filter: blur(5px);
+      box-shadow: inset 0 2px 15px rgba(0, 0, 0, 0.03), 0 5px 15px rgba(0, 0, 0, 0.03);
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      transition: all 0.3s ease;
+    }
+
+    .chat-window:hover {
+      box-shadow: inset 0 2px 15px rgba(0, 0, 0, 0.04), 0 8px 20px rgba(0, 0, 0, 0.05);
     }
 
     .chat-message {
-      margin-bottom: 15px;
-      padding: 12px 18px;
-      border-radius: 15px;
+      margin-bottom: 18px;
+      padding: 15px 20px;
+      border-radius: 18px;
       max-width: 80%;
       position: relative;
-      line-height: 1.5;
-      font-size: 15px;
-      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
-      animation: fadeIn 0.3s ease-in-out;
+      line-height: 1.6;
+      font-size: 16px;
+      box-shadow: 0 3px 8px rgba(0, 0, 0, 0.08);
+      animation: fadeIn 0.35s ease-in-out;
       word-wrap: break-word;
+      transition: all 0.2s ease;
+    }
+
+    .chat-message:hover {
+      box-shadow: 0 5px 12px rgba(0, 0, 0, 0.12);
+      transform: translateY(-2px);
     }
 
     @keyframes fadeIn {
@@ -652,72 +711,89 @@
     }
 
     .user {
-      background: var(--gradient-primary);
+      background: linear-gradient(120deg, #3a7bd5, #00d2ff);
       color: white;
       margin-left: auto;
       margin-right: 50px;
       border-bottom-right-radius: 0;
+      box-shadow: 0 5px 15px rgba(58, 123, 213, 0.2);
+      border: 1px solid rgba(255, 255, 255, 0.2);
     }
 
     .ai {
-      background: rgba(240, 242, 245, 0.9);
+      background: linear-gradient(120deg, rgba(240, 242, 245, 0.95), rgba(255, 255, 255, 0.95));
       color: var(--text-primary);
       margin-right: auto;
       margin-left: 50px;
       border-bottom-left-radius: 0;
+      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+      border: 1px solid rgba(58, 123, 213, 0.1);
     }
 
     .chat-input-container {
       width: 100%;
       display: flex;
-      gap: 10px;
+      gap: 15px;
       position: relative;
+      margin-top: 5px;
+    }
+
+    .chat-buttons {
+      display: flex;
+      gap: 10px;
     }
 
     .chat-input {
       flex: 1;
-      padding: 15px;
+      padding: 16px 20px;
       border-radius: 30px;
-      border: 1px solid rgba(0, 0, 0, 0.1);
-      background: rgba(255, 255, 255, 0.7);
+      border: 1px solid rgba(0, 0, 0, 0.08);
+      background: rgba(255, 255, 255, 0.9);
       font-size: 16px;
       outline: none;
       transition: all 0.3s ease;
       width: auto;
-      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
-      backdrop-filter: blur(5px);
-      -webkit-backdrop-filter: blur(5px);
+      box-shadow: 0 3px 12px rgba(0, 0, 0, 0.04);
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
     }
 
     .chat-input:focus {
       border-color: var(--primary-color);
-      box-shadow: 0 0 0 2px rgba(58, 123, 213, 0.2);
-      background: rgba(255, 255, 255, 0.9);
+      box-shadow: 0 0 0 3px rgba(58, 123, 213, 0.2), 0 5px 15px rgba(0, 0, 0, 0.05);
+      background: rgba(255, 255, 255, 1);
     }
 
-    .chat-btn {
-      width: auto;
+    .chat-send-btn, .chat-clear-btn {
       border-radius: 30px;
       font-weight: 600;
-      padding: 15px 25px;
+      padding: 16px 28px;
       transition: all 0.3s ease;
-      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+      box-shadow: 0 3px 10px rgba(0, 0, 0, 0.1);
+      cursor: pointer;
+      border: none;
+      color: white;
+      font-size: 15px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
     }
 
     .chat-send-btn {
       background: var(--gradient-primary);
-      box-shadow: 0 2px 5px rgba(58, 123, 213, 0.2);
+      box-shadow: 0 3px 10px rgba(58, 123, 213, 0.2);
     }
 
     .chat-clear-btn {
       background: linear-gradient(135deg, var(--danger), #ff7675);
-      box-shadow: 0 2px 5px rgba(255, 59, 48, 0.2);
+      box-shadow: 0 3px 10px rgba(255, 59, 48, 0.2);
     }
 
     .chat-send-btn:hover,
     .chat-clear-btn:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+      transform: translateY(-3px);
+      box-shadow: 0 6px 15px rgba(0, 0, 0, 0.15);
+      filter: brightness(1.05);
     }
 
     /* Custom scrollbar */
@@ -742,22 +818,24 @@
     /* AI and user avatars */
     .chat-message::before {
       content: '';
-      width: 35px;
-      height: 35px;
+      width: 40px;
+      height: 40px;
       border-radius: 50%;
       background-size: cover;
       position: absolute;
       top: 0;
+      box-shadow: 0 3px 8px rgba(0, 0, 0, 0.1);
+      border: 2px solid white;
     }
 
     .ai::before {
-      left: -45px;
-      background-image: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="%233a7bd5"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8z"/></svg>');
+      left: -50px;
+      background-image: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="%233a7bd5"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 17.93c-3.95-.49-7-3.85-7-7.93 0-.62.08-1.21.21-1.79L9 15v1c0 1.1.9 2 2 2v1.93zm6.9-2.54c-.26-.81-1-1.39-1.9-1.39h-1v-3c0-.55-.45-1-1-1H8v-2h2c.55 0 1-.45 1-1V7h2c1.1 0 2-.9 2-2v-.41c2.93 1.19 5 4.06 5 7.41 0 2.08-.8 3.97-2.1 5.39z"/></svg>');
     }
 
     .user::before {
-      right: -45px;
-      background-image: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="%2334c759"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8z"/></svg>');
+      right: -50px;
+      background-image: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="%2334c759"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg>');
     }
 
     /* Typing animation */
@@ -1070,14 +1148,65 @@
     }
     
     #chartContainer {
-      background: rgba(255, 255, 255, 0.7);
-      border-radius: 15px;
+      background: white;
+      border-radius: 16px;
       padding: 20px;
-      box-shadow: var(--card-shadow);
-      margin-bottom: 30px;
-      backdrop-filter: blur(5px);
-      -webkit-backdrop-filter: blur(5px);
-      border: var(--card-border);
+      box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+      margin-top: 20px;
+      border: 1px solid rgba(0,0,0,0.04);
+      height: 500px !important;
+      max-width: 95%;
+      margin-left: auto;
+      margin-right: auto;
+      overflow: hidden;
+      transition: all 0.3s ease;
+    }
+    
+    #chartContainer:hover {
+      box-shadow: 0 8px 20px rgba(0,0,0,0.08);
+    }
+    
+    /* 视图切换按钮样式 */
+    #viewModeToggle {
+      text-align: center;
+      margin-top: 20px;
+      margin-bottom: 20px;
+      display: flex;
+      justify-content: center;
+      gap: 15px;
+    }
+    
+    .view-mode-btn {
+      padding: 12px 20px;
+      border: 1px solid #1976D2;
+      background: white;
+      color: #1976D2;
+      border-radius: 10px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s;
+      min-width: 180px;
+      position: relative;
+      overflow: hidden;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+      font-size: 14px;
+    }
+    
+    .view-mode-btn.active {
+      background: linear-gradient(135deg, #2196F3, #1976D2);
+      color: white;
+      border-color: transparent;
+      box-shadow: 0 4px 12px rgba(33, 150, 243, 0.3);
+    }
+    
+    .view-mode-btn:hover:not(.active) {
+      background: rgba(33, 150, 243, 0.05);
+      box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+      transform: translateY(-2px);
+    }
+    
+    .view-mode-btn:active {
+      transform: translateY(1px);
     }
     
     .historical-search-container {
@@ -1508,28 +1637,21 @@
     .predict-btn {
       width: calc(50% - 8px);
       box-sizing: border-box;
+      padding: 12px 24px;
+      border-radius: 8px;
+      font-weight: 600;
+      font-size: 15px;
+      transition: all 0.3s ease;
     }
     
     .clear-stocks-btn {
-      width: 100%;
-      max-width: 300px;
+      width: calc(50% - 8px);
       box-sizing: border-box;
-    }
-    
-    .get-data-btn,
-    .predict-btn,
-    .clear-stocks-btn,
-    .view-mode-btn {
-      padding: 12px 22px;
-      border-radius: 12px;
-      font-size: 15px;
+      padding: 12px 24px;
+      border-radius: 8px;
       font-weight: 600;
-      color: white;
-      border: none;
-      cursor: pointer;
+      font-size: 15px;
       transition: all 0.3s ease;
-      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-      letter-spacing: 0.5px;
     }
     
     .get-data-btn {
@@ -1546,16 +1668,14 @@
     
     .get-data-btn:hover,
     .predict-btn:hover,
-    .clear-stocks-btn:hover,
-    .view-mode-btn:hover {
+    .clear-stocks-btn:hover {
       transform: translateY(-3px);
       box-shadow: 0 6px 15px rgba(0, 0, 0, 0.2);
     }
     
     .get-data-btn:active,
     .predict-btn:active,
-    .clear-stocks-btn:active,
-    .view-mode-btn:active {
+    .clear-stocks-btn:active {
       transform: translateY(1px);
       box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
     }
@@ -1573,17 +1693,23 @@
     }
     
     .view-mode-btn {
-      background: rgba(255, 255, 255, 0.6);
-      color: #445566;
-      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
-      padding: 10px 16px;
-      min-width: 160px;
+      width: calc(50% - 8px);
+      box-sizing: border-box;
+      padding: 10px 20px;
+      border-radius: 8px;
+      font-weight: 500;
+      font-size: 14px;
+      transition: all 0.3s ease;
+      background-color: #f8f9fa;
+      color: #495057;
+      border: 1px solid #ced4da;
     }
     
     .view-mode-btn.active {
-      background: var(--primary-color);
+      background: linear-gradient(135deg, #4a6fdc 0%, #6c8ff8 100%);
       color: white;
-      box-shadow: 0 4px 10px rgba(58, 123, 213, 0.3);
+      border: none;
+      box-shadow: 0 4px 15px rgba(74, 111, 220, 0.3);
     }
     
     #chartContainer {
@@ -1654,14 +1780,14 @@
     }
 
     .alerts-container {
-      background-color: white;
-      border-radius: 15px;
-      padding: 30px;
-      box-shadow: 0 8px 16px rgba(0,0,0,0.1);
+      background-color: rgba(248, 249, 250, 0.85);
+      border-radius: 16px;
+      padding: 25px;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.15), 0 1px 5px rgba(0,0,0,0.1);
       margin-bottom: 30px;
       box-sizing: border-box;
       width: 100%;
-      max-width: 1000px; /* 调整为与其他容器一致的宽度 */
+      max-width: 800px; /* 调整为更合适的宽度 */
       margin-left: auto;
       margin-right: auto;
       transition: all 0.3s ease;
@@ -1669,60 +1795,86 @@
     
     .alerts-container:hover {
       transform: translateY(-3px);
-      box-shadow: 0 12px 24px rgba(0,0,0,0.15);
-      animation: pulse 1.5s infinite;
+      box-shadow: 0 15px 35px rgba(0,0,0,0.2);
+    }
+    
+    .alerts-container h1 {
+      font-size: 28px;
+      font-weight: 700;
+      color: #1e3a8a;
+      margin-bottom: 25px;
+      text-align: center;
+      font-family: 'Poppins', sans-serif;
+      position: relative;
+      padding-bottom: 10px;
+    }
+    
+    .alerts-container h1:after {
+      content: '';
+      position: absolute;
+      bottom: 0;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 80px;
+      height: 3px;
+      background: linear-gradient(90deg, #3a7bd5, #00d2ff);
+      border-radius: 3px;
     }
     
     .alert-form {
       display: flex;
       flex-direction: column;
-      gap: 20px;
+      gap: 22px;
     }
     
     .form-field {
       display: flex;
       flex-direction: column;
-      gap: 8px;
+      gap: 10px;
     }
     
     .form-field label {
       font-weight: 600;
-      color: #333;
-      font-size: 15px;
+      color: #2c3e50;
+      font-size: 16px;
+      letter-spacing: 0.3px;
     }
     
     .form-field input,
     .form-field select {
-      padding: 12px 15px;
+      padding: 14px 16px;
       border: 2px solid #e0e0e0;
-      border-radius: 8px;
+      border-radius: 10px;
       font-size: 15px;
-      background: rgba(255, 255, 255, 0.8);
+      background: rgba(255, 255, 255, 0.9);
       transition: all 0.3s ease;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.05);
     }
     
     .form-field input:focus,
     .form-field select:focus {
       border-color: #3a7bd5;
-      box-shadow: 0 0 0 3px rgba(58, 123, 213, 0.15);
+      box-shadow: 0 0 0 3px rgba(58, 123, 213, 0.2);
       outline: none;
+      background: #fff;
     }
     
     .alert-actions {
       display: flex;
-      gap: 15px;
-      margin-top: 10px;
+      gap: 18px;
+      margin-top: 15px;
     }
     
     .set-alarm-btn,
     .reset-btn {
-      padding: 12px 25px;
+      padding: 14px 25px;
       border: none;
-      border-radius: 8px;
+      border-radius: 10px;
       font-weight: 600;
-      font-size: 15px;
+      font-size: 16px;
       cursor: pointer;
       transition: all 0.3s ease;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
     }
     
     .set-alarm-btn {
@@ -1740,154 +1892,255 @@
     .set-alarm-btn:hover,
     .reset-btn:hover {
       transform: translateY(-3px);
-      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+      box-shadow: 0 8px 15px rgba(0, 0, 0, 0.2);
+    }
+    
+    .set-alarm-btn:active,
+    .reset-btn:active {
+      transform: translateY(1px);
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
     }
 
     /* =============== 历史价格页面样式 =============== */
     .history-container {
-      background-color: white;
-      border-radius: 15px;
-      padding: 30px;
-      box-shadow: 0 8px 16px rgba(0,0,0,0.1);
-      margin-bottom: 30px;
+      background: linear-gradient(145deg, rgba(255,255,255,0.95), rgba(252,252,252,0.9));
+      border-radius: 20px;
+      padding: 40px;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.08);
+      margin-bottom: 40px;
       box-sizing: border-box;
       width: 100%;
       max-width: 1000px;
+      margin-left: auto;
+      margin-right: auto;
+      border: 1px solid rgba(0,0,0,0.04);
+      position: relative;
+      overflow: hidden;
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      transition: all 0.3s ease;
+    }
+    
+    .history-container:hover {
+      box-shadow: 0 15px 35px rgba(0,0,0,0.1);
+      transform: translateY(-5px);
+    }
+    
+    #history h1 {
+      font-size: 36px;
+      font-weight: 800;
+      text-align: center;
+      margin-bottom: 24px;
+      color: #333;
+      letter-spacing: -0.5px;
+      position: relative;
+      display: inline-block;
+      width: 100%;
+      font-family: 'Playfair Display', Georgia, serif;
+    }
+    
+    #history h1:after {
+      content: '';
+      display: block;
+      width: 80px;
+      height: 4px;
+      background: linear-gradient(90deg, #2196F3, #1976D2);
+      margin: 15px auto 5px;
+      border-radius: 2px;
+    }
+    
+    #history p {
+      text-align: center;
+      color: #666;
+      font-size: 16px;
+      margin-bottom: 25px;
+      max-width: 600px;
       margin-left: auto;
       margin-right: auto;
     }
     
     /* 更新历史搜索容器样式与白色背景匹配 */
     #history .historical-search-container {
-      background: rgba(248, 249, 250, 0.7);
-      padding: 20px;
-      border-radius: 12px;
-      margin-bottom: 20px;
-      box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+      background: rgba(248, 249, 250, 0.8);
+      padding: 30px;
+      border-radius: 16px;
+      margin-bottom: 30px;
+      box-shadow: 0 5px 15px rgba(0,0,0,0.05);
       display: flex;
       flex-wrap: wrap;
       justify-content: center;
-      gap: 15px;
-      border: 1px solid rgba(0, 0, 0, 0.05);
-      max-width: 1000px;  /* 添加统一宽度 */
+      gap: 20px;
+      border: 1px solid rgba(0, 0, 0, 0.04);
+      max-width: 800px;
       margin-left: auto;
       margin-right: auto;
+      position: relative;
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
     }
     
-    /* 美化预测设置区域 */
-    #predictionSettings {
-      background: rgba(248, 249, 250, 0.7);
-      padding: 20px;
+    #history .historical-search-container input {
+      width: 100%;
+      padding: 15px 20px;
       border-radius: 12px;
-      margin-top: 20px;
-      margin-bottom: 10px;
-      box-shadow: 0 2px 8px rgba(0,0,0,0.05);
-      border: 1px solid rgba(0, 0, 0, 0.05);
-    }
-    
-    #predictionSettings h3 {
-      margin-top: 0;
-      color: var(--primary-color);
-      font-weight: 600;
-    }
-    
-    .settings-content {
-      display: flex;
-      justify-content: center;
-      gap: 30px;
-      flex-wrap: wrap;
-    }
-    
-    .setting-group {
-      display: flex;
-      flex-direction: column;
-      min-width: 200px;
-    }
-    
-    .setting-group label {
-      font-weight: 500;
-      color: var(--text-secondary);
-      margin-bottom: 5px;
-    }
-    
-    .setting-group input {
-      padding: 10px;
-      border: 1px solid rgba(0, 0, 0, 0.1);
-      border-radius: 8px;
+      border: 1px solid rgba(0, 0, 0, 0.08);
       background: white;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.03);
+      font-size: 16px;
       transition: all 0.3s;
-    }
-    
-    .setting-group input:focus {
-      border-color: var(--primary-color);
       outline: none;
-      box-shadow: 0 0 0 3px rgba(58, 123, 213, 0.1);
     }
     
-    .input-description {
-      font-size: 12px;
-      color: #999;
-      margin-top: 5px;
+    #history .historical-search-container input:focus {
+      border-color: #2196F3;
+      box-shadow: 0 0 0 3px rgba(33, 150, 243, 0.2);
     }
     
     /* 历史价格页面按钮样式 */
     .get-data-btn, .predict-btn {
-      padding: 10px 20px;
+      padding: 14px 28px;
       border: none;
-      border-radius: 8px;
+      border-radius: 12px;
       color: white;
-      font-weight: 500;
+      font-weight: 600;
       cursor: pointer;
       transition: all 0.3s;
-      min-width: 120px;
+      min-width: 140px;
+      letter-spacing: 0.5px;
+      font-size: 15px;
     }
     
     .get-data-btn {
       background: linear-gradient(135deg, #2196F3, #1976D2);
-      box-shadow: 0 2px 5px rgba(33, 150, 243, 0.3);
+      box-shadow: 0 4px 12px rgba(33, 150, 243, 0.3);
     }
     
     .predict-btn {
       background: linear-gradient(135deg, #9C27B0, #673AB7);
-      box-shadow: 0 2px 5px rgba(156, 39, 176, 0.3);
+      box-shadow: 0 4px 12px rgba(156, 39, 176, 0.3);
     }
     
     .clear-stocks-btn {
-      padding: 10px 20px;
+      padding: 14px 28px;
       border: none;
-      border-radius: 8px;
+      border-radius: 12px;
       background: linear-gradient(135deg, #F44336, #E53935);
       color: white;
-      font-weight: 500;
+      font-weight: 600;
       cursor: pointer;
       transition: all 0.3s;
-      box-shadow: 0 2px 5px rgba(244, 67, 54, 0.3);
-      min-width: 200px;
+      box-shadow: 0 4px 12px rgba(244, 67, 54, 0.3);
+      min-width: 220px;
+      letter-spacing: 0.5px;
+      font-size: 15px;
     }
     
     .get-data-btn:hover, .predict-btn:hover, .clear-stocks-btn:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+      transform: translateY(-3px);
+      box-shadow: 0 6px 15px rgba(0, 0, 0, 0.2);
+      filter: brightness(1.05);
     }
     
-    .view-mode-btn {
-      padding: 8px 16px;
-      border: 1px solid var(--primary-color);
+    .historical-buttons {
+      display: flex;
+      flex-direction: column;
+      gap: 15px;
+      width: 100%;
+    }
+    
+    .button-row {
+      display: flex;
+      gap: 15px;
+      justify-content: center;
+    }
+    
+    /* 美化预测设置区域 */
+    #predictionSettings {
+      background: rgba(248, 249, 250, 0.85);
+      padding: 25px;
+      border-radius: 16px;
+      margin-top: 30px;
+      margin-bottom: 20px;
+      box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+      border: 1px solid rgba(0, 0, 0, 0.04);
+      max-width: 800px;
+      margin-left: auto;
+      margin-right: auto;
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      transition: all 0.3s ease;
+    }
+    
+    #predictionSettings:hover {
+      box-shadow: 0 8px 20px rgba(0,0,0,0.08);
+    }
+    
+    #predictionSettings h3 {
+      margin-top: 0;
+      color: #333;
+      font-weight: 700;
+      font-size: 22px;
+      margin-bottom: 20px;
+      text-align: center;
+      font-family: 'Playfair Display', Georgia, serif;
+      position: relative;
+    }
+    
+    #predictionSettings h3:after {
+      content: '';
+      display: block;
+      width: 50px;
+      height: 3px;
+      background: linear-gradient(90deg, #9C27B0, #673AB7);
+      margin: 12px auto 0;
+      border-radius: 2px;
+    }
+    
+    .settings-content {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 30px;
+      margin-top: 20px;
+    }
+    
+    .setting-group {
+      flex: 1;
+      min-width: 200px;
+      max-width: 300px;
+    }
+    
+    .setting-group label {
+      display: block;
+      margin-bottom: 8px;
+      font-weight: 600;
+      color: #444;
+      font-size: 15px;
+    }
+    
+    .setting-group input {
+      width: 100%;
+      padding: 12px 15px;
+      border-radius: 10px;
+      border: 1px solid rgba(0, 0, 0, 0.1);
       background: white;
-      color: var(--primary-color);
-      border-radius: 6px;
-      font-weight: 500;
-      cursor: pointer;
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.03);
+      font-size: 15px;
       transition: all 0.3s;
+      outline: none;
     }
     
-    .view-mode-btn.active {
-      background: var(--primary-color);
-      color: white;
+    .setting-group input:focus {
+      border-color: #673AB7;
+      box-shadow: 0 0 0 3px rgba(156, 39, 176, 0.2);
     }
     
-    .view-mode-btn:hover:not(.active) {
-      -webkit-backdrop-filter: blur(5px);
+    .input-description {
+      display: block;
+      font-size: 13px;
+      color: #777;
+      margin-top: 5px;
+      font-style: italic;
     }
 
     /* 账户信息页面样式 */
@@ -2009,6 +2262,8 @@
 </head>
 
 <body>
+  <!-- 添加星云效果元素 -->
+  <div class="nebula"></div>
 
   <!-- User login interface -->
   <div id="login" class="login-container">
@@ -2078,7 +2333,7 @@
           <h3>Trade Operations</h3>
           <div class="trade-options">
             <div class="trade-type-row">
-              <button class="active" onclick="setOrderType('real-time')">Real-time Order</button>
+              <button class="active" onclick="setOrderType('realtime')">Real-time Order</button>
               <button onclick="setOrderType('limit')">Limit Order</button>
           </div>
             <div class="trade-action-row">
@@ -2498,7 +2753,7 @@
       </style>
 
       <script>
-        let currentOrderType = 'real-time';
+        let currentOrderType = 'realtime';
         let currentTradeType = 'buy';
 
         function setOrderType(type) {
@@ -2590,7 +2845,13 @@
           document.getElementById('openPrice').textContent = `$${data.open}`;
           document.getElementById('highPrice').textContent = `$${data.high}`;
           document.getElementById('lowPrice').textContent = `$${data.low}`;
-          document.getElementById('volume').textContent = data.volume.toLocaleString();
+          document.getElementById('volume').textContent = Number(data.volume).toLocaleString();
+          
+          // 自动填入价格到订单表单
+          document.getElementById('orderPrice').value = data.price;
+          
+          // 显示交易面板
+          document.querySelector('.trade-panel').style.display = 'block';
         }
 
         function updateCompanyInfo(data) {
@@ -2641,32 +2902,28 @@
     <!-- Historical price -->
     <div id="history" class="content" style="display: none;">
       <div class="history-container">
-        <h1>Historical price</h1>
-        <p>Enter the stock code you want to view (separated by commas)</p>
+        <h1>Historical Price Analysis</h1>
+        <p>Enter the stock symbols you want to analyze (separated by commas)</p>
         
         <div class="historical-search-container">
           <input type="text" id="stockInput" placeholder="e.g. AAPL, MSFT, GOOGL">
           <div class="historical-buttons">
             <div class="button-row">
-              <button onclick="fetchStockData()" class="get-data-btn">Get Data</button>
-              <button onclick="predictMonteCarlo()" class="predict-btn">Predict</button>
+              <button onclick="fetchStockDataAndPredict()" class="get-data-btn">Get Data</button>
+              <button onclick="clearStocks()" class="clear-stocks-btn">Clear Stocks</button>
             </div>
             <div class="button-row">
-              <button onclick="clearStocks()" class="clear-stocks-btn">Clear Stocks</button>
+              <button id="fullHistoryBtn" class="view-mode-btn active" onclick="toggleViewMode('full')">Full History View</button>
+              <button id="predictionFocusBtn" class="view-mode-btn" onclick="toggleViewMode('prediction')">Prediction Focus View</button>
             </div>
           </div>
         </div>
         
-        <div id="viewModeToggle" style="text-align: center; margin-top: 10px; display: none;">
-          <button id="fullHistoryBtn" class="view-mode-btn active" onclick="toggleViewMode('full')">Full History View</button>
-          <button id="predictionFocusBtn" class="view-mode-btn" onclick="toggleViewMode('prediction')">Prediction Focus View</button>
-        </div>
-        
-        <div id="chartContainer" style="height: 500px;">
+        <div id="chartContainer">
           <canvas id="stockChart"></canvas>
         </div>
         
-        <div id="predictionSettings" style="margin-top: 20px; text-align: center; display: none;" class="prediction-settings">
+        <div id="predictionSettings" style="display: none;" class="prediction-settings">
           <h3>Prediction Settings</h3>
           <div class="settings-content">
             <div class="setting-group">
@@ -2686,16 +2943,16 @@
 
     <!-- AI assistant (similar to ChatGPT) -->
     <div id="ai-assistant" class="content" style="display: none;">
-      <h1 id="aiTitle">AI financial assistant</h1>
+      <h1 id="aiTitle">Financial AI Assistant</h1>
       <div class="chat-container">
         <div class="chat-window" id="chatWindow"></div>
         <div class="chat-input-container">
-          <input type="text" class="chat-input" id="chatInput" placeholder="Please enter your question...">
+          <input type="text" class="chat-input" id="chatInput" placeholder="Enter your question...">
           <div class="chat-buttons">
             <button class="chat-send-btn" onclick="sendMessage()">Send</button>
             <button class="chat-clear-btn" onclick="clearChat()">Clear</button>
-      </div>
           </div>
+        </div>
       </div>
     </div>
 
@@ -2749,7 +3006,7 @@
 
     <!-- Order information -->
     <div id="orders" class="content" style="display: none;">
-      <h1>Account and transaction center</h1>
+      <h1 style="color: #ffffff; text-shadow: 0 0 10px rgba(255, 255, 255, 0.5); font-size: 36px; margin-bottom: 20px; text-align: center; background: linear-gradient(120deg, rgba(255,255,255,0.3), rgba(58,123,213,0.5)); padding: 15px; border-radius: 15px;">Account and transaction center</h1>
       
       <!-- 选项卡导航 -->
       <div class="tabs-container">
@@ -3424,6 +3681,92 @@
        ********************************************************/
       let selectedStocks = [];
       let chart = null;
+      
+      async function fetchStockDataAndPredict() {
+        // 第一步：获取股票数据
+        let inputField = document.getElementById("stockInput");
+        let stocks = inputField.value.toUpperCase().split(",").map(s => s.trim()).filter(s => s !== "");
+        if (stocks.length === 0) {
+          alert("Please enter at least one stock code!");
+          return;
+        }
+        selectedStocks = [...new Set([...selectedStocks, ...stocks])];
+        inputField.value = "";
+        
+        try {
+          // 显示加载提示
+          const loadingMsg = document.createElement("div");
+          loadingMsg.id = "loadingMessage";
+          loadingMsg.style.textAlign = "center";
+          loadingMsg.style.marginTop = "20px";
+          loadingMsg.innerHTML = `<div class="spinner-border text-primary" role="status"></div>
+                                <p>Fetching data and running predictions...</p>`;
+          document.getElementById("chartContainer").appendChild(loadingMsg);
+          
+          // 获取历史数据
+          const response = await fetch("/get_stock_data", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ stocks: selectedStocks })
+          });
+          const data = await response.json();
+          
+          // 保存历史数据
+          historicalData = data;
+          
+          // 第二步：运行预测
+          // 获取预测参数
+          let futureDays = parseInt(document.getElementById("futureDays").value) || 180;
+          let simulations = parseInt(document.getElementById("simulations").value) || 1000;
+          let sample_paths = 100; // 请求100条样本路径
+          
+          // 调用预测API
+          const predictionResponse = await fetch("/predict_monte_carlo", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ 
+              stocks: selectedStocks,
+              future_days: futureDays,
+              simulations: simulations,
+              sample_paths: sample_paths
+            })
+          });
+          
+          // 处理预测结果
+          const predictionResult = await predictionResponse.json();
+          
+          // 移除加载提示
+          const loadingElement = document.getElementById("loadingMessage");
+          if (loadingElement) {
+            loadingElement.remove();
+          }
+          
+          // 显示预测设置面板
+          document.getElementById("predictionSettings").style.display = "block";
+          
+          // 保存预测数据
+          predictionData = predictionResult;
+          
+          // 默认显示Full History View
+          isShowingPrediction = false;
+          document.getElementById('fullHistoryBtn').classList.add('active');
+          document.getElementById('predictionFocusBtn').classList.remove('active');
+          
+          // 更新图表显示
+          updateChartDisplay();
+          
+        } catch (error) {
+          console.error("Data retrieval or prediction failed:", error);
+          alert("Failed to retrieve stock data or make predictions. Please ensure the server is running!");
+          
+          // 移除加载提示
+          const loadingElement = document.getElementById("loadingMessage");
+          if (loadingElement) {
+            loadingElement.remove();
+          }
+        }
+      }
+      
       async function fetchStockData() {
         let inputField = document.getElementById("stockInput");
         let stocks = inputField.value.toUpperCase().split(",").map(s => s.trim()).filter(s => s !== "");
@@ -4810,6 +5153,93 @@
           fetchUsers("/api/admin/users");
         }
       });
+
+      function viewOrders() {
+        // 显示Account and Trading Center部分
+        showSectionInMain("orders");
+        
+        // 在Account and Trading Center中显示订单选项卡
+        document.querySelectorAll("#orders .tab-content").forEach(tab => {
+          tab.classList.remove("active");
+        });
+        document.getElementById("ordersTab").classList.add("active");
+        
+        // 获取最新订单数据
+        fetchOrders();
+      }
+      
+      function fetchOrders() {
+        fetch('/api/orders')
+          .then(response => response.json())
+          .then(data => {
+            if (data.status === 'success') {
+              displayOrders(data.orders);
+            } else {
+              alert('Failed to load orders: ' + data.message);
+            }
+          })
+          .catch(error => {
+            console.error('Error fetching orders:', error);
+            alert('Error loading orders. Please try again.');
+          });
+      }
+      
+      function displayOrders(orders) {
+        const tableBody = document.getElementById('ordersTableBody');
+        tableBody.innerHTML = '';
+        
+        if (orders.length === 0) {
+          const row = document.createElement('tr');
+          row.innerHTML = '<td colspan="9" class="no-data">No orders found</td>';
+          tableBody.appendChild(row);
+          return;
+        }
+        
+        orders.forEach(order => {
+          const row = document.createElement('tr');
+          row.innerHTML = `
+            <td>${order.id}</td>
+            <td>${order.stock_symbol}</td>
+            <td>${order.trade_type === 'buy' ? 'Buy' : 'Sell'}</td>
+            <td>${order.order_type === 'realtime' ? 'Real-time' : 'Limit'}</td>
+            <td>$${parseFloat(order.price).toFixed(2)}</td>
+            <td>${order.quantity}</td>
+            <td>${order.status}</td>
+            <td>${order.order_time}</td>
+            <td>
+              ${order.status === 'pending' ? 
+                `<button class="cancel-btn" onclick="cancelOrder(${order.id})">Cancel</button>` : 
+                ''}
+            </td>
+          `;
+          tableBody.appendChild(row);
+        });
+      }
+      
+      function cancelOrder(orderId) {
+        if (confirm("Are you sure you want to cancel this order?")) {
+          fetch(`/api/orders/${orderId}`, {
+            method: 'PUT',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ status: 'cancelled' })
+          })
+          .then(response => response.json())
+          .then(data => {
+            if (data.status === 'success') {
+              alert('Order cancelled successfully');
+              fetchOrders(); // 刷新订单列表
+            } else {
+              alert('Failed to cancel order: ' + data.message);
+            }
+          })
+          .catch(error => {
+            console.error('Error cancelling order:', error);
+            alert('Error cancelling order. Please try again.');
+          });
+        }
+      }
     </script>
   </div>
 
@@ -5092,5 +5522,189 @@
       });
     });
   </script>
-</body>
+
+  <script>
+    // ... existing code ...
+      function placeOrder() {
+        // 检查用户是否已登录
+        if (!isLoggedIn()) {
+          alert('Please login first');
+          return;
+        }
+        
+        // 获取当前选中的股票代码
+        const stockSymbol = document.getElementById('stockSymbol').value;
+        if (!stockSymbol) {
+          alert('Please search for a stock first');
+          return;
+        }
+        
+        // 获取价格和数量
+        const price = document.getElementById('orderPrice').value;
+        const quantity = document.getElementById('orderQuantity').value;
+        
+        // 验证输入
+        if (!price || parseFloat(price) <= 0) {
+          alert('Please enter a valid price');
+          return;
+        }
+        
+        if (!quantity || parseInt(quantity) <= 0) {
+          alert('Please enter a valid quantity');
+          return;
+        }
+        
+        // 准备订单数据
+        const orderData = {
+          symbol: stockSymbol,
+          orderType: currentOrderType,
+          tradeType: currentTradeType,
+          price: parseFloat(price),
+          quantity: parseInt(quantity)
+        };
+        
+        // 显示处理中提示
+        const submitBtn = document.querySelector('.submit-btn');
+        const originalText = submitBtn.textContent;
+        submitBtn.disabled = true;
+        submitBtn.textContent = 'Processing...';
+        
+        // 发送订单请求
+        fetch('/api/orders', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(orderData)
+        })
+        .then(response => response.json())
+        .then(data => {
+          // 恢复按钮状态
+          submitBtn.disabled = false;
+          submitBtn.textContent = originalText;
+          
+          if (data.status === 'success') {
+            alert('Order placed successfully');
+            
+            // 清空输入字段
+            document.getElementById('orderQuantity').value = '';
+            
+            // 如果是实时订单，立即跳转到订单列表查看
+            if (currentOrderType === 'realtime') {
+              viewOrders();
+            }
+          } else {
+            alert('Failed to place order: ' + data.message);
+          }
+        })
+        .catch(error => {
+          console.error('Error placing order:', error);
+          submitBtn.disabled = false;
+          submitBtn.textContent = originalText;
+          alert('Error placing order. Please try again.');
+        });
+      }
+      
+      // 检查用户是否已登录
+      function isLoggedIn() {
+        return document.getElementById('main').style.display !== 'none';
+      }
+      
+      function viewOrders() {
+        // 显示Account and Trading Center部分
+        showSectionInMain("orders");
+        
+        // 在Account and Trading Center中显示订单选项卡
+        document.querySelectorAll("#orders .tab-content").forEach(tab => {
+          tab.classList.remove("active");
+        });
+        document.getElementById("ordersTab").classList.add("active");
+        
+        // 获取最新订单数据
+        fetchOrders();
+      }
+      
+      function fetchOrders() {
+        fetch('/api/orders')
+          .then(response => response.json())
+          .then(data => {
+            if (data.status === 'success') {
+              displayOrders(data.orders);
+            } else {
+              alert('Failed to load orders: ' + data.message);
+            }
+          })
+          .catch(error => {
+            console.error('Error fetching orders:', error);
+            alert('Error loading orders. Please try again.');
+          });
+      }
+      
+      function displayOrders(orders) {
+        const tableBody = document.getElementById('ordersTableBody');
+        tableBody.innerHTML = '';
+        
+        if (orders.length === 0) {
+          const row = document.createElement('tr');
+          row.innerHTML = '<td colspan="9" class="no-data">No orders found</td>';
+          tableBody.appendChild(row);
+          return;
+        }
+        
+        orders.forEach(order => {
+          const row = document.createElement('tr');
+          row.innerHTML = `
+            <td>${order.id}</td>
+            <td>${order.stock_symbol}</td>
+            <td>${order.trade_type === 'buy' ? 'Buy' : 'Sell'}</td>
+            <td>${order.order_type === 'realtime' ? 'Real-time' : 'Limit'}</td>
+            <td>$${parseFloat(order.price).toFixed(2)}</td>
+            <td>${order.quantity}</td>
+            <td>${order.status}</td>
+            <td>${order.order_time}</td>
+            <td>
+              ${order.status === 'pending' ? 
+                `<button class="cancel-btn" onclick="cancelOrder(${order.id})">Cancel</button>` : 
+                ''}
+            </td>
+          `;
+          tableBody.appendChild(row);
+        });
+      }
+      
+      function cancelOrder(orderId) {
+        if (confirm("Are you sure you want to cancel this order?")) {
+          fetch(`/api/orders/${orderId}`, {
+            method: 'PUT',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ status: 'cancelled' })
+          })
+          .then(response => response.json())
+          .then(data => {
+            if (data.status === 'success') {
+              alert('Order cancelled successfully');
+              fetchOrders(); // 刷新订单列表
+            } else {
+              alert('Failed to cancel order: ' + data.message);
+            }
+          })
+          .catch(error => {
+            console.error('Error cancelling order:', error);
+            alert('Error cancelling order. Please try again.');
+          });
+        }
+      }
+    // ... existing code ...
+  </script>
+
+  <script>
+    // ... existing code ...
+    </script>
+    
+    <footer style="position: fixed; bottom: 0; left: 0; width: 100%; text-align: center; padding: 10px; font-size: 12px; color: white; background: rgba(5, 10, 36, 0.8); backdrop-filter: blur(5px); -webkit-backdrop-filter: blur(5px); z-index: 1000; border-top: 1px solid rgba(255, 255, 255, 0.1);">
+      developer：🔥🔥 | email: bc10441@um.edu.mo | tel: 853+68555390 | address: University of Macao | github: <a href="https://github.com/ccchenhuohuo/code" style="color: white; text-decoration: underline;">@https://github.com/ccchenhuohuo/code</a>
+    </footer>
+  </body>
 </html>

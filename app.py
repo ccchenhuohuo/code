@@ -895,7 +895,11 @@ def get_user_orders():
             query += " ORDER BY order_time DESC"
             
             result = conn.execute(text(query), params)
-            orders = [dict(row) for row in result]
+            orders = []
+            for row in result:
+                # 正确使用_mapping获取值
+                order_dict = {key: row._mapping[key] for key in row._mapping.keys()}
+                orders.append(order_dict)
             
             # Format date fields
             for order in orders:
