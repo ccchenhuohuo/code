@@ -7,103 +7,478 @@
 
   <!-- Introduction of Chart.js (CDN) -->
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chartjs-adapter-date-fns"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-annotation"></script>
+
+  <script>
+    // 添加流星效果
+    document.addEventListener('DOMContentLoaded', function() {
+      const body = document.body;
+      
+      // 创建流星
+      function createShootingStar() {
+        const star = document.createElement('div');
+        star.className = 'shooting-star';
+        
+        // 随机位置
+        const startX = Math.random() * window.innerWidth;
+        const startY = Math.random() * (window.innerHeight / 2);
+        
+        // 随机角度 (-30 ~ -60度)
+        const angle = -(Math.random() * 30 + 30);
+        
+        // 随机动画持续时间 (0.6秒 ~ 1.2秒)
+        const duration = Math.random() * 0.6 + 0.6;
+        
+        star.style.top = startY + 'px';
+        star.style.left = startX + 'px';
+        star.style.transform = `rotate(${angle}deg)`;
+        star.style.animation = `shooting-star ${duration}s linear forwards`;
+        
+        body.appendChild(star);
+        
+        // 动画结束后移除流星
+        setTimeout(() => {
+          star.remove();
+        }, duration * 1000);
+      }
+      
+      // 随机间隔产生流星
+      function shootStars() {
+        // 随机间隔 (3秒 ~ 8秒)
+        const interval = Math.random() * 5000 + 3000;
+        createShootingStar();
+        setTimeout(shootStars, interval);
+      }
+      
+      // 开始产生流星
+      shootStars();
+    });
+  </script>
 
   <style>
+    :root {
+      /* Base Colors */
+      --primary-color: #3a7bd5;
+      --primary-light: #6faae7;
+      --primary-dark: #0d47a1;
+      --secondary-color: #00c6ff;
+      --accent-color: #5f3dc4;
+      
+      /* Text Colors */
+      --text-primary: #333;
+      --text-secondary: #555;
+      --text-light: #f0f2f5;
+      
+      /* Background Colors */
+      --bg-dark: #1a1f36;
+      --bg-medium: #2c3e50;
+      --bg-light: #f0f2f5;
+      --bg-content: rgba(255, 255, 255, 0.85);
+      
+      /* Status Colors */
+      --success: #34c759;
+      --warning: #ff9500;
+      --danger: #ff3b30;
+      --info: #00c6ff;
+      
+      /* Card Effects */
+      --card-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+      --card-hover-shadow: 0 12px 28px rgba(0, 0, 0, 0.18);
+      --card-border: 1px solid rgba(255, 255, 255, 0.18);
+      
+      /* Gradients */
+      --gradient-primary: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+      --gradient-dark: linear-gradient(135deg, var(--bg-dark), var(--bg-medium));
+      --gradient-glass: linear-gradient(135deg, rgba(255, 255, 255, 0.3), rgba(255, 255, 255, 0.1));
+    }
+    
     body {
-      font-family: Arial, sans-serif;
+      font-family: 'Segoe UI', Arial, sans-serif;
       margin: 0; padding: 0;
-      background-color: #f5f5f5;
+      background: var(--gradient-dark);
+      background-attachment: fixed;
+      color: var(--text-primary);
+      line-height: 1.6;
+      overflow-x: hidden;
+      position: relative;
     }
+    
+    /* 添加流星背景效果 */
+    body:after {
+      content: "";
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-image: 
+        radial-gradient(1px 1px at 25% 15%, white, transparent),
+        radial-gradient(1px 1px at 50% 40%, white, transparent),
+        radial-gradient(2px 2px at 15% 55%, white, transparent),
+        radial-gradient(1px 1px at 60% 70%, white, transparent),
+        radial-gradient(1.5px 1.5px at 75% 25%, white, transparent),
+        radial-gradient(1px 1px at 35% 85%, white, transparent),
+        radial-gradient(1.5px 1.5px at 85% 60%, white, transparent);
+      background-repeat: repeat;
+      background-size: 250px 250px;
+      animation: stars 10s linear infinite;
+      z-index: -1;
+      opacity: 0.5;
+    }
+    
+    @keyframes stars {
+      0% {
+        transform: translateY(0);
+      }
+      100% {
+        transform: translateY(-250px);
+      }
+    }
+    
+    @keyframes shooting-star {
+      0% {
+        transform: translateX(0) translateY(0) rotate(-45deg);
+        opacity: 1;
+      }
+      70% {
+        opacity: 1;
+      }
+      100% {
+        transform: translateX(-500px) translateY(500px) rotate(-45deg);
+        opacity: 0;
+      }
+    }
+    
+    .shooting-star {
+      position: fixed;
+      width: 100px;
+      height: 1px;
+      background: linear-gradient(90deg, white, transparent);
+      z-index: -1;
+      opacity: 0;
+    }
+    
+    .shooting-star:before {
+      content: "";
+      position: absolute;
+      width: 4px;
+      height: 4px;
+      border-radius: 50%;
+      background: white;
+      top: -2px;
+      left: 0;
+      box-shadow: 0 0 15px 2px white;
+    }
+    
     nav {
-      background-color: #333;
+      background-color: var(--bg-dark);
+      box-shadow: 0 2px 10px rgba(0,0,0,0.1);
       padding: 10px;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
     }
+    
     nav ul {
       list-style-type: none;
       padding: 0; margin: 0;
       display: flex; justify-content: space-around;
     }
+    
     nav ul li a {
-      color: white; text-decoration: none;
+      color: var(--text-light); 
+      text-decoration: none;
       padding: 10px 20px;
+      border-radius: 4px;
+      transition: all 0.3s ease;
     }
+    
     nav ul li a:hover {
-      background-color: #555;
+      background-color: rgba(255, 255, 255, 0.1);
+      transform: translateY(-2px);
     }
+    
     .content {
       padding: 20px;
-      text-align: center;
-      background-color: #fff;
-      margin: 20px auto;
-      max-width: 1000px;
-      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+      max-width: 1000px;  /* 修改为统一宽度 */
+      margin: 0 auto;
+      box-sizing: border-box;
     }
+    
+    .search-bar {
+      display: flex;
+      gap: 15px;
+      margin-bottom: 30px;
+      background: #fff;
+      padding: 20px;
+      border-radius: 12px;
+      box-shadow: 0 8px 16px rgba(0,0,0,0.1);
+      transition: all 0.3s ease;
+      box-sizing: border-box;
+      width: 100%;
+    }
+    
+    .search-bar:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 12px 24px rgba(0,0,0,0.15);
+    }
+
+    .search-bar input {
+      flex: 1;
+      max-width: none;
+      padding: 12px 20px;
+      border: 2px solid #e0e0e0;
+      border-radius: 8px;
+      font-size: 16px;
+      transition: all 0.3s ease;
+      background: linear-gradient(145deg, #ffffff, #f5f5f5);
+      box-sizing: border-box;
+    }
+    
+    .stock-content {
+      display: flex;
+      gap: 20px;
+      width: 100%;
+      box-sizing: border-box;
+      flex-wrap: wrap;
+    }
+    
+    .trade-panel {
+      width: 320px;
+      background: #fff;
+      border-radius: 12px;
+      padding: 25px;
+      box-shadow: 0 8px 16px rgba(0,0,0,0.1);
+      transition: all 0.3s ease;
+      box-sizing: border-box;
+    }
+    
+    .trade-panel:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 12px 24px rgba(0,0,0,0.15);
+    }
+    
+    .stock-info {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+      min-width: 300px;
+      box-sizing: border-box;
+    }
+    
+    .stock-header {
+      background: #fff;
+      padding: 20px;
+      border-radius: 10px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+      box-sizing: border-box;
+      width: 100%;
+      max-width: 1000px;  /* 统一宽度 */
+      margin-left: auto;
+      margin-right: auto;
+      transition: all 0.3s ease;
+    }
+    
+    .stock-header:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 6px 12px rgba(0,0,0,0.15);
+    }
+    
+    .trading-metrics {
+      background: #fff;
+      border-radius: 10px;
+      padding: 20px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+      box-sizing: border-box;
+      width: 100%;
+      max-width: 1000px;  /* 统一宽度 */
+      margin-left: auto;
+      margin-right: auto;
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 15px;
+      margin-top: 15px;
+      transition: all 0.3s ease;
+    }
+    
+    .trading-metrics:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 6px 12px rgba(0,0,0,0.15);
+    }
+    
+    .info-tabs {
+      background: #fff;
+      border-radius: 10px;
+      padding: 20px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+      box-sizing: border-box;
+      width: 100%;
+      max-width: 1000px;  /* 统一宽度 */
+      margin-left: auto;
+      margin-right: auto;
+      overflow: hidden;
+      margin-top: 20px;
+      transition: all 0.3s ease;
+    }
+    
+    .info-tabs:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 6px 12px rgba(0,0,0,0.15);
+    }
+    
+    .metric-row {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 25px;
+      margin-bottom: 25px;
+    }
+    
+    .metrics-container {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      grid-template-rows: repeat(2, auto);
+      gap: 15px;
+    }
+
+    .metric-item {
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      gap: 5px;
+      padding: 12px;
+      background: rgba(255, 255, 255, 0.5);
+      border-radius: 15px;
+      transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+      border: var(--card-border);
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+      overflow: hidden;
+      backdrop-filter: blur(5px);
+      -webkit-backdrop-filter: blur(5px);
+    }
+    
     form {
       display: flex;
       flex-direction: column;
       align-items: center;
-      gap: 10px;
-      margin-top: 20px;
+      gap: 15px;
+      margin-top: 25px;
     }
-    input, button {
-      padding: 10px;
+    
+    input, button, select, textarea {
+      padding: 12px 15px;
       width: 250px;
       outline: none;
+      border-radius: 8px;
+      border: 1px solid rgba(0,0,0,0.1);
+      transition: all 0.3s ease;
     }
+    
+    input:focus, select:focus, textarea:focus {
+      border-color: var(--primary-color);
+      box-shadow: 0 0 0 2px rgba(58, 123, 213, 0.2);
+    }
+    
     button {
       cursor: pointer;
-      background-color: #4CAF50;
-      color: white; border: none;
-      transition: background-color 0.2s;
+      background: var(--gradient-primary);
+      color: white; 
+      border: none;
+      font-weight: 500;
+      letter-spacing: 0.5px;
+      transition: transform 0.3s, box-shadow 0.3s;
     }
+    
     button:hover {
-      background-color: #45a049;
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(58, 123, 213, 0.3);
     }
+    
     a {
-      color: #007BFF;
+      color: var(--primary-color);
       cursor: pointer;
+      transition: color 0.2s;
     }
+    
     a:hover {
-      color: #0056b3;
+      color: var(--primary-dark);
     }
+    
     /* Backend management style */
     #adminPanel table {
-      width: 80%;
+      width: 90%;
       margin: 20px auto;
       border-collapse: collapse;
+      border-radius: 10px;
+      overflow: hidden;
+      box-shadow: var(--card-shadow);
     }
+    
     #adminPanel th, #adminPanel td {
-      border: 1px solid #ccc;
-      padding: 10px; text-align: left;
+      padding: 12px 15px; 
+      text-align: left;
     }
+    
+    #adminPanel th {
+      background: var(--gradient-primary);
+      color: white;
+      font-weight: 500;
+    }
+    
+    #adminPanel tr:nth-child(even) {
+      background-color: rgba(240, 242, 245, 0.8);
+    }
+    
+    #adminPanel tr:nth-child(odd) {
+      background-color: rgba(255, 255, 255, 0.9);
+    }
+    
     #adminPanel tr:hover {
-      background-color: #f5f5f5;
+      background-color: rgba(58, 123, 213, 0.05);
       cursor: pointer;
     }
+    
     #adminSearch {
-      margin: 20px; padding: 8px; width: 300px;
+      margin: 20px; 
+      padding: 12px 15px; 
+      width: 300px;
+      border-radius: 8px;
+      border: 1px solid rgba(0,0,0,0.1);
+      box-shadow: 0 2px 5px rgba(0,0,0,0.05);
     }
+    
     .back-btn {
-      margin: 20px; padding: 8px 16px;
-      background-color: #333; color: #fff;
-      border: none; cursor: pointer;
+      margin: 20px; 
+      padding: 10px 20px;
+      background: var(--gradient-dark);
+      color: #fff;
+      border: none; 
+      cursor: pointer;
+      border-radius: 8px;
+      transition: all 0.3s ease;
     }
+    
     .back-btn:hover {
-      background-color: #555;
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
     }
 
-    /* =============== AI Assistant - ChatGPT style =============== */
+    /* =============== AI Assistant - Modern style =============== */
     #ai-assistant {
       width: 100%;
       max-width: 1200px;
       margin: 20px auto;
       padding: 30px;
-      background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
-      border-radius: 12px;
-      box-shadow: 0 8px 16px rgba(0,0,0,0.1);
+      background: var(--bg-content);
+      border-radius: 20px;
+      box-shadow: var(--card-shadow);
       display: flex;
       flex-direction: column;
       align-items: center;
+      border: var(--card-border);
     }
 
     #ai-assistant h1 {
@@ -111,7 +486,7 @@
       font-weight: 700;
       text-align: center;
       margin-bottom: 25px;
-      background: linear-gradient(120deg, #2196F3, #1976D2, #2196F3);
+      background: var(--gradient-primary);
       background-size: 200% auto;
       color: transparent;
       -webkit-background-clip: text;
@@ -122,7 +497,7 @@
 
     #ai-assistant h1:hover {
       transform: scale(1.05);
-      text-shadow: 0 0 10px rgba(33, 150, 243, 0.3);
+      text-shadow: 0 0 10px rgba(58, 123, 213, 0.3);
     }
 
     @keyframes shine {
@@ -133,7 +508,7 @@
 
     #ai-assistant .description {
       text-align: center;
-      color: #666;
+      color: var(--text-secondary);
       font-size: 16px;
       line-height: 1.6;
       max-width: 800px;
@@ -141,17 +516,20 @@
     }
 
     #ai-assistant .example-questions {
-      background: #fff;
+      background: rgba(255, 255, 255, 0.7);
       padding: 20px;
-      border-radius: 12px;
-      box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+      border-radius: 15px;
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
       margin-bottom: 20px;
       width: 100%;
       max-width: 800px;
+      backdrop-filter: blur(5px);
+      -webkit-backdrop-filter: blur(5px);
+      border: var(--card-border);
     }
 
     #ai-assistant .example-questions p {
-      color: #666;
+      color: var(--text-secondary);
       margin-bottom: 15px;
       text-align: center;
       font-weight: 500;
@@ -165,21 +543,23 @@
 
     #ai-assistant .example-questions li {
       padding: 12px 20px;
-      background: linear-gradient(145deg, #ffffff, #f5f5f5);
-      border-radius: 8px;
+      background: rgba(255, 255, 255, 0.5);
+      border-radius: 10px;
       margin-bottom: 10px;
       font-size: 15px;
-      color: #333;
+      color: var(--text-primary);
       transition: all 0.3s ease;
       cursor: pointer;
-      border: 1px solid rgba(33, 150, 243, 0.1);
+      border: 1px solid rgba(58, 123, 213, 0.1);
+      backdrop-filter: blur(5px);
+      -webkit-backdrop-filter: blur(5px);
     }
 
     #ai-assistant .example-questions li:hover {
       transform: translateX(5px);
-      background: linear-gradient(145deg, #f8f9fa, #e9ecef);
-      border-color: rgba(33, 150, 243, 0.3);
-      box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+      background: rgba(255, 255, 255, 0.8);
+      border-color: rgba(58, 123, 213, 0.3);
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
     }
 
     .chat-container {
@@ -194,144 +574,122 @@
       width: 100%;
       height: 500px;
       border: none;
-      border-radius: 12px;
-      background: #fff;
-      box-shadow: 0 8px 16px rgba(0,0,0,0.1);
-      scroll-behavior: smooth;
+      border-radius: 15px;
+      background: rgba(255, 255, 255, 0.7);
+      padding: 20px;
       overflow-y: auto;
-      padding: 30px;
-      display: flex;
-      flex-direction: column;
+      box-shadow: inset 0 2px 10px rgba(0, 0, 0, 0.05);
+      backdrop-filter: blur(5px);
+      -webkit-backdrop-filter: blur(5px);
     }
 
     .chat-message {
-      display: flex;
-      margin: 10px 0;
-      width: 100%;
-    }
-
-    .chat-message.user {
-      justify-content: flex-end;
-    }
-
-    .chat-message.ai {
-      justify-content: flex-start;
-    }
-
-    .chat-bubble {
-      position: relative;
-      padding: 12px 20px;
+      margin-bottom: 15px;
+      padding: 12px 18px;
       border-radius: 15px;
+      max-width: 80%;
+      position: relative;
       line-height: 1.5;
       font-size: 15px;
-      box-shadow: 0 2px 4px rgba(0,0,0,0.05);
-      transition: all 0.3s ease;
-      max-width: 70%;
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+      animation: fadeIn 0.3s ease-in-out;
+      word-wrap: break-word;
     }
 
-    .user .chat-bubble {
-      background: linear-gradient(135deg, #2196F3, #1976D2);
-      color: #fff;
-      border-bottom-right-radius: 5px;
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: translateY(0); }
     }
 
-    .ai .chat-bubble {
-      background: linear-gradient(145deg, #ffffff, #f5f5f5);
-      color: #333;
-      margin-left: 40px;
-      border: 1px solid rgba(0,0,0,0.1);
-      border-bottom-left-radius: 5px;
+    .user {
+      background: var(--gradient-primary);
+      color: white;
+      margin-left: auto;
+      margin-right: 50px;
+      border-bottom-right-radius: 0;
     }
 
-    .ai .chat-bubble::before {
-      content: '';
-      width: 30px;
-      height: 30px;
-      border-radius: 50%;
-      position: absolute;
-      left: -40px;
-      top: 50%;
-      transform: translateY(-50%);
-      background-color: #2196F3;
-      background-size: cover;
-      background-image: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="%23fff"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8z"/></svg>');
+    .ai {
+      background: rgba(240, 242, 245, 0.9);
+      color: var(--text-primary);
+      margin-right: auto;
+      margin-left: 50px;
+      border-bottom-left-radius: 0;
     }
 
     .chat-input-container {
       width: 100%;
       display: flex;
       gap: 10px;
-      padding: 0;
+      position: relative;
     }
 
     .chat-input {
       flex: 1;
-      padding: 15px 20px;
-      border: 2px solid #e0e0e0;
-      border-radius: 12px;
-      font-size: 15px;
-      background: linear-gradient(145deg, #ffffff, #f5f5f5);
+      padding: 15px;
+      border-radius: 30px;
+      border: 1px solid rgba(0, 0, 0, 0.1);
+      background: rgba(255, 255, 255, 0.7);
+      font-size: 16px;
+      outline: none;
       transition: all 0.3s ease;
+      width: auto;
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+      backdrop-filter: blur(5px);
+      -webkit-backdrop-filter: blur(5px);
     }
 
-    .chat-buttons {
-      display: flex;
-      gap: 10px;
+    .chat-input:focus {
+      border-color: var(--primary-color);
+      box-shadow: 0 0 0 2px rgba(58, 123, 213, 0.2);
+      background: rgba(255, 255, 255, 0.9);
     }
 
-    .chat-send-btn,
-    .chat-clear-btn {
-      padding: 15px 30px;
-      border: none;
-      border-radius: 12px;
-      color: #fff;
-      cursor: pointer;
+    .chat-btn {
+      width: auto;
+      border-radius: 30px;
       font-weight: 600;
-      font-size: 15px;
+      padding: 15px 25px;
       transition: all 0.3s ease;
-      min-width: 100px;
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
     }
 
     .chat-send-btn {
-      background: linear-gradient(135deg, #2196F3, #1976D2);
-      box-shadow: 0 2px 4px rgba(33, 150, 243, 0.2);
+      background: var(--gradient-primary);
+      box-shadow: 0 2px 5px rgba(58, 123, 213, 0.2);
     }
 
     .chat-clear-btn {
-      background: linear-gradient(135deg, #ff4081, #c51162);
-      box-shadow: 0 2px 4px rgba(255, 64, 129, 0.2);
+      background: linear-gradient(135deg, var(--danger), #ff7675);
+      box-shadow: 0 2px 5px rgba(255, 59, 48, 0.2);
     }
 
     .chat-send-btn:hover,
     .chat-clear-btn:hover {
       transform: translateY(-2px);
-      box-shadow: 0 4px 8px rgba(33, 150, 243, 0.3);
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
     }
 
-    .chat-clear-btn:hover {
-      box-shadow: 0 4px 8px rgba(255, 64, 129, 0.3);
-    }
-
-    /* 自定义滚动条样式 */
+    /* Custom scrollbar */
     .chat-window::-webkit-scrollbar {
       width: 8px;
     }
 
     .chat-window::-webkit-scrollbar-track {
-      background: #f1f1f1;
+      background: rgba(240, 242, 245, 0.5);
       border-radius: 4px;
     }
 
     .chat-window::-webkit-scrollbar-thumb {
-      background: linear-gradient(135deg, #2196F3, #1976D2);
+      background: var(--gradient-primary);
       border-radius: 4px;
     }
 
     .chat-window::-webkit-scrollbar-thumb:hover {
-      background: linear-gradient(135deg, #1E88E5, #1565C0);
+      background: linear-gradient(135deg, var(--primary-dark), var(--primary-color));
     }
 
-    /* AI头像和用户头像 */
+    /* AI and user avatars */
     .chat-message::before {
       content: '';
       width: 35px;
@@ -344,15 +702,15 @@
 
     .ai::before {
       left: -45px;
-      background-image: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="%232196F3"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8z"/></svg>');
+      background-image: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="%233a7bd5"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8z"/></svg>');
     }
 
     .user::before {
       right: -45px;
-      background-image: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="%234CAF50"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8z"/></svg>');
+      background-image: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="%2334c759"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8z"/></svg>');
     }
 
-    /* 打字动画效果 */
+    /* Typing animation */
     .ai .chat-bubble.typing::after {
       content: '...';
       position: absolute;
@@ -368,118 +726,168 @@
       100% { content: '.'; }
     }
 
-    /* =============== Early warning information - simple and intuitive =============== */
+    /* =============== Alert information - modern glass style =============== */
     #alerts .alert-container {
       display: flex;
       justify-content: center;
       align-items: center;
       gap: 50px;
-      margin-top: 20px;
+      margin-top: 30px;
     }
+    
     .alert-box {
       width: 150px;
       height: 150px;
-      border-radius: 8px;
+      border-radius: 15px;
       display: flex;
       justify-content: center;
       align-items: center;
-      font-size: 20px;
+      font-size: 22px;
       font-weight: bold;
-      color: #fff;
+      color: white;
+      transition: all 0.3s ease;
+      box-shadow: var(--card-shadow);
+      backdrop-filter: blur(5px);
+      -webkit-backdrop-filter: blur(5px);
+      border: var(--card-border);
     }
+    
+    .alert-box:hover {
+      transform: translateY(-5px);
+      box-shadow: var(--card-hover-shadow);
+    }
+    
     .alert-title {
-      margin-top: 10px;
-      font-weight: normal;
+      margin-top: 15px;
+      font-weight: 500;
+      color: var(--text-secondary);
     }
-    /* Low: green, Medium: orange, High: red */
-    .low { background-color: #4caf50; }
-    .medium { background-color: #ffa500; }
-    .high { background-color: #f44336; }
+    
+    /* Status colors */
+    .low { 
+      background: linear-gradient(135deg, var(--success), #a8e063); 
+    }
+    
+    .medium { 
+      background: linear-gradient(135deg, var(--warning), #ffcc33); 
+    }
+    
+    .high { 
+      background: linear-gradient(135deg, var(--danger), #ff416c); 
+    }
 
     /* =============== Order information style =============== */
     #orders table {
-      width: 80%;
-      margin: 20px auto;
+      width: 90%;
+      margin: 25px auto;
       border-collapse: collapse;
+      border-radius: 15px;
+      overflow: hidden;
+      box-shadow: var(--card-shadow);
+      background: rgba(255, 255, 255, 0.7);
     }
-    #orders th, #orders td {
-      border: 1px solid #ccc;
-      padding: 10px; text-align: center;
+    
+    #orders th {
+      background: var(--gradient-primary);
+      color: white;
+      padding: 15px; 
+      text-align: center;
+      font-weight: 500;
     }
+    
+    #orders td {
+      padding: 12px 15px; 
+      text-align: center;
+      border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+    }
+    
+    #orders tr:last-child td {
+      border-bottom: none;
+    }
+    
+    #orders tr:hover {
+      background-color: rgba(58, 123, 213, 0.05);
+    }
+    
     #accountInfo {
-      margin: 20px;
+      margin: 25px;
       font-size: 18px;
+      background: rgba(255, 255, 255, 0.7);
+      padding: 15px 25px;
+      border-radius: 15px;
+      box-shadow: var(--card-shadow);
+      display: inline-block;
     }
 
     .trade-type-row button,
     .trade-action-row button {
       flex: 1;
-      padding: 10px;
-      border: 1px solid #ddd;
-      border-radius: 4px;
-      background: white;
+      padding: 12px 15px;
+      border-radius: 8px;
       cursor: pointer;
       transition: all 0.3s;
       font-weight: 500;
-      font-size: 14px;
+      font-size: 15px;
+      border: none;
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
     }
 
     .trade-type-row button {
-      color: #2196F3;
-      border-color: #2196F3;
+      background: rgba(58, 123, 213, 0.1);
+      color: var(--primary-color);
     }
 
     .trade-type-row button:hover {
-      background: rgba(33, 150, 243, 0.1);
+      background: rgba(58, 123, 213, 0.2);
     }
 
     .trade-type-row button.active {
-      background: #2196F3;
+      background: var(--gradient-primary);
       color: white;
-      border-color: #2196F3;
     }
 
     .buy-btn {
-      color: #4CAF50;
-      border-color: #4CAF50;
+      background: rgba(52, 199, 89, 0.1);
+      color: var(--success);
     }
 
     .buy-btn:hover {
-      background: rgba(76, 175, 80, 0.1);
+      background: rgba(52, 199, 89, 0.2);
     }
 
     .buy-btn.active {
-      background: #4CAF50;
+      background: linear-gradient(135deg, var(--success), #a8e063);
       color: white;
-      border-color: #4CAF50;
     }
 
     .sell-btn {
-      color: #f44336;
-      border-color: #f44336;
+      background: rgba(255, 59, 48, 0.1);
+      color: var(--danger);
     }
 
     .sell-btn:hover {
-      background: rgba(244, 67, 54, 0.1);
+      background: rgba(255, 59, 48, 0.2);
     }
 
     .sell-btn.active {
-      background: #f44336;
+      background: linear-gradient(135deg, var(--danger), #ff416c);
       color: white;
-      border-color: #f44336;
     }
 
     .trading-metrics {
-      background: #fff;
-      border-radius: 12px;
+      background: rgba(255, 255, 255, 0.7);
+      border-radius: 15px;
       padding: 25px;
-      box-shadow: 0 8px 16px rgba(0,0,0,0.1);
+      box-shadow: var(--card-shadow);
       transition: all 0.3s ease;
+      backdrop-filter: blur(5px);
+      -webkit-backdrop-filter: blur(5px);
+      border: var(--card-border);
     }
 
     .trading-metrics:hover {
       transform: translateY(-5px);
-      box-shadow: 0 12px 24px rgba(0,0,0,0.15);
+      box-shadow: var(--card-hover-shadow);
     }
 
     .metric-row {
@@ -493,16 +901,16 @@
       position: relative;
       display: flex;
       flex-direction: column;
-      gap: 10px;
-      padding: 20px;
-      background: linear-gradient(145deg, #ffffff, #f5f5f5);
+      gap: 5px;
+      padding: 12px;
+      background: rgba(255, 255, 255, 0.5);
       border-radius: 15px;
       transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-      border: 1px solid rgba(255, 255, 255, 0.8);
-      box-shadow: 
-        0 4px 6px rgba(0,0,0,0.05),
-        inset 0 1px 1px rgba(255,255,255,0.8);
+      border: var(--card-border);
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
       overflow: hidden;
+      backdrop-filter: blur(5px);
+      -webkit-backdrop-filter: blur(5px);
     }
 
     .metric-item::before {
@@ -512,7 +920,7 @@
       left: 0;
       right: 0;
       bottom: 0;
-      background: linear-gradient(45deg, transparent, rgba(255,255,255,0.1), transparent);
+      background: linear-gradient(45deg, transparent, rgba(255, 255, 255, 0.1), transparent);
       transform: translateX(-100%);
       transition: transform 0.6s;
     }
@@ -523,65 +931,67 @@
 
     .metric-item:hover {
       transform: translateY(-5px) scale(1.02);
-      box-shadow: 
-        0 8px 12px rgba(0,0,0,0.1),
-        inset 0 1px 1px rgba(255,255,255,0.9);
+      box-shadow: 0 8px 15px rgba(0, 0, 0, 0.1);
     }
 
     .metric-item .label {
-      font-size: 13px;
-      color: #666;
+      font-size: 12px;
+      color: var(--text-secondary);
       text-transform: uppercase;
       letter-spacing: 0.5px;
     }
 
     .metric-item .value {
-      font-size: 18px;
+      font-size: 16px;
       font-weight: 600;
-      color: #333;
+      color: var(--text-primary);
     }
 
     .metric-item.highlight {
-      background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+      background: rgba(255, 255, 255, 0.7);
     }
 
     .metric-item.volume .value {
-      color: #2196F3;
+      color: var(--primary-color);
     }
 
     .metric-item.market-cap .value {
-      color: #4CAF50;
+      color: var(--success);
     }
 
     .metric-item.pe-ratio .value {
-      color: #ff9800;
+      color: var(--warning);
     }
-
+    
+    /* =============== Stock Chart and Search Styles =============== */
     .search-bar {
       display: flex;
       gap: 15px;
       margin-bottom: 30px;
-      background: #fff;
+      background: rgba(255, 255, 255, 0.7);
       padding: 20px;
-      border-radius: 12px;
-      box-shadow: 0 8px 16px rgba(0,0,0,0.1);
+      border-radius: 15px;
+      box-shadow: var(--card-shadow);
       transition: all 0.3s ease;
+      backdrop-filter: blur(5px);
+      -webkit-backdrop-filter: blur(5px);
+      border: var(--card-border);
     }
 
     .search-bar:hover {
       transform: translateY(-2px);
-      box-shadow: 0 12px 24px rgba(0,0,0,0.15);
+      box-shadow: var(--card-hover-shadow);
     }
 
     .search-bar input {
       flex: 1;
       max-width: none;
       padding: 12px 20px;
-      border: 2px solid #e0e0e0;
-      border-radius: 8px;
+      border: 1px solid rgba(0, 0, 0, 0.1);
+      border-radius: 10px;
       font-size: 16px;
       transition: all 0.3s ease;
-      background: linear-gradient(145deg, #ffffff, #f5f5f5);
+      background: rgba(255, 255, 255, 0.5);
     }
 
     .search-bar input:focus {
@@ -608,685 +1018,826 @@
       box-shadow: 0 4px 8px rgba(33, 150, 243, 0.3);
       background: linear-gradient(135deg, #1E88E5, #1565C0);
     }
-
-    .trade-panel {
-      width: 320px;
-      background: #fff;
-      border-radius: 12px;
-      padding: 25px;
-      box-shadow: 0 8px 16px rgba(0,0,0,0.1);
-      transition: all 0.3s ease;
+    
+    #chartContainer {
+      background: rgba(255, 255, 255, 0.7);
+      border-radius: 15px;
+      padding: 20px;
+      box-shadow: var(--card-shadow);
+      margin-bottom: 30px;
+      backdrop-filter: blur(5px);
+      -webkit-backdrop-filter: blur(5px);
+      border: var(--card-border);
     }
-
-    .trade-panel:hover {
-      transform: translateY(-5px);
-      box-shadow: 0 12px 24px rgba(0,0,0,0.15);
-    }
-
-    .trade-panel h3 {
-      margin: 0 0 20px 0;
-      color: #333;
-      font-size: 20px;
-      font-weight: 600;
-    }
-
-    .trade-options {
-      margin: 20px 0;
-    }
-
-    .trade-type-row,
-    .trade-action-row {
+    
+    .historical-search-container {
+      background: rgba(255, 255, 255, 0.7);
+      padding: 20px;
+      border-radius: 15px;
+      margin-bottom: 30px;
+      box-shadow: var(--card-shadow);
       display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
       gap: 15px;
-      margin-bottom: 15px;
+      backdrop-filter: blur(5px);
+      -webkit-backdrop-filter: blur(5px);
+      border: var(--card-border);
     }
-
-    .trade-type-row button,
-    .trade-action-row button {
-      flex: 1;
-      padding: 12px;
-      border: 2px solid;
-      border-radius: 8px;
-      background: linear-gradient(145deg, #ffffff, #f5f5f5);
-      cursor: pointer;
-      transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-      font-weight: 600;
-      font-size: 15px;
+    
+    .tab-content {
+      display: none;
+      animation: fadeIn 0.3s ease-in-out;
+    }
+    
+    .tab-content.active {
+      display: block;
+    }
+    
+    /* =============== Login/Register Glass Morphism =============== */
+    .login-container,
+    .register-container,
+    .admin-login-container {
+      max-width: 400px;
+      margin: 80px auto;
+      padding: 40px;
+      background: rgba(255, 255, 255, 0.85);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border-radius: 25px;
+      box-shadow: 0 15px 25px rgba(0, 0, 0, 0.1), 0 5px 10px rgba(0, 0, 0, 0.05);
+      transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
       position: relative;
       overflow: hidden;
+      border: 1px solid rgba(255, 255, 255, 0.8);
     }
-
-    .trade-type-row button::before,
-    .trade-action-row button::before {
+    
+    .login-container::before,
+    .register-container::before,
+    .admin-login-container::before {
       content: '';
       position: absolute;
-      top: 0;
-      left: 0;
-      right: 0;
+      top: -50%;
+      left: -50%;
+      width: 200%;
+      height: 200%;
+      background: linear-gradient(45deg, 
+        rgba(58, 123, 213, 0.08), 
+        rgba(0, 198, 255, 0.08), 
+        rgba(95, 61, 196, 0.08));
+      transform: rotate(45deg);
+      z-index: -1;
+      transition: transform 0.8s;
+    }
+    
+    .login-container:hover,
+    .register-container:hover,
+    .admin-login-container:hover {
+      box-shadow: 0 20px 30px rgba(0, 0, 0, 0.15), 0 10px 15px rgba(0, 0, 0, 0.07);
+      transform: translateY(-8px);
+    }
+    
+    .login-container h1,
+    .register-container h1,
+    .admin-login-container h1 {
+      text-align: center;
+      margin-bottom: 35px;
+      color: #2c3e50;
+      font-size: 32px;
+      font-weight: 600;
+      position: relative;
+      padding-bottom: 12px;
+      letter-spacing: 0.5px;
+    }
+    
+    .login-container h1::after,
+    .register-container h1::after,
+    .admin-login-container h1::after {
+      content: '';
+      position: absolute;
       bottom: 0;
-      background: linear-gradient(45deg, transparent, rgba(255,255,255,0.2), transparent);
-      transform: translateX(-100%);
-      transition: transform 0.6s;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 60px;
+      height: 4px;
+      background: linear-gradient(to right, #3a7bd5, #00d2ff);
+      border-radius: 2px;
     }
 
-    .trade-type-row button:hover::before,
-    .trade-action-row button:hover::before {
-      transform: translateX(100%);
+    .login-form,
+    .register-form,
+    .admin-form {
+      margin-bottom: 25px;
     }
-
-    .trade-form {
-      display: flex;
-      flex-direction: column;
-      gap: 20px;
-    }
-
+    
     .form-group {
+      margin-bottom: 20px;
       display: flex;
       flex-direction: column;
       gap: 8px;
     }
-
+    
     .form-group label {
       font-size: 14px;
-      color: #666;
+      color: #546e7a;
       font-weight: 500;
+      margin-bottom: 5px;
+    }
+    
+    .form-group input {
+      padding: 16px;
+      border: 2px solid #e0e0e0;
+      border-radius: 12px;
+      font-size: 16px;
+      transition: all 0.3s ease;
+      background: rgba(255, 255, 255, 0.9);
+      box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.03);
+    }
+    
+    .form-group input:focus {
+      border-color: #3a7bd5;
+      box-shadow: 0 0 0 4px rgba(58, 123, 213, 0.15), inset 0 2px 4px rgba(0, 0, 0, 0.03);
+      outline: none;
     }
 
-    .form-group input {
-      padding: 12px;
+    .login-btn,
+    .register-btn,
+    .admin-btn {
+      width: 100%;
+      padding: 16px;
+      margin-top: 10px;
+      border-radius: 12px;
+      font-size: 16px;
+      font-weight: 600;
+      background: linear-gradient(135deg, #3a7bd5, #5754f8);
+      color: white;
+      border: none;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      box-shadow: 0 6px 15px rgba(58, 123, 213, 0.3);
+      letter-spacing: 0.5px;
+    }
+    
+    .login-btn:hover,
+    .register-btn:hover,
+    .admin-btn:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 8px 20px rgba(58, 123, 213, 0.4);
+      background: linear-gradient(135deg, #4a8be5, #6764f8);
+    }
+    
+    .login-btn:active,
+    .register-btn:active,
+    .admin-btn:active {
+      transform: translateY(1px);
+      box-shadow: 0 4px 10px rgba(58, 123, 213, 0.3);
+    }
+    
+    .login-links,
+    .register-links {
+      text-align: center;
+      margin-top: 20px;
+      font-size: 14px;
+      color: #546e7a;
+    }
+    
+    .login-links a,
+    .register-links a {
+      color: #3a7bd5;
+      text-decoration: none;
+      font-weight: 500;
+      margin-left: 6px;
+      transition: color 0.3s ease;
+    }
+    
+    .login-links a:hover,
+    .register-links a:hover {
+      color: #5754f8;
+      text-decoration: underline;
+    }
+    
+    .admin-link {
+      margin-top: 15px;
+      padding-top: 15px;
+      border-top: 1px solid rgba(0, 0, 0, 0.08);
+    }
+    
+    /* Override the Chart.js styling to match our theme */
+    canvas {
+      background: transparent !important;
+      border-radius: 10px;
+    }
+    
+    /* Order tab content styling */
+    .order-tab-content {
+      background: rgba(255, 255, 255, 0.7) !important;
+      padding: 15px !important;
+      margin-bottom: 20px !important;
+      border-radius: 15px !important;
+      box-shadow: var(--card-shadow) !important;
+      backdrop-filter: blur(5px) !important;
+      -webkit-backdrop-filter: blur(5px) !important;
+      border: var(--card-border) !important;
+    }
+    
+    #realtimeOrderInfo {
+      background: linear-gradient(135deg, rgba(58, 123, 213, 0.1), rgba(0, 198, 255, 0.1)) !important;
+    }
+    
+    #limitOrderInfo {
+      background: linear-gradient(135deg, rgba(255, 149, 0, 0.1), rgba(255, 204, 51, 0.1)) !important;
+    }
+    
+    /* Stock content area */
+    .stock-content {
+      background: rgba(255, 255, 255, 0.7);
+      border-radius: 15px;
+      padding: 25px;
+      box-shadow: var(--card-shadow);
+      margin-bottom: 30px;
+      backdrop-filter: blur(5px);
+      -webkit-backdrop-filter: blur(5px);
+      border: var(--card-border);
+    }
+    
+    /* Add subtle animations to make the UI feel more responsive */
+    @keyframes pulse {
+      0% { box-shadow: 0 0 0 0 rgba(58, 123, 213, 0.4); }
+      70% { box-shadow: 0 0 0 10px rgba(58, 123, 213, 0); }
+      100% { box-shadow: 0 0 0 0 rgba(58, 123, 213, 0); }
+    }
+    
+    /* Add this to any element you want to pulse on hover */
+    .pulse-on-hover:hover {
+      animation: pulse 1.5s infinite;
+    }
+
+    /* =============== Prediction Settings Styles =============== */
+    .prediction-settings {
+      margin-top: 30px !important;
+      background: rgba(255, 255, 255, 0.8);
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      border-radius: 16px;
+      padding: 25px;
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+      max-width: 600px;
+      margin-left: auto !important;
+      margin-right: auto !important;
+      border: 1px solid rgba(255, 255, 255, 0.8);
+      transition: all 0.3s ease;
+    }
+    
+    .prediction-settings:hover {
+      box-shadow: 0 12px 28px rgba(0, 0, 0, 0.15);
+      transform: translateY(-3px);
+    }
+    
+    .prediction-settings h3 {
+      margin-top: 0 !important;
+      margin-bottom: 20px !important;
+      color: #2c3e50;
+      font-size: 22px;
+      font-weight: 600;
+      position: relative;
+      display: inline-block;
+      padding-bottom: 8px;
+    }
+    
+    .prediction-settings h3:after {
+      content: '';
+      position: absolute;
+      bottom: 0;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 80px;
+      height: 3px;
+      background: linear-gradient(to right, #3a7bd5, #00d2ff);
+      border-radius: 3px;
+    }
+    
+    .settings-content {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 25px;
+      padding: 10px 0;
+    }
+    
+    .setting-group {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      min-width: 200px;
+      position: relative;
+      padding: 15px 20px;
+      background: rgba(255, 255, 255, 0.6);
+      border-radius: 12px;
+      border: 1px solid rgba(255, 255, 255, 0.9);
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
+      transition: all 0.3s ease;
+    }
+    
+    .setting-group:hover {
+      box-shadow: 0 6px 12px rgba(0, 0, 0, 0.08);
+      transform: translateY(-2px);
+      background: rgba(255, 255, 255, 0.8);
+    }
+    
+    .setting-group label {
+      font-size: 15px;
+      font-weight: 500;
+      color: #445566;
+      margin-bottom: 12px;
+      width: 100%;
+      text-align: center;
+    }
+    
+    .setting-group input {
+      width: 100%;
+      padding: 12px 15px;
+      border: 2px solid #e0e0e0;
+      border-radius: 10px;
+      font-size: 15px;
+      text-align: center;
+      background: rgba(255, 255, 255, 0.9);
+      color: #2c3e50;
+      font-weight: 500;
+      box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.03);
+      transition: all 0.3s ease;
+    }
+    
+    .setting-group input:focus {
+      border-color: #3a7bd5;
+      box-shadow: 0 0 0 3px rgba(58, 123, 213, 0.15), inset 0 2px 4px rgba(0, 0, 0, 0.03);
+      outline: none;
+    }
+    
+    .setting-group input::-webkit-inner-spin-button,
+    .setting-group input::-webkit-outer-spin-button {
+      -webkit-appearance: none;
+      margin: 0;
+    }
+    
+    .setting-group input[type=number] {
+      -moz-appearance: textfield;
+    }
+    
+    .input-description {
+      font-size: 12px;
+      color: #78909c;
+      margin-top: 8px;
+      font-style: italic;
+    }
+    
+    @media (max-width: 768px) {
+      .settings-content {
+        flex-direction: column;
+        align-items: center;
+      }
+      
+      .setting-group {
+        width: 100%;
+        max-width: 300px;
+      }
+    }
+
+    /* Historical Search and Buttons */
+    .historical-search-container {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 15px;
+      margin-bottom: 25px;
+      max-width: 700px;
+      margin-left: auto;
+      margin-right: auto;
+      width: 100%;
+      box-sizing: border-box;
+      padding: 0 20px;
+    }
+    
+    .historical-search-container input {
+      width: 100%;
+      padding: 15px 20px;
+      border: 2px solid #e0e0e0;
+      border-radius: 12px;
+      font-size: 16px;
+      background: rgba(255, 255, 255, 0.9);
+      box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.03), 0 4px 10px rgba(0, 0, 0, 0.05);
+      transition: all 0.3s ease;
+      box-sizing: border-box;
+    }
+    
+    .historical-search-container input:focus {
+      border-color: #3a7bd5;
+      box-shadow: 0 0 0 3px rgba(58, 123, 213, 0.15), inset 0 2px 4px rgba(0, 0, 0, 0.03);
+      outline: none;
+    }
+    
+    .historical-buttons {
+      display: flex;
+      flex-direction: column;
+      width: 100%;
+      gap: 15px;
+    }
+    
+    .button-row {
+      display: flex;
+      justify-content: center;
+      gap: 15px;
+      width: 100%;
+      box-sizing: border-box;
+    }
+    
+    .button-row:first-child {
+      justify-content: space-between;
+    }
+    
+    .get-data-btn,
+    .predict-btn {
+      width: calc(50% - 8px);
+      box-sizing: border-box;
+    }
+    
+    .clear-stocks-btn {
+      width: 100%;
+      max-width: 300px;
+      box-sizing: border-box;
+    }
+    
+    .get-data-btn,
+    .predict-btn,
+    .clear-stocks-btn,
+    .view-mode-btn {
+      padding: 12px 22px;
+      border-radius: 12px;
+      font-size: 15px;
+      font-weight: 600;
+      color: white;
+      border: none;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+      letter-spacing: 0.5px;
+    }
+    
+    .get-data-btn {
+      background: linear-gradient(135deg, #3a7bd5, #00d2ff);
+    }
+    
+    .predict-btn {
+      background: linear-gradient(135deg, #6a5af9, #d789d7);
+    }
+    
+    .clear-stocks-btn {
+      background: linear-gradient(135deg, #ff7676, #f54ea2);
+    }
+    
+    .get-data-btn:hover,
+    .predict-btn:hover,
+    .clear-stocks-btn:hover,
+    .view-mode-btn:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 6px 15px rgba(0, 0, 0, 0.2);
+    }
+    
+    .get-data-btn:active,
+    .predict-btn:active,
+    .clear-stocks-btn:active,
+    .view-mode-btn:active {
+      transform: translateY(1px);
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    }
+    
+    #viewModeToggle {
+      background: rgba(255, 255, 255, 0.7);
+      backdrop-filter: blur(5px);
+      -webkit-backdrop-filter: blur(5px);
+      border-radius: 12px;
+      padding: 10px 15px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+      display: inline-flex !important;
+      gap: 12px;
+      margin: 20px auto !important;
+    }
+    
+    .view-mode-btn {
+      background: rgba(255, 255, 255, 0.6);
+      color: #445566;
+      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+      padding: 10px 16px;
+      min-width: 160px;
+    }
+    
+    .view-mode-btn.active {
+      background: linear-gradient(135deg, #3a7bd5, #00d2ff);
+      color: white;
+      box-shadow: 0 4px 10px rgba(58, 123, 213, 0.3);
+    }
+    
+    #chartContainer {
+      background: rgba(255, 255, 255, 0.8);
+      border-radius: 16px;
+      padding: 20px;
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+      margin-top: 20px;
+      transition: all 0.3s ease;
+    }
+    
+    #chartContainer:hover {
+      box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+    }
+
+    .stock-header {
+      padding: 20px;
+      background: #fff;
+      border-radius: 8px;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+      transition: all 0.3s ease;
+    }
+    
+    .stock-header:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 6px 12px rgba(0,0,0,0.15);
+      animation: pulse 1.5s infinite;
+    }
+
+    .trading-metrics {
+      background: #fff;
+      border-radius: 10px;
+      padding: 20px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+      box-sizing: border-box;
+      width: 100%;
+      max-width: 1000px;  /* 统一宽度 */
+      margin-left: auto;
+      margin-right: auto;
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 15px;
+      margin-top: 15px;
+    }
+    
+    .info-tabs {
+      background: #fff;
+      border-radius: 10px;
+      padding: 20px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+      box-sizing: border-box;
+      width: 100%;
+      max-width: 1000px;  /* 统一宽度 */
+      margin-left: auto;
+      margin-right: auto;
+      overflow: hidden;
+      margin-top: 20px;
+    }
+    
+    .orders-container {
+      background-color: white;
+      border-radius: 15px;
+      padding: 30px;
+      box-shadow: 0 8px 16px rgba(0,0,0,0.1);
+      margin-bottom: 30px;
+      box-sizing: border-box;
+      width: 100%;
+    }
+
+    .alerts-container {
+      background-color: white;
+      border-radius: 15px;
+      padding: 30px;
+      box-shadow: 0 8px 16px rgba(0,0,0,0.1);
+      margin-bottom: 30px;
+      box-sizing: border-box;
+      width: 100%;
+      max-width: 1000px; /* 调整为与其他容器一致的宽度 */
+      margin-left: auto;
+      margin-right: auto;
+      transition: all 0.3s ease;
+    }
+    
+    .alerts-container:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 12px 24px rgba(0,0,0,0.15);
+      animation: pulse 1.5s infinite;
+    }
+    
+    .alert-form {
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+    }
+    
+    .form-field {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+    
+    .form-field label {
+      font-weight: 600;
+      color: #333;
+      font-size: 15px;
+    }
+    
+    .form-field input,
+    .form-field select {
+      padding: 12px 15px;
       border: 2px solid #e0e0e0;
       border-radius: 8px;
       font-size: 15px;
+      background: rgba(255, 255, 255, 0.8);
       transition: all 0.3s ease;
-      background: linear-gradient(145deg, #ffffff, #f5f5f5);
     }
-
-    .form-group input:focus {
-      border-color: #2196F3;
-      box-shadow: 0 0 0 3px rgba(33, 150, 243, 0.1);
+    
+    .form-field input:focus,
+    .form-field select:focus {
+      border-color: #3a7bd5;
+      box-shadow: 0 0 0 3px rgba(58, 123, 213, 0.15);
       outline: none;
     }
-
-    .submit-btn,
-    .view-btn {
-      padding: 12px;
-      border: none;
-      border-radius: 8px;
-      cursor: pointer;
-      font-weight: 600;
-      font-size: 15px;
-      transition: all 0.3s ease;
-    }
-
-    .submit-btn {
-      background: linear-gradient(135deg, #4CAF50, #43A047);
-      color: white;
-      box-shadow: 0 2px 4px rgba(76, 175, 80, 0.2);
-    }
-
-    .submit-btn:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 4px 8px rgba(76, 175, 80, 0.3);
-      background: linear-gradient(135deg, #43A047, #388E3C);
-    }
-
-    .view-btn {
-      background: linear-gradient(135deg, #757575, #616161);
-      color: white;
-      box-shadow: 0 2px 4px rgba(117, 117, 117, 0.2);
-    }
-
-    .view-btn:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 4px 8px rgba(117, 117, 117, 0.3);
-      background: linear-gradient(135deg, #616161, #424242);
-    }
-
-    /* 技术指标区域样式 */
-    .info-tabs {
-      background: #fff;
-      border-radius: 12px;
-      padding: 25px;
-      box-shadow: 0 8px 16px rgba(0,0,0,0.1);
-      transition: all 0.3s ease;
-    }
-
-    .info-tabs:hover {
-      transform: translateY(-5px);
-      box-shadow: 0 12px 24px rgba(0,0,0,0.15);
-    }
-
-    .tab-buttons {
+    
+    .alert-actions {
       display: flex;
       gap: 15px;
-      margin-bottom: 25px;
-      border-bottom: none;
-      padding-bottom: 0;
-    }
-
-    .tab-btn {
-      padding: 12px 24px;
-      border: none;
-      border-radius: 8px;
-      background: linear-gradient(145deg, #ffffff, #f5f5f5);
-      cursor: pointer;
-      color: #666;
-      transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-      font-weight: 500;
-      font-size: 15px;
-      position: relative;
-      overflow: hidden;
-    }
-
-    .tab-btn::before {
-      content: '';
-      position: absolute;
-      top: 0;
-      left: 0;
-      right: 0;
-      bottom: 0;
-      background: linear-gradient(45deg, transparent, rgba(255,255,255,0.2), transparent);
-      transform: translateX(-100%);
-      transition: transform 0.6s;
-    }
-
-    .tab-btn:hover::before {
-      transform: translateX(100%);
-    }
-
-    .tab-btn.active {
-      background: linear-gradient(135deg, #4CAF50, #43A047);
-      color: white;
-      box-shadow: 0 2px 4px rgba(76, 175, 80, 0.2);
-    }
-
-    .tab-content.active {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-      gap: 20px;
-    }
-
-    .info-item {
-      position: relative;
-      padding: 20px;
-      background: linear-gradient(145deg, #ffffff, #f5f5f5);
-      border-radius: 12px;
-      transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-      border: 1px solid rgba(255, 255, 255, 0.8);
-      box-shadow: 
-        0 4px 6px rgba(0,0,0,0.05),
-        inset 0 1px 1px rgba(255,255,255,0.8);
-      overflow: hidden;
-    }
-
-    .info-item::before {
-      content: '';
-      position: absolute;
-      top: 0;
-      left: 0;
-      right: 0;
-      bottom: 0;
-      background: linear-gradient(45deg, transparent, rgba(255,255,255,0.1), transparent);
-      transform: translateX(-100%);
-      transition: transform 0.6s;
-    }
-
-    .info-item:hover::before {
-      transform: translateX(100%);
-    }
-
-    .info-item:hover {
-      transform: translateY(-3px) scale(1.02);
-      box-shadow: 
-        0 8px 12px rgba(0,0,0,0.1),
-        inset 0 1px 1px rgba(255,255,255,0.9);
-    }
-
-    .info-item .label {
-      font-size: 14px;
-      color: #666;
-      font-weight: 500;
-      margin-bottom: 8px;
-    }
-
-    .info-item .value {
-      font-size: 18px;
-      font-weight: 600;
-      color: #333;
-      background: linear-gradient(45deg, #2196F3, #1976D2);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-    }
-
-    /* Historical price search area container */
-    .historical-search-container {
-      display: flex;
-      gap: 15px;
-      margin: 30px auto;
-      padding: 25px;
-      background: linear-gradient(145deg, #ffffff, #f5f5f5);
-      border-radius: 16px;
-      box-shadow: 
-        0 10px 20px rgba(0,0,0,0.08),
-        inset 0 -2px 0 rgba(255,255,255,0.15);
-      max-width: 800px;
-      transition: all 0.3s ease;
-    }
-
-    .historical-search-container:hover {
-      transform: translateY(-2px);
-      box-shadow: 
-        0 15px 30px rgba(0,0,0,0.12),
-        inset 0 -2px 0 rgba(255,255,255,0.2);
-    }
-
-    /* Search input box */
-    #stockInput {
-      flex: 1;
-      padding: 15px 20px;
-      border: 2px solid rgba(33, 150, 243, 0.1);
-      border-radius: 12px;
-      font-size: 16px;
-      background: white;
-      transition: all 0.3s ease;
-      color: #333;
-      box-shadow: 
-        inset 0 2px 4px rgba(0,0,0,0.05),
-        0 0 0 transparent;
-    }
-
-    #stockInput:focus {
-      border-color: #2196F3;
-      box-shadow: 
-        inset 0 2px 4px rgba(0,0,0,0.05),
-        0 0 0 4px rgba(33, 150, 243, 0.15);
-      outline: none;
-    }
-
-    #stockInput::placeholder {
-      color: #999;
-      font-size: 15px;
-    }
-
-    /* Button container */
-    .historical-buttons {
-      display: flex;
-      gap: 12px;
-    }
-
-    /* Get data button */
-    .get-data-btn {
-      padding: 15px 25px;
-      border: none;
-      border-radius: 12px;
-      background: linear-gradient(135deg, #2196F3, #1976D2);
-      color: white;
-      font-weight: 600;
-      font-size: 15px;
-      cursor: pointer;
-      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-      box-shadow: 0 4px 6px rgba(33, 150, 243, 0.2);
-      position: relative;
-      overflow: hidden;
-    }
-
-    .get-data-btn:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 6px 12px rgba(33, 150, 243, 0.3);
-      background: linear-gradient(135deg, #1E88E5, #1565C0);
-    }
-
-    .get-data-btn:active {
-      transform: translateY(0);
-      box-shadow: 0 2px 4px rgba(33, 150, 243, 0.2);
-    }
-
-    /* Clear button */
-    .clear-stocks-btn {
-      padding: 15px 25px;
-      border: 2px solid #e57373;
-      border-radius: 12px;
-      background: white;
-      color: #e57373;
-      font-weight: 600;
-      font-size: 15px;
-      cursor: pointer;
-      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-      box-shadow: 0 2px 4px rgba(229, 115, 115, 0.1);
-    }
-
-    .clear-stocks-btn:hover {
-      background: #e57373;
-      color: white;
-      transform: translateY(-2px);
-      box-shadow: 0 4px 8px rgba(229, 115, 115, 0.2);
-    }
-
-    .clear-stocks-btn:active {
-      transform: translateY(0);
-      box-shadow: 0 2px 4px rgba(229, 115, 115, 0.1);
-    }
-
-    /* Wave effect */
-    .get-data-btn::after {
-      content: '';
-      position: absolute;
-      top: 50%;
-      left: 50%;
-      width: 5px;
-      height: 5px;
-      background: rgba(255, 255, 255, 0.5);
-      opacity: 0;
-      border-radius: 100%;
-      transform: scale(1, 1) translate(-50%);
-      transform-origin: 50% 50%;
-    }
-
-    .get-data-btn:focus:not(:active)::after {
-      animation: ripple 1s ease-out;
-    }
-
-    @keyframes ripple {
-      0% {
-        transform: scale(0, 0);
-        opacity: 0.5;
-      }
-      100% {
-        transform: scale(100, 100);
-        opacity: 0;
-      }
-    }
-
-    /* Login page styles */
-    .login-container {
-      max-width: 400px;
-      margin: 50px auto;
-      padding: 30px;
-      background: linear-gradient(145deg, #ffffff, #f5f5f5);
-      border-radius: 20px;
-      box-shadow: 
-        0 10px 20px rgba(0,0,0,0.1),
-        inset 0 -2px 0 rgba(255,255,255,0.2);
-      transition: all 0.3s ease;
-    }
-
-    .login-container:hover {
-      transform: translateY(-5px);
-      box-shadow: 
-        0 15px 30px rgba(0,0,0,0.15),
-        inset 0 -2px 0 rgba(255,255,255,0.3);
-    }
-
-    .login-container h1 {
-      text-align: center;
-      margin-bottom: 30px;
-      color: #333;
-      font-size: 2.5em;
-      font-weight: 700;
-      background: linear-gradient(120deg, #2196F3, #1976D2);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-    }
-
-    .login-form {
-      display: flex;
-      flex-direction: column;
-      gap: 20px;
-    }
-
-    .form-group {
-      position: relative;
-    }
-
-    .form-group input {
-      width: 100%;
-      padding: 15px 20px;
-      border: 2px solid rgba(33, 150, 243, 0.1);
-      border-radius: 12px;
-      font-size: 16px;
-      background: white;
-      transition: all 0.3s ease;
-      color: #333;
-      box-shadow: 
-        inset 0 2px 4px rgba(0,0,0,0.05),
-        0 0 0 transparent;
-    }
-
-    .form-group input:focus {
-      border-color: #2196F3;
-      box-shadow: 
-        inset 0 2px 4px rgba(0,0,0,0.05),
-        0 0 0 4px rgba(33, 150, 243, 0.15);
-      outline: none;
-    }
-
-    .form-group input::placeholder {
-      color: #999;
-      font-size: 15px;
-    }
-
-    .login-btn {
-      width: 100%;
-      padding: 15px;
-      border: none;
-      border-radius: 12px;
-      background: linear-gradient(135deg, #2196F3, #1976D2);
-      color: white;
-      font-size: 16px;
-      font-weight: 600;
-      cursor: pointer;
-      transition: all 0.3s ease;
-      box-shadow: 0 4px 8px rgba(33, 150, 243, 0.2);
-    }
-
-    .login-btn:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 6px 12px rgba(33, 150, 243, 0.3);
-      background: linear-gradient(135deg, #1E88E5, #1565C0);
-    }
-
-    .login-links {
-      margin-top: 20px;
-      text-align: center;
-      display: flex;
-      flex-direction: column;
-      gap: 10px;
-    }
-
-    .login-links a {
-      color: #2196F3;
-      text-decoration: none;
-      font-size: 15px;
-      transition: all 0.3s ease;
-    }
-
-    .login-links a:hover {
-      color: #1976D2;
-      text-decoration: underline;
-    }
-
-    .admin-link {
       margin-top: 10px;
-      padding-top: 10px;
-      border-top: 1px solid rgba(0,0,0,0.1);
     }
-
-    /* Register page styles */
-    .register-container {
-      max-width: 400px;
-      margin: 50px auto;
-      padding: 30px;
-      background: linear-gradient(145deg, #ffffff, #f5f5f5);
-      border-radius: 20px;
-      box-shadow: 
-        0 10px 20px rgba(0,0,0,0.1),
-        inset 0 -2px 0 rgba(255,255,255,0.2);
-      transition: all 0.3s ease;
-    }
-
-    .register-container:hover {
-      transform: translateY(-5px);
-      box-shadow: 
-        0 15px 30px rgba(0,0,0,0.15),
-        inset 0 -2px 0 rgba(255,255,255,0.3);
-    }
-
-    .register-container h1 {
-      text-align: center;
-      margin-bottom: 30px;
-      color: #333;
-      font-size: 2.5em;
-      font-weight: 700;
-      background: linear-gradient(120deg, #4CAF50, #388E3C);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-    }
-
-    .register-form {
-      display: flex;
-      flex-direction: column;
-      gap: 20px;
-    }
-
-    .register-btn {
-      width: 100%;
-      padding: 15px;
+    
+    .set-alarm-btn,
+    .reset-btn {
+      padding: 12px 25px;
       border: none;
-      border-radius: 12px;
-      background: linear-gradient(135deg, #4CAF50, #388E3C);
-      color: white;
-      font-size: 16px;
-      font-weight: 600;
-      cursor: pointer;
-      transition: all 0.3s ease;
-      box-shadow: 0 4px 8px rgba(76, 175, 80, 0.2);
-    }
-
-    .register-btn:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 6px 12px rgba(76, 175, 80, 0.3);
-      background: linear-gradient(135deg, #43A047, #2E7D32);
-    }
-
-    .register-links {
-      margin-top: 20px;
-      text-align: center;
-    }
-
-    .register-links a {
-      color: #4CAF50;
-      text-decoration: none;
-      font-size: 15px;
-      transition: all 0.3s ease;
-    }
-
-    .register-links a:hover {
-      color: #388E3C;
-      text-decoration: underline;
-    }
-
-    /* Admin login page styles */
-    .admin-login-container {
-      max-width: 400px;
-      margin: 50px auto;
-      padding: 30px;
-      background: linear-gradient(145deg, #ffffff, #f5f5f5);
-      border-radius: 20px;
-      box-shadow: 
-        0 10px 20px rgba(0,0,0,0.1),
-        inset 0 -2px 0 rgba(255,255,255,0.2);
-      transition: all 0.3s ease;
-      position: relative;
-      overflow: hidden;
-    }
-
-    .admin-login-container::before {
-      content: '';
-      position: absolute;
-      top: 0;
-      left: 0;
-      right: 0;
-      height: 5px;
-      background: linear-gradient(90deg, #FF5722, #FF9800);
-    }
-
-    .admin-login-container:hover {
-      transform: translateY(-5px);
-      box-shadow: 
-        0 15px 30px rgba(0,0,0,0.15),
-        inset 0 -2px 0 rgba(255,255,255,0.3);
-    }
-
-    .admin-login-container h1 {
-      text-align: center;
-      margin-bottom: 30px;
-      color: #333;
-      font-size: 2.5em;
-      font-weight: 700;
-      background: linear-gradient(120deg, #FF5722, #FF9800);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-    }
-
-    .admin-form {
-      display: flex;
-      flex-direction: column;
-      gap: 20px;
-    }
-
-    .admin-btn {
-      width: 100%;
-      padding: 15px;
-      border: none;
-      border-radius: 12px;
-      background: linear-gradient(135deg, #FF5722, #FF9800);
-      color: white;
-      font-size: 16px;
-      font-weight: 600;
-      cursor: pointer;
-      transition: all 0.3s ease;
-      box-shadow: 0 4px 8px rgba(255, 87, 34, 0.2);
-    }
-
-    .admin-btn:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 6px 12px rgba(255, 87, 34, 0.3);
-      background: linear-gradient(135deg, #F4511E, #FB8C00);
-    }
-
-    .admin-links {
-      margin-top: 20px;
-      text-align: center;
-    }
-
-    .admin-links a {
-      color: #FF5722;
-      text-decoration: none;
-      font-size: 15px;
-      transition: all 0.3s ease;
-      display: inline-flex;
-      align-items: center;
-      gap: 5px;
-    }
-
-    .admin-links a::before {
-      content: '←';
-      font-size: 18px;
-    }
-
-    .admin-links a:hover {
-      color: #F4511E;
-      transform: translateX(-5px);
-    }
-
-    .admin-notice {
-      margin-top: 15px;
-      padding: 10px;
-      background: rgba(255, 87, 34, 0.1);
       border-radius: 8px;
-      font-size: 14px;
-      color: #FF5722;
-      text-align: center;
+      font-weight: 600;
+      font-size: 15px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+    
+    .set-alarm-btn {
+      background: linear-gradient(135deg, #3a7bd5, #00d2ff);
+      color: white;
+      flex: 1;
+    }
+    
+    .reset-btn {
+      background: linear-gradient(135deg, #6c757d, #495057);
+      color: white;
+      flex: 1;
+    }
+    
+    .set-alarm-btn:hover,
+    .reset-btn:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+    }
+
+    /* =============== 历史价格页面样式 =============== */
+    .history-container {
+      background-color: white;
+      border-radius: 15px;
+      padding: 30px;
+      box-shadow: 0 8px 16px rgba(0,0,0,0.1);
+      margin-bottom: 30px;
+      box-sizing: border-box;
+      width: 100%;
+      max-width: 1000px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+    
+    /* 更新历史搜索容器样式与白色背景匹配 */
+    #history .historical-search-container {
+      background: rgba(248, 249, 250, 0.7);
+      padding: 20px;
+      border-radius: 12px;
+      margin-bottom: 20px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 15px;
+      border: 1px solid rgba(0, 0, 0, 0.05);
+      max-width: 1000px;  /* 添加统一宽度 */
+      margin-left: auto;
+      margin-right: auto;
+    }
+    
+    /* 美化预测设置区域 */
+    #predictionSettings {
+      background: rgba(248, 249, 250, 0.7);
+      padding: 20px;
+      border-radius: 12px;
+      margin-top: 20px;
+      margin-bottom: 10px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+      border: 1px solid rgba(0, 0, 0, 0.05);
+    }
+    
+    #predictionSettings h3 {
+      margin-top: 0;
+      color: var(--primary-color);
+      font-weight: 600;
+    }
+    
+    .settings-content {
+      display: flex;
+      justify-content: center;
+      gap: 30px;
+      flex-wrap: wrap;
+    }
+    
+    .setting-group {
+      display: flex;
+      flex-direction: column;
+      min-width: 200px;
+    }
+    
+    .setting-group label {
+      font-weight: 500;
+      color: var(--text-secondary);
+      margin-bottom: 5px;
+    }
+    
+    .setting-group input {
+      padding: 10px;
+      border: 1px solid rgba(0, 0, 0, 0.1);
+      border-radius: 8px;
+      background: white;
+      transition: all 0.3s;
+    }
+    
+    .setting-group input:focus {
+      border-color: var(--primary-color);
+      outline: none;
+      box-shadow: 0 0 0 3px rgba(58, 123, 213, 0.1);
+    }
+    
+    .input-description {
+      font-size: 12px;
+      color: #999;
+      margin-top: 5px;
+    }
+    
+    /* 历史价格页面按钮样式 */
+    .get-data-btn, .predict-btn {
+      padding: 10px 20px;
+      border: none;
+      border-radius: 8px;
+      color: white;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.3s;
+      min-width: 120px;
+    }
+    
+    .get-data-btn {
+      background: linear-gradient(135deg, #2196F3, #1976D2);
+      box-shadow: 0 2px 5px rgba(33, 150, 243, 0.3);
+    }
+    
+    .predict-btn {
+      background: linear-gradient(135deg, #9C27B0, #673AB7);
+      box-shadow: 0 2px 5px rgba(156, 39, 176, 0.3);
+    }
+    
+    .clear-stocks-btn {
+      padding: 10px 20px;
+      border: none;
+      border-radius: 8px;
+      background: linear-gradient(135deg, #F44336, #E53935);
+      color: white;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.3s;
+      box-shadow: 0 2px 5px rgba(244, 67, 54, 0.3);
+      min-width: 200px;
+    }
+    
+    .get-data-btn:hover, .predict-btn:hover, .clear-stocks-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    }
+    
+    .view-mode-btn {
+      padding: 8px 16px;
+      border: 1px solid var(--primary-color);
+      background: white;
+      color: var(--primary-color);
+      border-radius: 6px;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.3s;
+    }
+    
+    .view-mode-btn.active {
+      background: var(--primary-color);
+      color: white;
+    }
+    
+    .view-mode-btn:hover:not(.active) {
+      -webkit-backdrop-filter: blur(5px);
     }
   </style>
 </head>
@@ -1298,16 +1849,16 @@
     <h1>Login</h1>
     <form id="loginForm" class="login-form">
       <div class="form-group">
-        <input type="text" placeholder="Username" required />
+        <input type="text" placeholder="Username" required autocomplete="username" />
       </div>
       <div class="form-group">
-        <input type="password" placeholder="Password" required />
+        <input type="password" placeholder="Password" required autocomplete="current-password" />
       </div>
       <button type="submit" class="login-btn">Login</button>
     </form>
     <div class="login-links">
-      <p>No account? <a href="#" id="registerLink">Register now</a></p>
-      <p class="admin-link"><a href="#" id="adminEntryLink">Admin entry</a></p>
+      <p>No account yet? <a href="#" id="registerLink">Register now</a></p>
+      <p class="admin-link"><a href="#" id="adminEntryLink">Admin Entry</a></p>
     </div>
   </div>
 
@@ -1316,16 +1867,16 @@
     <h1>Register</h1>
     <form id="registerForm" class="register-form">
       <div class="form-group">
-        <input type="text" placeholder="Username" required />
+        <input type="text" placeholder="Username" required autocomplete="username" />
       </div>
       <div class="form-group">
-        <input type="email" placeholder="Email" required />
+        <input type="email" placeholder="Email" required autocomplete="email" />
       </div>
       <div class="form-group">
-        <input type="password" placeholder="Password" required />
+        <input type="password" placeholder="Password" required autocomplete="new-password" />
       </div>
       <div class="form-group">
-        <input type="password" placeholder="Confirm password" required />
+        <input type="password" placeholder="Confirm Password" required autocomplete="new-password" />
       </div>
       <button type="submit" class="register-btn">Register</button>
     </form>
@@ -1387,17 +1938,17 @@
         <!-- Right side: Stock information -->
         <div class="stock-info">
           <!-- Stock title and price -->
-          <div class="stock-header">
+          <div class="stock-header pulse-on-hover">
             <h2 id="stockName">--</h2>
             <div class="price-display">
               <span id="currentPrice" class="current-price">$--</span>
               <span id="priceChange" class="price-change">--</span>
             </div>
-              </div>
+          </div>
 
           <!-- Trading data grid -->
-          <div class="trading-metrics">
-            <div class="metric-row">
+          <div class="trading-metrics pulse-on-hover">
+            <div class="metrics-container">
               <div class="metric-item highlight">
                 <span class="label">Opening Price</span>
                 <span id="openPrice" class="value">$--</span>
@@ -1405,13 +1956,11 @@
               <div class="metric-item highlight">
                 <span class="label">Highest Price</span>
                 <span id="highPrice" class="value">$--</span>
-            </div>
+              </div>
               <div class="metric-item highlight">
                 <span class="label">Lowest Price</span>
                 <span id="lowPrice" class="value">$--</span>
-          </div>
               </div>
-            <div class="metric-row">
               <div class="metric-item volume">
                 <span class="label">Volume</span>
                 <span id="volume" class="value">--</span>
@@ -1419,16 +1968,16 @@
               <div class="metric-item market-cap">
                 <span class="label">Market Cap</span>
                 <span id="marketCap" class="value">--</span>
-            </div>
+              </div>
               <div class="metric-item pe-ratio">
                 <span class="label">PE Ratio</span>
                 <span id="peRatio" class="value">--</span>
-          </div>
-        </div>
+              </div>
+            </div>
           </div>
           
           <!-- Information tab page -->
-          <div class="info-tabs">
+          <div class="info-tabs pulse-on-hover">
             <div class="tab-buttons">
               <button class="tab-btn active" onclick="switchTab('company')">Company Information</button>
               <button class="tab-btn" onclick="switchTab('financial')">Financial Indicators</button>
@@ -1444,8 +1993,9 @@
       <style>
         .content {
           padding: 20px;
-          max-width: 1200px;
+          max-width: 1000px;  /* 修改为统一宽度 */
           margin: 0 auto;
+          box-sizing: border-box;
         }
 
         .search-bar {
@@ -1931,19 +2481,47 @@
 
     <!-- Historical price -->
     <div id="history" class="content" style="display: none;">
-      <h1>Historical price</h1>
-      <p>Enter the stock code you want to view (separated by commas)</p>
-      
-      <div class="historical-search-container">
-        <input type="text" id="stockInput" placeholder="e.g. AAPL, MSFT, GOOGL">
-        <div class="historical-buttons">
-          <button onclick="fetchStockData()" class="get-data-btn">Get data</button>
-          <button onclick="clearStocks()" class="clear-stocks-btn">Clear stocks</button>
+      <div class="history-container">
+        <h1>Historical price</h1>
+        <p>Enter the stock code you want to view (separated by commas)</p>
+        
+        <div class="historical-search-container">
+          <input type="text" id="stockInput" placeholder="e.g. AAPL, MSFT, GOOGL">
+          <div class="historical-buttons">
+            <div class="button-row">
+              <button onclick="fetchStockData()" class="get-data-btn">Get Data</button>
+              <button onclick="predictMonteCarlo()" class="predict-btn">Predict</button>
+            </div>
+            <div class="button-row">
+              <button onclick="clearStocks()" class="clear-stocks-btn">Clear Stocks</button>
+            </div>
+          </div>
         </div>
-      </div>
-      
-      <div id="chartContainer" style="height: 500px;">
-        <canvas id="stockChart"></canvas>
+        
+        <div id="viewModeToggle" style="text-align: center; margin-top: 10px; display: none;">
+          <button id="fullHistoryBtn" class="view-mode-btn active" onclick="toggleViewMode('full')">Full History View</button>
+          <button id="predictionFocusBtn" class="view-mode-btn" onclick="toggleViewMode('prediction')">Prediction Focus View</button>
+        </div>
+        
+        <div id="chartContainer" style="height: 500px;">
+          <canvas id="stockChart"></canvas>
+        </div>
+        
+        <div id="predictionSettings" style="margin-top: 20px; text-align: center; display: none;" class="prediction-settings">
+          <h3>Prediction Settings</h3>
+          <div class="settings-content">
+            <div class="setting-group">
+              <label for="futureDays">Prediction Days</label>
+              <input type="number" id="futureDays" min="30" max="365" value="180">
+              <span class="input-description">Future time horizon (30-365 days)</span>
+            </div>
+            <div class="setting-group">
+              <label for="simulations">Number of Simulations</label>
+              <input type="number" id="simulations" min="100" max="5000" value="1000">
+              <span class="input-description">Monte Carlo paths (100-5000)</span>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
 
@@ -1963,1044 +2541,1402 @@
     </div>
 
     <!-- Alert information (simple display) -->
-    <div id="alerts" class="content">
-      <h1>Stock price alerts</h1>
-      
-      <div style="max-width: 600px; margin: 0 auto; text-align: left;">
-        <div style="margin-bottom: 20px;">
-          <label style="display: block; margin-bottom: 8px; font-weight: bold;">Stock symbol</label>
-          <select id="stockSymbolSelect" style="width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 4px;">
-            <option value="">Select stock</option>
-            <option value="AAPL">Apple (AAPL)</option>
-            <option value="MSFT">Microsoft (MSFT)</option>
-            <option value="GOOGL">Google (GOOGL)</option>
-            <option value="AMZN">Amazon (AMZN)</option>
-            <!-- More options can be dynamically filled through JavaScript -->
-          </select>
-        </div>
+    <div id="alerts" class="content" style="display: none;">
+      <div class="alerts-container pulse-on-hover">
+        <h1>Stock price alerts</h1>
         
-        <div style="margin-bottom: 20px;">
-          <label style="display: block; margin-bottom: 8px; font-weight: bold;">Target price</label>
-          <input type="number" id="targetPrice" placeholder="Enter target price" style="width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 4px;" step="0.01">
-        </div>
-        
-        <div style="margin-bottom: 20px;">
-          <label style="display: block; margin-bottom: 8px; font-weight: bold;">Email notification</label>
-          <input type="email" id="emailNotification" placeholder="Enter your email" style="width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 4px;">
-        </div>
-        
-        <div style="margin-bottom: 20px;">
-          <label style="display: block; margin-bottom: 8px; font-weight: bold;">Alert type</label>
-          <select id="alertType" style="width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 4px;">
-            <option value="">Select alert type</option>
-            <option value="above">Price above target</option>
-            <option value="below">Price below target</option>
-          </select>
-        </div>
-        
-        <div style="display: flex; gap: 10px; margin-top: 30px;">
-          <button id="setAlarmBtn" style="background-color: #4285f4; color: white; padding: 10px 20px; border: none; border-radius: 4px; cursor: pointer;">Set alarm</button>
-          <button id="resetAlarmBtn" style="background-color: #6c757d; color: white; padding: 10px 20px; border: none; border-radius: 4px; cursor: pointer;">Reset</button>
+        <div class="alert-form">
+          <div class="form-field">
+            <label>Stock symbol</label>
+            <select id="stockSymbolSelect">
+              <option value="">Select stock</option>
+              <option value="AAPL">Apple (AAPL)</option>
+              <option value="MSFT">Microsoft (MSFT)</option>
+              <option value="GOOGL">Google (GOOGL)</option>
+              <option value="AMZN">Amazon (AMZN)</option>
+              <option value="META">Meta (META)</option>
+              <option value="TSLA">Tesla (TSLA)</option>
+              <option value="NVDA">NVIDIA (NVDA)</option>
+              <option value="JPM">JPMorgan Chase (JPM)</option>
+            </select>
+          </div>
+          
+          <div class="form-field">
+            <label>Target price</label>
+            <input type="number" id="targetPrice" placeholder="Enter target price" step="0.01">
+          </div>
+          
+          <div class="form-field">
+            <label>Email notification</label>
+            <input type="email" id="emailNotification" placeholder="Enter your email">
+          </div>
+          
+          <div class="form-field">
+            <label>Alert type</label>
+            <select id="alertType">
+              <option value="">Select alert type</option>
+              <option value="above">Price above target</option>
+              <option value="below">Price below target</option>
+            </select>
+          </div>
+          
+          <div class="alert-actions">
+            <button id="setAlarmBtn" class="set-alarm-btn">Set alarm</button>
+            <button id="resetAlarmBtn" class="reset-btn">Reset</button>
+          </div>
         </div>
       </div>
     </div>
+
+    </style>
 
     <!-- Order information -->
     <div id="orders" class="content" style="display: none;">
-      <h1>Order information</h1>
-      <!-- Trading time information -->
-      <div style="background-color: #f8f9fa; padding: 10px; margin-bottom: 15px; border-radius: 4px; text-align: center;">
-        <strong>Trading time (Eastern Time):</strong> Monday to Friday 9:30 AM - 4:00 PM
-      </div>
-      
-      <div id="accountInfo">
-        <strong>User account:</strong> <strong>Simulated account</strong>, profit and loss: <strong>+￥5,000</strong>
-      </div>
-      
-      <!-- Order type switch button -->
-      <div style="margin: 20px 0; text-align: center;">
-        <button id="realtimeOrderBtn" class="order-tab-btn active" style="padding: 10px 20px; background-color: #4285f4; color: white; border: none; border-radius: 4px 0 0 4px; cursor: pointer;">Real-time order</button>
-        <button id="limitOrderBtn" class="order-tab-btn" style="padding: 10px 20px; background-color: #f1f1f1; color: #333; border: none; border-radius: 0 4px 4px 0; cursor: pointer;">Limit order</button>
-      </div>
-      
-      <!-- Realtime order information -->
-      <div id="realtimeOrderInfo" class="order-tab-content" style="background-color: #e9f5ff; padding: 10px; margin-bottom: 15px; border-radius: 4px;">
-        <p style="margin: 0;"><strong>Realtime order information:</strong> Complete the transaction on the current trading day, if not completed on the same day, it will be automatically cancelled.</p>
-      </div>
-      
-      <!-- Limit order information -->
-      <div id="limitOrderInfo" class="order-tab-content" style="background-color: #fff4e5; padding: 10px; margin-bottom: 15px; border-radius: 4px; display: none;">
-        <p style="margin: 0;"><strong>Limit order information:</strong> No trading day limit, always on until completed or manually cancelled.</p>
-      </div>
-      
-      <!-- Realtime order table -->
-      <div id="realtimeOrderTable" class="order-tables">
-        <h3>Realtime order</h3>
-        <table>
-          <thead>
-            <tr>
-              <th>Order number</th>
-              <th>Stock code</th>
-              <th>Buy/Sell</th>
-              <th>Price</th>
-              <th>Quantity</th>
-              <th>Status</th>
-              <th>Order time</th>
-              <th>Operation</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              <td>2001</td>
-              <td>AAPL</td>
-              <td>Buy</td>
-              <td>197.25</td>
-              <td>50</td>
-              <td>Pending</td>
-              <td>2023-07-16 10:15:30</td>
-              <td><button class="cancel-btn" style="background-color: #f44336; color: white; border: none; border-radius: 4px; padding: 5px 10px; cursor: pointer;">Cancel</button></td>
-            </tr>
-            <tr>
-              <td>2002</td>
-              <td>MSFT</td>
-              <td>Sell</td>
-              <td>425.40</td>
-              <td>20</td>
-              <td>Completed</td>
-              <td>2023-07-16 09:45:12</td>
-              <td><button class="cancel-btn" style="background-color: #f44336; color: white; border: none; border-radius: 4px; padding: 5px 10px; cursor: pointer;" disabled>Cancel</button></td>
-            </tr>
-            <tr>
-              <td>2003</td>
-              <td>GOOGL</td>
-              <td>Buy</td>
-              <td>182.60</td>
-              <td>30</td>
-              <td>Cancelled</td>
-              <td>2023-07-15 15:30:00</td>
-              <td><button class="cancel-btn" style="background-color: #f44336; color: white; border: none; border-radius: 4px; padding: 5px 10px; cursor: pointer;" disabled>Cancel</button></td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
-      
-      <!-- Limit order table -->
-      <div id="limitOrderTable" class="order-tables" style="display: none;">
-        <h3>Limit order</h3>
-        <table>
-          <thead>
-            <tr>
-              <th>Order number</th>
-              <th>Stock code</th>
-              <th>Buy/Sell</th>
-              <th>Price</th>
-              <th>Quantity</th>
-              <th>Status</th>
-              <th>Order time</th>
-              <th>Operation</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              <td>3001</td>
-              <td>NVDA</td>
-              <td>Buy</td>
-              <td>102.75</td>
-              <td>15</td>
-              <td>Pending</td>
-              <td>2023-07-10 14:20:45</td>
-              <td><button class="cancel-btn" style="background-color: #f44336; color: white; border: none; border-radius: 4px; padding: 5px 10px; cursor: pointer;">Cancel</button></td>
-            </tr>
-            <tr>
-              <td>3002</td>
-              <td>AMZN</td>
-              <td>Buy</td>
-              <td>175.00</td>
-              <td>10</td>
-              <td>Pending</td>
-              <td>2023-07-12 11:05:30</td>
-              <td><button class="cancel-btn" style="background-color: #f44336; color: white; border: none; border-radius: 4px; padding: 5px 10px; cursor: pointer;">Cancel</button></td>
-            </tr>
-            <tr>
-              <td>3003</td>
-              <td>META</td>
-              <td>Sell</td>
-              <td>500.00</td>
-              <td>5</td>
-              <td>Pending</td>
-              <td>2023-07-14 13:40:10</td>
-              <td><button class="cancel-btn" style="background-color: #f44336; color: white; border: none; border-radius: 4px; padding: 5px 10px; cursor: pointer;">Cancel</button></td>
-            </tr>
-          </tbody>
-        </table>
+      <div class="orders-container">
+        <h1>Order information</h1>
+        <!-- Trading time information -->
+        <div style="background-color: #f8f9fa; padding: 10px; margin-bottom: 15px; border-radius: 4px; text-align: center;">
+          <strong>Trading time (Eastern Time):</strong> Monday to Friday 9:30 AM - 4:00 PM
+        </div>
+        
+        <div id="accountInfo">
+          <strong>User account:</strong> <strong>Simulated account</strong>, profit and loss: <strong>+￥5,000</strong>
+        </div>
+        
+        <!-- Order type switch button -->
+        <div style="margin: 20px 0; text-align: center;">
+          <button id="realtimeOrderBtn" class="order-tab-btn active" style="padding: 10px 20px; background-color: #4285f4; color: white; border: none; border-radius: 4px 0 0 4px; cursor: pointer;">Real-time order</button>
+          <button id="limitOrderBtn" class="order-tab-btn" style="padding: 10px 20px; background-color: #f1f1f1; color: #333; border: none; border-radius: 0 4px 4px 0; cursor: pointer;">Limit order</button>
+        </div>
+        
+        <!-- Realtime order information -->
+        <div id="realtimeOrderInfo" class="order-tab-content" style="background-color: #e9f5ff; padding: 10px; margin-bottom: 15px; border-radius: 4px;">
+          <p style="margin: 0;"><strong>Realtime order information:</strong> Complete the transaction on the current trading day, if not completed on the same day, it will be automatically cancelled.</p>
+        </div>
+        
+        <!-- Limit order information -->
+        <div id="limitOrderInfo" class="order-tab-content" style="background-color: #fff4e5; padding: 10px; margin-bottom: 15px; border-radius: 4px; display: none;">
+          <p style="margin: 0;"><strong>Limit order information:</strong> No trading day limit, always on until completed or manually cancelled.</p>
+        </div>
+        
+        <!-- Realtime order table -->
+        <div id="realtimeOrderTable" class="order-tables">
+          <h3>Realtime order</h3>
+          <table>
+            <thead>
+              <tr>
+                <th>Order number</th>
+                <th>Stock code</th>
+                <th>Buy/Sell</th>
+                <th>Price</th>
+                <th>Quantity</th>
+                <th>Status</th>
+                <th>Order time</th>
+                <th>Operation</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>2001</td>
+                <td>AAPL</td>
+                <td>Buy</td>
+                <td>197.25</td>
+                <td>50</td>
+                <td>Pending</td>
+                <td>2023-07-16 10:15:30</td>
+                <td><button class="cancel-btn" style="background-color: #f44336; color: white; border: none; border-radius: 4px; padding: 5px 10px; cursor: pointer;">Cancel</button></td>
+              </tr>
+              <tr>
+                <td>2002</td>
+                <td>MSFT</td>
+                <td>Sell</td>
+                <td>425.40</td>
+                <td>20</td>
+                <td>Completed</td>
+                <td>2023-07-16 09:45:12</td>
+                <td><button class="cancel-btn" style="background-color: #f44336; color: white; border: none; border-radius: 4px; padding: 5px 10px; cursor: pointer;" disabled>Cancel</button></td>
+              </tr>
+              <tr>
+                <td>2003</td>
+                <td>GOOGL</td>
+                <td>Buy</td>
+                <td>182.60</td>
+                <td>30</td>
+                <td>Cancelled</td>
+                <td>2023-07-15 15:30:00</td>
+                <td><button class="cancel-btn" style="background-color: #f44336; color: white; border: none; border-radius: 4px; padding: 5px 10px; cursor: pointer;" disabled>Cancel</button></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        
+        <!-- Limit order table -->
+        <div id="limitOrderTable" class="order-tables" style="display: none;">
+          <h3>Limit order</h3>
+          <table>
+            <thead>
+              <tr>
+                <th>Order number</th>
+                <th>Stock code</th>
+                <th>Buy/Sell</th>
+                <th>Price</th>
+                <th>Quantity</th>
+                <th>Status</th>
+                <th>Order time</th>
+                <th>Operation</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>3001</td>
+                <td>NVDA</td>
+                <td>Buy</td>
+                <td>102.75</td>
+                <td>15</td>
+                <td>Pending</td>
+                <td>2023-07-10 14:20:45</td>
+                <td><button class="cancel-btn" style="background-color: #f44336; color: white; border: none; border-radius: 4px; padding: 5px 10px; cursor: pointer;">Cancel</button></td>
+              </tr>
+              <tr>
+                <td>3002</td>
+                <td>AMZN</td>
+                <td>Buy</td>
+                <td>175.00</td>
+                <td>10</td>
+                <td>Pending</td>
+                <td>2023-07-12 11:05:30</td>
+                <td><button class="cancel-btn" style="background-color: #f44336; color: white; border: none; border-radius: 4px; padding: 5px 10px; cursor: pointer;">Cancel</button></td>
+              </tr>
+              <tr>
+                <td>3003</td>
+                <td>META</td>
+                <td>Sell</td>
+                <td>500.00</td>
+                <td>5</td>
+                <td>Pending</td>
+                <td>2023-07-14 13:40:10</td>
+                <td><button class="cancel-btn" style="background-color: #f44336; color: white; border: none; border-radius: 4px; padding: 5px 10px; cursor: pointer;">Cancel</button></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
       </div>
     </div>
-  </div>
 
-  <!-- Admin login interface -->
-  <div id="adminLogin" class="admin-login-container" style="display: none;">
-    <h1>Admin Login</h1>
-    <form id="adminLoginForm" class="admin-form">
-      <div class="form-group">
-        <input type="text" placeholder="Admin Username" required />
-      </div>
-      <div class="form-group">
-        <input type="password" placeholder="Admin Password" required />
-      </div>
-      <button type="submit" class="admin-btn">Login as Admin</button>
-    </form>
-    <div class="admin-notice">
-      This area is restricted to authorized administrators only.
-    </div>
-    <div class="admin-links">
-      <a href="#" id="backToUserLogin">Back to user login</a>
-    </div>
-  </div>
-
-  <!-- Admin backend interface -->
-  <div id="adminPanel" style="display: none;">
-    <h1 style="text-align: center;">Admin panel</h1>
-    <input type="text" id="adminSearch" placeholder="Input email to search user">
-    <table>
-      <thead>
-        <tr>
-          <th>Username</th>
-          <th>Email</th>
-          <th>Registered date</th>
-        </tr>
-      </thead>
-      <tbody id="userTableBody">
-        <!-- User data will be dynamically filled here -->
-      </tbody>
-    </table>
-    <button class="back-btn" id="adminLogout">Logout</button>
-  </div>
-
-  <!-- User details page (backend) -->
-  <div id="userDetail" class="content" style="display: none;">
-    <h1>User details</h1>
-    <div id="userDetailContent">
-      <!-- User details information -->
-    </div>
-    <button class="back-btn" id="backToAdminPanel">Back to admin panel</button>
-  </div>
-
-  <script>
-    /********************************************************
-     * 1. Simulated user data (only for admin panel demonstration)
-     ********************************************************/
-    const users = [
-      { username: "alice",   email: "alice@example.com",   registered: "2023-01-10", info: "Alice's detailed information……" },
-      { username: "bob",     email: "bob@example.com",     registered: "2023-02-15", info: "Bob's detailed information……" },
-      { username: "charlie", email: "charlie@example.com", registered: "2023-03-20", info: "Charlie's detailed information……" }
-    ];
-
-    /********************************************************
-     * 2. Page switching: showContent()、showSectionInMain()
-     ********************************************************/
-    function showContent(id) {
-      document.querySelectorAll("body > div").forEach(div => {
-        div.style.display = "none";
-      });
-      document.getElementById(id).style.display = "block";
-    }
-    function showSectionInMain(id) {
-      document.querySelectorAll("#main .content").forEach(content => {
-        content.style.display = "none";
-      });
-      document.getElementById(id).style.display = "block";
-    }
-
-    /********************************************************
-     * 3. Ordinary users: login/register/navigation
-     ********************************************************/
-    document.getElementById("loginForm").addEventListener("submit", function(e) {
-      e.preventDefault();
-      showContent("main");
-      showSectionInMain("real-time");
-    });
-    document.getElementById("registerForm").addEventListener("submit", function(e) {
-      e.preventDefault();
-      alert("Registration successful! Please login.");
-      showContent("login");
-    });
-    document.getElementById("registerLink").addEventListener("click", function(e) {
-      e.preventDefault();
-      showContent("register");
-    });
-    document.getElementById("loginLink").addEventListener("click", function(e) {
-      e.preventDefault();
-      showContent("login");
-    });
-    document.getElementById("logoutLink").addEventListener("click", function(e) {
-      e.preventDefault();
-      showContent("login");
-    });
-    document.querySelectorAll("#main nav a").forEach(link => {
-      link.addEventListener("click", function(e) {
-        e.preventDefault();
-        if (this.id === "logoutLink") {
-          showContent("login");
-        } else {
-          showSectionInMain(this.getAttribute("href").substring(1));
-        }
-      });
-    });
-
-    /********************************************************
-     * 4. Admin entry & login/backend logic
-     ********************************************************/
-    document.getElementById("adminEntryLink").addEventListener("click", function(e) {
-      e.preventDefault();
-      showContent("adminLogin");
-    });
-    document.getElementById("backToUserLogin").addEventListener("click", function(e) {
-      e.preventDefault();
-      showContent("login");
-    });
-    document.getElementById("adminLoginForm").addEventListener("submit", function(e) {
-      e.preventDefault();
-      showContent("adminPanel");
-      renderUserTable(users);
-    });
-    document.getElementById("adminLogout").addEventListener("click", function() {
-      showContent("adminLogin");
-    });
-    function renderUserTable(userList) {
-      const tbody = document.getElementById("userTableBody");
-      tbody.innerHTML = "";
-      userList.forEach((user, index) => {
-        const tr = document.createElement("tr");
-        tr.dataset.index = index;
-        tr.innerHTML = `
-          <td>${user.username}</td>
-          <td>${user.email}</td>
-          <td>${user.registered}</td>
-        `;
-        tr.addEventListener("click", function() {
-          showUserDetail(index);
-        });
-        tbody.appendChild(tr);
-      });
-    }
-    document.getElementById("adminSearch").addEventListener("input", function() {
-      const keyword = this.value.trim().toLowerCase();
-      const filtered = users.filter(user => user.email.toLowerCase().includes(keyword));
-      renderUserTable(filtered);
-    });
-    function showUserDetail(index) {
-      const user = users[index];
-      const detailDiv = document.getElementById("userDetailContent");
-      detailDiv.innerHTML = `
-        <p><strong>Username:</strong> ${user.username}</p>
-        <p><strong>Email:</strong> ${user.email}</p>
-        <p><strong>Registered date:</strong> ${user.registered}</p>
-        <p><strong>Detailed information:</strong> ${user.info}</p>
-      `;
-      showContent("userDetail");
-    }
-    document.getElementById("backToAdminPanel").addEventListener("click", function() {
-      showContent("adminPanel");
-    });
-
-    /********************************************************
-     * 5. Historical price: get stock data & plot (Chart.js)
-     ********************************************************/
-    let selectedStocks = [];
-    let chart = null;
-    async function fetchStockData() {
-      let inputField = document.getElementById("stockInput");
-      let stocks = inputField.value.toUpperCase().split(",").map(s => s.trim()).filter(s => s !== "");
-      if (stocks.length === 0) {
-        alert("Please enter at least one stock code!");
-        return;
+    <style>
+      .orders-container {
+        background-color: white;
+        border-radius: 15px;
+        padding: 30px;
+        box-shadow: 0 8px 16px rgba(0,0,0,0.1);
+        margin-bottom: 30px;
+        box-sizing: border-box;
+        width: 100%;
       }
-      selectedStocks = [...new Set([...selectedStocks, ...stocks])];
-      inputField.value = "";
+    </style>
+
+    <!-- Admin login interface -->
+    <div id="adminLogin" class="admin-login-container" style="display: none;">
+      <h1>Admin Login</h1>
+      <form id="adminLoginForm" class="admin-form">
+        <div class="form-group">
+          <input type="text" placeholder="Admin Username" required autocomplete="username" />
+        </div>
+        <div class="form-group">
+          <input type="password" placeholder="Admin Password" required autocomplete="current-password" />
+        </div>
+        <button type="submit" class="admin-btn">Login as Admin</button>
+      </form>
+      <div class="login-links">
+        <p><a href="#" id="backToUserLogin">Back to user login</a></p>
+      </div>
+    </div>
+
+    <!-- Admin backend interface -->
+    <div id="adminPanel" style="display: none;">
+      <h1 style="text-align: center;">Admin panel</h1>
+      <input type="text" id="adminSearch" placeholder="Input email to search user">
+      <table>
+        <thead>
+          <tr>
+            <th>Username</th>
+            <th>Email</th>
+            <th>Registered date</th>
+          </tr>
+        </thead>
+        <tbody id="userTableBody">
+          <!-- User data will be dynamically filled here -->
+        </tbody>
+      </table>
+      <button class="back-btn" id="adminLogout">Logout</button>
+    </div>
+
+    <!-- User details page (backend) -->
+    <div id="userDetail" class="content" style="display: none;">
+      <h1>User details</h1>
+      <div id="userDetailContent">
+        <!-- User details information -->
+      </div>
+      <button class="back-btn" id="backToAdminPanel">Back to admin panel</button>
+    </div>
+
+    <script>
+      // 注册Chart.js标注插件
       try {
-        const response = await fetch("/get_stock_data", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ stocks: selectedStocks })
+        if(window.ChartAnnotation) {
+          Chart.register(window.ChartAnnotation);
+        }
+      } catch (e) {
+        console.error("无法注册Chart.js插件:", e);
+      }
+      
+      /********************************************************
+       * 1. Simulated user data (only for admin panel demonstration)
+       ********************************************************/
+      const users = [
+        { username: "alice",   email: "alice@example.com",   registered: "2023-01-10", info: "Alice's detailed information……" },
+        { username: "bob",     email: "bob@example.com",     registered: "2023-02-15", info: "Bob's detailed information……" },
+        { username: "charlie", email: "charlie@example.com", registered: "2023-03-20", info: "Charlie's detailed information……" }
+      ];
+
+      /********************************************************
+       * 2. Page switching: showContent()、showSectionInMain()
+       ********************************************************/
+      function showContent(id) {
+        document.querySelectorAll("body > div").forEach(div => {
+          div.style.display = "none";
         });
-        const data = await response.json();
-        updateChart(data);
-      } catch (error) {
-        console.error("Data retrieval failed:", error);
-        alert("Failed to retrieve stock data. Please ensure the backend is running and accessible to the database!");
+        document.getElementById(id).style.display = "block";
       }
-    }
-    function clearStocks() {
-      selectedStocks = [];
-      if (chart) {
-        chart.destroy();
-        chart = null;
+      function showSectionInMain(id) {
+        document.querySelectorAll("#main .content").forEach(content => {
+          content.style.display = "none";
+        });
+        document.getElementById(id).style.display = "block";
       }
-    }
-    function updateChart(stockData) {
-      let ctx = document.getElementById("stockChart").getContext("2d");
-      if (chart) { chart.destroy(); }
-      let datasets = [];
-      let colors = ["red", "blue", "green", "purple", "orange", "brown", "pink", "navy"];
-      Object.keys(stockData).forEach((stock, index) => {
-        if (stockData[stock].error) {
-          alert(`Failed to retrieve stock data for ${stock}: ${stockData[stock].error}`);
+
+      /********************************************************
+       * 3. Ordinary users: login/register/navigation
+       ********************************************************/
+      document.getElementById("loginForm").addEventListener("submit", function(e) {
+        e.preventDefault();
+        showContent("main");
+        showSectionInMain("real-time");
+      });
+      document.getElementById("registerForm").addEventListener("submit", function(e) {
+        e.preventDefault();
+        alert("Registration successful! Please login.");
+        showContent("login");
+      });
+      document.getElementById("registerLink").addEventListener("click", function(e) {
+        e.preventDefault();
+        showContent("register");
+      });
+      document.getElementById("loginLink").addEventListener("click", function(e) {
+        e.preventDefault();
+        showContent("login");
+      });
+      document.getElementById("logoutLink").addEventListener("click", function(e) {
+        e.preventDefault();
+        showContent("login");
+      });
+      document.querySelectorAll("#main nav a").forEach(link => {
+        link.addEventListener("click", function(e) {
+          e.preventDefault();
+          if (this.id === "logoutLink") {
+            showContent("login");
+          } else {
+            showSectionInMain(this.getAttribute("href").substring(1));
+          }
+        });
+      });
+
+      /********************************************************
+       * 4. Admin entry & login/backend logic
+       ********************************************************/
+      document.getElementById("adminEntryLink").addEventListener("click", function(e) {
+        e.preventDefault();
+        showContent("adminLogin");
+      });
+      document.getElementById("backToUserLogin").addEventListener("click", function(e) {
+        e.preventDefault();
+        showContent("login");
+      });
+      document.getElementById("adminLoginForm").addEventListener("submit", function(e) {
+        e.preventDefault();
+        showContent("adminPanel");
+        renderUserTable(users);
+      });
+      document.getElementById("adminLogout").addEventListener("click", function() {
+        showContent("adminLogin");
+      });
+      function renderUserTable(userList) {
+        const tbody = document.getElementById("userTableBody");
+        tbody.innerHTML = "";
+        userList.forEach((user, index) => {
+          const tr = document.createElement("tr");
+          tr.dataset.index = index;
+          tr.innerHTML = `
+            <td>${user.username}</td>
+            <td>${user.email}</td>
+            <td>${user.registered}</td>
+          `;
+          tr.addEventListener("click", function() {
+            showUserDetail(index);
+          });
+          tbody.appendChild(tr);
+        });
+      }
+      document.getElementById("adminSearch").addEventListener("input", function() {
+        const keyword = this.value.trim().toLowerCase();
+        const filtered = users.filter(user => user.email.toLowerCase().includes(keyword));
+        renderUserTable(filtered);
+      });
+      function showUserDetail(index) {
+        const user = users[index];
+        const detailDiv = document.getElementById("userDetailContent");
+        detailDiv.innerHTML = `
+          <p><strong>Username:</strong> ${user.username}</p>
+          <p><strong>Email:</strong> ${user.email}</p>
+          <p><strong>Registered date:</strong> ${user.registered}</p>
+          <p><strong>Detailed information:</strong> ${user.info}</p>
+        `;
+        showContent("userDetail");
+      }
+      document.getElementById("backToAdminPanel").addEventListener("click", function() {
+        showContent("adminPanel");
+      });
+
+      /********************************************************
+       * 5. Historical price: get stock data & plot (Chart.js)
+       ********************************************************/
+      let selectedStocks = [];
+      let chart = null;
+      async function fetchStockData() {
+        let inputField = document.getElementById("stockInput");
+        let stocks = inputField.value.toUpperCase().split(",").map(s => s.trim()).filter(s => s !== "");
+        if (stocks.length === 0) {
+          alert("Please enter at least one stock code!");
           return;
         }
-        let prices = Object.values(stockData[stock]).map(val => parseFloat(val));
-        datasets.push({
-          label: stock,
-          data: prices,
-          borderColor: colors[index % colors.length],
-          fill: false,
-          tension: 0.1
-        });
-      });
-      let firstStock = selectedStocks.length > 0 ? selectedStocks[0] : null;
-      let labels = firstStock ? Object.keys(stockData[firstStock]) : [];
-      chart = new Chart(ctx, {
-        type: "line",
-        data: { labels: labels, datasets: datasets },
-        options: {
-          responsive: true,
-          scales: {
-            x: { title: { display: true, text: "Date" } },
-            y: { type: "linear", title: { display: true, text: "Closing Price" }, beginAtZero: false }
-          }
+        selectedStocks = [...new Set([...selectedStocks, ...stocks])];
+        inputField.value = "";
+        try {
+          const response = await fetch("/get_stock_data", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ stocks: selectedStocks })
+          });
+          const data = await response.json();
+          updateChart(data);
+        } catch (error) {
+          console.error("Data retrieval failed:", error);
+          alert("Failed to retrieve stock data. Please ensure the backend is running and accessible to the database!");
         }
-      });
-    }
-
-    /********************************************************
-     * 6. AI assistant: ChatGPT style layout + real interface example
-     ********************************************************/
-    const chatWindow = document.getElementById("chatWindow");
-    const assistantInput = document.getElementById("chatInput");
-    const assistantSendBtn = document.querySelector(".chat-send-btn");
-    const assistantClearBtn = document.querySelector(".chat-clear-btn");
-
-    assistantSendBtn.addEventListener("click", () => {
-      const userText = assistantInput.value.trim();
-      if (!userText) return;
-      // Display user message
-      appendMessage(userText, "user");
-      assistantInput.value = "";
-
-      // Send to backend
-      fetch("/gemini_assistant", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ command: userText })
-      })
-      .then(res => res.json())
-      .then(data => {
-        appendMessage(data.response, "ai");
-      })
-      .catch(err => {
-        console.error(err);
-        appendMessage("出错啦，请稍后再试。", "ai");
-      });
-    });
-
-    assistantClearBtn.addEventListener("click", () => {
-      clearChat();
-    });
-
-    function appendMessage(text, role) {
-      const msgDiv = document.createElement("div");
-      msgDiv.classList.add("chat-message", role);
-      const bubble = document.createElement("div");
-      bubble.classList.add("chat-bubble");
-      bubble.innerText = text;
-      msgDiv.appendChild(bubble);
-      chatWindow.appendChild(msgDiv);
-      chatWindow.scrollTop = chatWindow.scrollHeight;
-    }
-
-    /********************************************************
-     * 7. Alert information: high/medium/low, displayed in colorful blocks直观显示
-     ********************************************************/
-    document.getElementById("searchButton").addEventListener("click", function() {
-      const stockSymbol = document.getElementById("stockSymbolInput").value.trim();
-      if (!stockSymbol) {
-        alert("请输入股票代码");
-        return;
+      }
+      function clearStocks() {
+        selectedStocks = [];
+        if (chart) {
+          chart.destroy();
+          chart = null;
+        }
+        document.getElementById("predictionSettings").style.display = "none";
+        document.getElementById("viewModeToggle").style.display = "none";
+        isShowingPrediction = false;
+      }
+      function updateChart(stockData) {
+        // 保存历史数据
+        historicalData = stockData;
+        predictionData = {};
+        
+        // 清除预测设置面板和视图模式切换按钮
+        document.getElementById("predictionSettings").style.display = "none";
+        document.getElementById("viewModeToggle").style.display = "none";
+        isShowingPrediction = false;
+        
+        updateChartDisplay();
       }
       
-      // 显示加载状态
-      document.getElementById("companyName").textContent = "加载中...";
+      async function predictMonteCarlo() {
+        if (selectedStocks.length === 0) {
+          alert("Please get stock history data before making predictions!");
+          return;
+        }
+        
+        // 显示预测设置面板
+        document.getElementById("predictionSettings").style.display = "block";
+        
+        // 获取预测参数
+        let futureDays = parseInt(document.getElementById("futureDays").value) || 180;
+        let simulations = parseInt(document.getElementById("simulations").value) || 1000;
+        let sample_paths = 100; // 请求100条样本路径
+        
+        try {
+          // 显示加载提示
+          const loadingMsg = document.createElement("div");
+          loadingMsg.id = "loadingMessage";
+          loadingMsg.style.textAlign = "center";
+          loadingMsg.style.marginTop = "20px";
+          loadingMsg.innerHTML = `<div class="spinner-border text-primary" role="status"></div>
+                                <p>Monte Carlo simulation is in progress, please wait...</p>`;
+          document.getElementById("chartContainer").appendChild(loadingMsg);
+          
+          // Call prediction API
+          const response = await fetch("/predict_monte_carlo", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ 
+              stocks: selectedStocks,
+              future_days: futureDays,
+              simulations: simulations,
+              sample_paths: sample_paths
+            })
+          });
+          
+          // 移除加载提示
+          const loadingElement = document.getElementById("loadingMessage");
+          if (loadingElement) {
+            loadingElement.remove();
+          }
+          
+          // 处理响应
+          const predictionData = await response.json();
+          
+          // 显示视图模式切换按钮
+          document.getElementById("viewModeToggle").style.display = "block";
+          
+          // 默认切换到预测焦点视图
+          isShowingPrediction = true;
+          document.getElementById('fullHistoryBtn').classList.remove('active');
+          document.getElementById('predictionFocusBtn').classList.add('active');
+          
+          updateChartWithPrediction(predictionData);
+        } catch (error) {
+          console.error("Prediction failed:", error);
+          alert("Monte Carlo prediction failed! Please ensure the server is running.");
+          
+          // 移除加载提示
+          const loadingElement = document.getElementById("loadingMessage");
+          if (loadingElement) {
+            loadingElement.remove();
+          }
+        }
+      }
       
-      // 发送请求获取股票数据
-      fetch(`/get_stock_details?symbol=${stockSymbol}`)
-        .then(response => response.json())
-        .then(data => {
-          if (data.error) {
-            alert(data.error);
+      // 保存全局变量以便于访问
+      let historicalData = {};
+      let predictionData = {};
+      let isShowingPrediction = false; // 标记是否在显示预测
+      
+      function updateChartWithPrediction(newPredictionData) {
+        // 保存预测数据
+        predictionData = newPredictionData;
+        isShowingPrediction = true; // 设置为显示预测模式
+        
+        updateChartDisplay();
+      }
+      
+      function updateChartDisplay() {
+        let ctx = document.getElementById("stockChart").getContext("2d");
+        if (chart) { chart.destroy(); }
+        
+        let datasets = [];
+        let colors = ["#e41a1c", "#377eb8", "#4daf4a", "#984ea3", "#ff7f00", "#ffff33", "#a65628"];
+        
+        // 确定时间范围
+        let minDate = null;
+        let maxDate = null;
+
+        // 添加历史数据
+        Object.keys(historicalData).forEach((stock, index) => {
+          if (historicalData[stock].error) {
+            alert(`Failed to get data for ${stock}: ${historicalData[stock].error}`);
             return;
           }
           
-          // 更新公司信息
-          document.getElementById("companyName").textContent = data.name || `${stockSymbol} Corporation`;
-          document.getElementById("currentPrice").textContent = `$${data.price.toFixed(2)}`;
+          let dates = Object.keys(historicalData[stock]);
+          let prices = Object.values(historicalData[stock]).map(val => parseFloat(val));
           
-          // 更新价格变化
-          const priceChangeElement = document.getElementById("priceChange");
-          const priceChange = data.change;
-          const priceChangePercent = data.changePercent;
-          priceChangeElement.textContent = `${priceChange >= 0 ? "+" : ""}${priceChange.toFixed(2)} (${priceChangePercent >= 0 ? "+" : ""}${priceChangePercent.toFixed(2)}%)`;
-          priceChangeElement.style.color = priceChange >= 0 ? "green" : "red";
-          
-          // 更新交易信息
-          document.getElementById("openPrice").textContent = `$${data.open.toFixed(2)}`;
-          document.getElementById("highPrice").textContent = `$${data.high.toFixed(2)}`;
-          document.getElementById("lowPrice").textContent = `$${data.low.toFixed(2)}`;
-          document.getElementById("volume").textContent = data.volume.toLocaleString();
-          document.getElementById("previousClose").textContent = `$${data.previous_close.toFixed(2)}`;
-          
-          // 自动填充订单表单中的股票代码和参考价格
-          orderStockSymbol.value = stockSymbol;
-          orderPrice.value = data.price.toFixed(2);
-          
-          // 获取预警信息
-          fetch("/get_alert_levels", {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ stock: stockSymbol })
-          })
-          .then(res => res.json())
-          .then(alertData => {
-            const { valuation, liquidity } = alertData;
+          // 如果在预测模式下，只显示最近一年(或180天)的历史数据
+          if (isShowingPrediction && predictionData[stock] && !predictionData[stock].error) {
+            // 找到最后的日期
+            const lastDate = new Date(predictionData[stock].last_date);
+            // 计算历史截取点（往前1年或根据预测天数确定）
+            let daysToShow = Math.min(365, predictionData[stock].dates.length * 2);
+            const cutoffDate = new Date(lastDate);
+            cutoffDate.setDate(cutoffDate.getDate() - daysToShow);
             
-            // 更新预警信息显示
-            updateAlertBox("valuationBox", valuation, "估值");
-            updateAlertBox("liquidityBox", liquidity, "流动性");
-          })
-          .catch(err => {
-            console.error("获取预警信息失败:", err);
-          });
-        })
-        .catch(error => {
-          console.error("获取股票数据失败:", error);
-          alert("获取股票数据失败，请稍后重试。");
-        });
-    });
+            // 筛选日期在截取点之后的数据
+            let filteredDates = [];
+            let filteredPrices = [];
+            
+            dates.forEach((date, i) => {
+              if (new Date(date) >= cutoffDate) {
+                filteredDates.push(date);
+                filteredPrices.push(prices[i]);
+              }
+            });
+            
+            dates = filteredDates;
+            prices = filteredPrices;
 
-    function updateAlertBox(boxId, level, label) {
-      const box = document.getElementById(boxId);
-      
-      // Set color
-      let color = "#FFC107"; // Default yellow (medium)
-      if (level === "Low") {
-        color = "#4CAF50"; // Green
-      } else if (level === "High") {
-        color = "#F44336"; // Red
-      }
-      
-      box.style.backgroundColor = color;
-      box.textContent = label;
-      
-      // Update text
-      const textElement = box.nextElementSibling;
-      if (textElement) {
-        textElement.textContent = level;
-      }
-    }
-
-    // Process alert setting form
-    document.getElementById("setAlarmBtn").addEventListener("click", function() {
-      const stock = document.getElementById("stockSymbolSelect").value;
-      const price = document.getElementById("targetPrice").value;
-      const email = document.getElementById("emailNotification").value;
-      const type = document.getElementById("alertType").value;
-      
-      if (!stock || !price || !email || !type) {
-        alert("Please fill in all fields");
-        return;
-      }
-      
-      // Validate email format
-      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-      if (!emailRegex.test(email)) {
-        alert("Please enter a valid email address");
-        return;
-      }
-      
-      // Add code to send to backend
-      // Example:
-      alert(`Alert set: ${stock} at ${price} notify ${email}`);
-      
-      // In actual projects, you should send it to the backend API
-      /*
-      fetch("/api/set_price_alert", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ stock, targetPrice: price, email, alertType: type })
-      })
-      .then(response => response.json())
-      .then(data => {
-        if (data.success) {
-          alert("Alert set successfully!");
-          resetAlarmForm();
-        } else {
-          alert("Failed to set alert: " + data.message);
-        }
-      })
-      .catch(error => {
-        console.error("Error:", error);
-        alert("Error occurred when setting alert");
-      });
-      */
-    });
-
-    document.getElementById("resetAlarmBtn").addEventListener("click", function() {
-      document.getElementById("stockSymbolSelect").value = "";
-      document.getElementById("targetPrice").value = "";
-      document.getElementById("emailNotification").value = "";
-      document.getElementById("alertType").value = "";
-    });
-    
-    /********************************************************
-     * 8. Order information: real-time and limit order switching
-     ********************************************************/
-    // Get order type buttons
-    const realtimeOrderBtn = document.getElementById("realtimeOrderBtn");
-    const limitOrderBtn = document.getElementById("limitOrderBtn");
-    
-    // Get related content areas
-    const realtimeOrderInfo = document.getElementById("realtimeOrderInfo");
-    const limitOrderInfo = document.getElementById("limitOrderInfo");
-    const realtimeOrderTable = document.getElementById("realtimeOrderTable");
-    const limitOrderTable = document.getElementById("limitOrderTable");
-    
-    // Real-time order button click event
-    realtimeOrderBtn.addEventListener("click", function() {
-      // Update button style
-      realtimeOrderBtn.classList.add("active");
-      realtimeOrderBtn.style.backgroundColor = "#4285f4";
-      realtimeOrderBtn.style.color = "white";
-      limitOrderBtn.classList.remove("active");
-      limitOrderBtn.style.backgroundColor = "#f1f1f1";
-      limitOrderBtn.style.color = "#333";
-      
-      // Show/hide related content
-      realtimeOrderInfo.style.display = "block";
-      limitOrderInfo.style.display = "none";
-      realtimeOrderTable.style.display = "block";
-      limitOrderTable.style.display = "none";
-    });
-    
-    // Limit order button click event
-    limitOrderBtn.addEventListener("click", function() {
-      // Update button style
-      limitOrderBtn.classList.add("active");
-      limitOrderBtn.style.backgroundColor = "#4285f4";
-      limitOrderBtn.style.color = "white";
-      realtimeOrderBtn.classList.remove("active");
-      realtimeOrderBtn.style.backgroundColor = "#f1f1f1";
-      realtimeOrderBtn.style.color = "#333";
-      
-      // Show/hide related content
-      limitOrderInfo.style.display = "block";
-      realtimeOrderInfo.style.display = "none";
-      limitOrderTable.style.display = "block";
-      realtimeOrderTable.style.display = "none";
-    });
-    
-    /********************************************************
-     * 9. Real-time price page order interface
-     ********************************************************/
-    // Get buttons and input fields of the order interface
-    const realOrderTypeBtn = document.getElementById("realOrderTypeBtn");
-    const limitOrderTypeBtn = document.getElementById("limitOrderTypeBtn");
-    const buyBtn = document.getElementById("buyBtn");
-    const sellBtn = document.getElementById("sellBtn");
-    const orderStockSymbol = document.getElementById("orderStockSymbol");
-    const orderPrice = document.getElementById("orderPrice");
-    const orderQuantity = document.getElementById("orderQuantity");
-    const placeOrderBtn = document.getElementById("placeOrderBtn");
-    const viewOrdersBtn = document.getElementById("viewOrdersBtn");
-    
-    // Maintain order state
-    let orderState = {
-      orderType: "realtime", // "realtime" or "limit"
-      tradeType: "buy",      // "buy" or "sell"
-    };
-    
-    // Search button click event - automatically fill in the stock code and reference price in the order form
-    document.getElementById("searchButton").addEventListener("click", function() {
-      const stockSymbol = document.getElementById("stockSymbolInput").value.trim();
-      if (stockSymbol) {
-        orderStockSymbol.value = stockSymbol;
-        
-        // Try to get the current price as a reference
-        const currentPriceText = document.getElementById("currentPrice").textContent;
-        if (currentPriceText) {
-          const priceMatch = currentPriceText.match(/\$(\d+(\.\d+)?)/);
-          if (priceMatch && priceMatch[1]) {
-            orderPrice.value = priceMatch[1];
+            // 更新最小日期
+            if (!minDate || new Date(cutoffDate) < minDate) {
+              minDate = new Date(cutoffDate);
+            }
           }
-        }
-      }
-    });
-    
-    // Real-time order button click event
-    realOrderTypeBtn.addEventListener("click", function() {
-      // Update button style
-      realOrderTypeBtn.classList.add("active");
-      realOrderTypeBtn.style.backgroundColor = "#4285f4";
-      realOrderTypeBtn.style.color = "white";
-      limitOrderTypeBtn.classList.remove("active");
-      limitOrderTypeBtn.style.backgroundColor = "#f1f1f1";
-      limitOrderTypeBtn.style.color = "#333";
-      
-      // Update order state
-      orderState.orderType = "realtime";
-    });
-    
-    // Limit order button click event
-    limitOrderTypeBtn.addEventListener("click", function() {
-      // Update button style
-      limitOrderTypeBtn.classList.add("active");
-      limitOrderTypeBtn.style.backgroundColor = "#4285f4";
-      limitOrderTypeBtn.style.color = "white";
-      realOrderTypeBtn.classList.remove("active");
-      realOrderTypeBtn.style.backgroundColor = "#f1f1f1";
-      realOrderTypeBtn.style.color = "#333";
-      
-      // Update order state
-      orderState.orderType = "limit";
-    });
-    
-    // Buy button click event
-    buyBtn.addEventListener("click", function() {
-      // Update button style
-      buyBtn.classList.add("active");
-      buyBtn.style.backgroundColor = "#4CAF50";
-      buyBtn.style.color = "white";
-      sellBtn.classList.remove("active");
-      sellBtn.style.backgroundColor = "#f1f1f1";
-      sellBtn.style.color = "#333";
-      
-      // Update order state
-      orderState.tradeType = "buy";
-    });
-    
-    // Sell button click event
-    sellBtn.addEventListener("click", function() {
-      // Update button style
-      sellBtn.classList.add("active");
-      sellBtn.style.backgroundColor = "#F44336";
-      sellBtn.style.color = "white";
-      buyBtn.classList.remove("active");
-      buyBtn.style.backgroundColor = "#f1f1f1";
-      buyBtn.style.color = "#333";
-      
-      // Update order state
-      orderState.tradeType = "sell";
-    });
-    
-    // Place order button click event
-    placeOrderBtn.addEventListener("click", function() {
-      const stockSymbol = orderStockSymbol.value.trim();
-      const price = orderPrice.value.trim();
-      const quantity = orderQuantity.value.trim();
-      
-      // Validate input
-      if (!stockSymbol || !price || !quantity) {
-        alert("Please fill in all required fields");
-        return;
-      }
-      
-      if (isNaN(price) || parseFloat(price) <= 0) {
-        alert("Please enter a valid price");
-        return;
-      }
-      
-      if (isNaN(quantity) || parseInt(quantity) <= 0) {
-        alert("Please enter a valid quantity");
-        return;
-      }
-      
-      // Simulate order success, in actual projects, send request to backend
-      const orderTypeName = orderState.orderType === "realtime" ? "Real-time order" : "Limit order";
-      const tradeTypeName = orderState.tradeType === "buy" ? "Buy" : "Sell";
-      
-      alert(`Order successful: ${orderTypeName} ${tradeTypeName} ${stockSymbol} ${quantity} shares, price $${price}`);
-      
-      // Jump to order information page and display the corresponding type of order
-      showSectionInMain("orders");
-      
-      // Display the corresponding type of order list based on the order type
-      if (orderState.orderType === "realtime") {
-        // Display real-time order
-        realtimeOrderBtn.click();
-        
-        // Add new order to real-time order table
-        addNewOrder(
-          "realtime", 
-          stockSymbol, 
-          orderState.tradeType === "buy" ? "Buy" : "Sell", 
-          price, 
-          quantity
-        );
-      } else {
-        // Display limit order
-        limitOrderBtn.click();
-        
-        // Add new order to limit order table
-        addNewOrder(
-          "limit", 
-          stockSymbol, 
-          orderState.tradeType === "buy" ? "Buy" : "Sell", 
-          price, 
-          quantity
-        );
-      }
-      
-      // In actual projects, should call backend API and handle response
-      /*
-      fetch("/api/place_order", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          stockSymbol: stockSymbol,
-          price: parseFloat(price),
-          quantity: parseInt(quantity),
-          orderType: orderState.orderType,
-          tradeType: orderState.tradeType
-        })
-      })
-      .then(response => response.json())
-      .then(data => {
-        if (data.success) {
-          alert("Order successful!");
-          showSectionInMain("orders");
-        } else {
-          alert("Order failed: " + data.message);
-        }
-      })
-      .catch(error => {
-        console.error("Error:", error);
-        alert("Order failed: " + error);
-      });
-      */
-    });
-    
-    // View order button click event - jump to order information page
-    viewOrdersBtn.addEventListener("click", function() {
-      showSectionInMain("orders");
-    });
-    
-    // Add new order to table
-    function addNewOrder(type, stockSymbol, tradeType, price, quantity) {
-      // Generate random order ID
-      const orderId = Math.floor(Math.random() * 1000) + 3000;
-      
-      // Get current time
-      const now = new Date();
-      const year = now.getFullYear();
-      const month = String(now.getMonth() + 1).padStart(2, '0');
-      const day = String(now.getDate()).padStart(2, '0');
-      const hours = String(now.getHours()).padStart(2, '0');
-      const minutes = String(now.getMinutes()).padStart(2, '0');
-      const seconds = String(now.getSeconds()).padStart(2, '0');
-      const orderTime = `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`;
-      
-      // Create new row
-      const newRow = document.createElement("tr");
-      newRow.innerHTML = `
-        <td>${orderId}</td>
-        <td>${stockSymbol}</td>
-        <td>${tradeType}</td>
-        <td>${price}</td>
-        <td>${quantity}</td>
-        <td>${type === "realtime" ? "待成交" : "挂单中"}</td>
-        <td>${orderTime}</td>
-        <td><button class="cancel-btn" style="background-color: #f44336; color: white; border: none; border-radius: 4px; padding: 5px 10px; cursor: pointer;">撤销</button></td>
-      `;
-      
-      // Add to corresponding table
-      if (type === "realtime") {
-        document.querySelector("#realtimeOrderTable tbody").prepend(newRow);
-      } else {
-        document.querySelector("#limitOrderTable tbody").prepend(newRow);
-      }
-      
-      // Bind event to cancel button
-      newRow.querySelector(".cancel-btn").addEventListener("click", function() {
-        cancelOrder(this);
-      });
-    }
-    
-    // 初始化：为现有的撤销按钮添加点击事件
-    document.addEventListener("DOMContentLoaded", function() {
-      // Bind event to all cancel buttons
-      document.querySelectorAll(".cancel-btn").forEach(btn => {
-        btn.addEventListener("click", function() {
-          cancelOrder(this);
+          
+          datasets.push({
+            label: `${stock} Historical data`,
+            data: prices.map((price, i) => ({ x: dates[i], y: price })),
+            borderColor: colors[index % colors.length],
+            backgroundColor: colors[index % colors.length],
+            fill: false,
+            tension: 0.1,
+            pointRadius: 1,
+            segment: {
+              borderDash: () => [0, 0]
+            }
+          });
+          
+          // 如果有预测数据，添加预测线和多条模拟路径
+          if (predictionData[stock] && !predictionData[stock].error) {
+            // 最后一个历史数据点
+            const lastDate = predictionData[stock].last_date;
+            const lastPrice = predictionData[stock].last_price;
+            
+            // 预测数据
+            const futureDates = predictionData[stock].dates;
+            const futurePrices = predictionData[stock].prices;
+            
+            // 更新最大日期
+            if (!maxDate || new Date(futureDates[futureDates.length - 1]) > maxDate) {
+              maxDate = new Date(futureDates[futureDates.length - 1]);
+            }
+            
+            // 添加样本路径（如果可用）
+            if (isShowingPrediction && predictionData[stock].sample_paths) {
+              const samplePaths = predictionData[stock].sample_paths;
+              const baseColor = colors[index % colors.length];
+              
+              // 最多显示50条路径，避免过度拥挤
+              const pathsToShow = Math.min(50, samplePaths.length);
+              
+              for (let i = 0; i < pathsToShow; i++) {
+                const path = samplePaths[i];
+                datasets.push({
+                  label: i === 0 ? `${stock} Simulation path` : undefined, // Only add label to the first path, avoid too many legends
+                  data: [
+                    { x: lastDate, y: lastPrice },
+                    ...path.map((price, j) => ({ x: futureDates[j], y: price }))
+                  ],
+                  borderColor: `${baseColor}30`, // Add transparency
+                  backgroundColor: 'transparent',
+                  borderWidth: 1,
+                  pointRadius: 0,
+                  tension: 0.1,
+                  fill: false,
+                  hidden: !isShowingPrediction // Ensure only displayed in prediction mode
+                });
+              }
+            }
+            
+            // 创建均值预测数据集
+            datasets.push({
+              label: `${stock} Prediction mean`,
+              data: [
+                // Start point - last historical data point
+                { x: lastDate, y: lastPrice },
+                // Subsequent prediction points
+                ...futurePrices.map((price, i) => ({ x: futureDates[i], y: price }))
+              ],
+              borderColor: colors[index % colors.length],
+              backgroundColor: colors[index % colors.length],
+              fill: false,
+              tension: 0.1,
+              pointRadius: 0,
+              borderWidth: 3,
+              borderDash: [5, 5],
+              pointStyle: 'circle',
+              zIndex: 100 // Ensure the mean line is displayed above all paths
+            });
+          }
         });
-      });
-      
-      // Initialize: bind click event to existing cancel buttons
-      setupFinancialDataTabs();
-    });
-    
-    // Cancel order function
-    function cancelOrder(button) {
-      // Get current row
-      const row = button.closest("tr");
-      
-      // Get order ID and status
-      const orderId = row.cells[0].textContent;
-      const statusCell = row.cells[5];
-      
-      // Confirm whether to cancel
-      if (confirm(`Are you sure you want to cancel order #${orderId}?`)) {
-        // Update status to "已取消"
-        statusCell.textContent = "Cancelled";
         
-        // Disable cancel button
-        button.disabled = true;
+        // All date labels (including historical and prediction)
+        let allDates = new Set();
         
-        // In actual projects, should call backend API
-        /*
-        fetch("/api/cancel_order", {
+        // Collect historical dates
+        Object.keys(historicalData).forEach(stock => {
+          if (!historicalData[stock].error) {
+            Object.keys(historicalData[stock]).forEach(date => allDates.add(date));
+          }
+        });
+        
+        // Collect prediction dates
+        Object.keys(predictionData).forEach(stock => {
+          if (predictionData[stock] && !predictionData[stock].error) {
+            predictionData[stock].dates.forEach(date => allDates.add(date));
+          }
+        });
+        
+        // Convert to array and sort
+        let labels = Array.from(allDates).sort();
+        
+        // Create chart
+        chart = new Chart(ctx, {
+          type: "line",
+          data: { datasets: datasets },
+          options: {
+            responsive: true,
+            scales: {
+              x: { 
+                type: 'time',
+                time: {
+                  unit: 'month',
+                  displayFormats: {
+                    month: 'yyyy-MM'
+                  }
+                },
+                title: { display: true, text: "Date" },
+                min: minDate, // Set minimum date
+                max: maxDate  // Set maximum date
+              },
+              y: { 
+                type: "linear", 
+                title: { display: true, text: "Closing price" }, 
+                beginAtZero: false 
+              }
+            },
+            plugins: {
+              tooltip: {
+                mode: 'index',
+                intersect: false,
+                callbacks: {
+                  // Simplify hover information, only display stock code and price
+                  title: function(tooltipItems) {
+                    // Return date as title
+                    return tooltipItems[0].label;
+                  },
+                  label: function(context) {
+                    let label = context.dataset.label || '';
+                    if (label) {
+                      // Extract stock code from label
+                      const stockCode = label.split(' ')[0];
+                      // Only keep stock code and price information
+                      label = `${stockCode}: $${context.parsed.y.toFixed(2)}`;
+                    }
+                    return label;
+                  },
+                  // Filter out hover information for simulation paths, only display when explicitly activated
+                  filter: function(tooltipItem) {
+                    // If it's a simulation path and not explicitly activated, don't display
+                    if (tooltipItem.dataset.label === undefined) {
+                      return false;
+                    }
+                    return true;
+                  }
+                }
+              },
+              legend: {
+                position: 'top',
+                labels: {
+                  usePointStyle: true,
+                  filter: function(item, chart) {
+                    // Filter out items without labels (i.e., single simulation path)
+                    return !!item.text;
+                  }
+                }
+              },
+              annotation: {
+                annotations: Object.keys(predictionData).map(stock => {
+                  if (predictionData[stock] && !predictionData[stock].error) {
+                    return {
+                      type: 'line',
+                      mode: 'vertical',
+                      scaleID: 'x',
+                      value: predictionData[stock].last_date,
+                      borderColor: 'rgba(0, 0, 0, 0.5)',
+                      borderWidth: 2,
+                      label: {
+                        content: 'Prediction start',
+                        enabled: true,
+                        position: 'top'
+                      }
+                    };
+                  }
+                  return null;
+                }).filter(a => a !== null)
+              }
+            }
+          }
+        });
+      }
+
+      /********************************************************
+       * 6. AI assistant: ChatGPT style layout + real interface example
+       ********************************************************/
+      const chatWindow = document.getElementById("chatWindow");
+      const assistantInput = document.getElementById("chatInput");
+      const assistantSendBtn = document.querySelector(".chat-send-btn");
+      const assistantClearBtn = document.querySelector(".chat-clear-btn");
+
+      assistantSendBtn.addEventListener("click", () => {
+        const userText = assistantInput.value.trim();
+        if (!userText) return;
+        // Display user message
+        appendMessage(userText, "user");
+        assistantInput.value = "";
+
+        // Send to backend
+        fetch("/gemini_assistant", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ orderId: orderId })
+          body: JSON.stringify({ command: userText })
+        })
+        .then(res => res.json())
+        .then(data => {
+          appendMessage(data.response, "ai");
+        })
+        .catch(err => {
+          console.error(err);
+          appendMessage("出错啦，请稍后再试。", "ai");
+        });
+      });
+
+      assistantClearBtn.addEventListener("click", () => {
+        clearChat();
+      });
+
+      function appendMessage(text, role) {
+        const msgDiv = document.createElement("div");
+        msgDiv.classList.add("chat-message", role);
+        const bubble = document.createElement("div");
+        bubble.classList.add("chat-bubble");
+        bubble.innerText = text;
+        msgDiv.appendChild(bubble);
+        chatWindow.appendChild(msgDiv);
+        chatWindow.scrollTop = chatWindow.scrollHeight;
+      }
+
+      /********************************************************
+       * 7. Alert information: high/medium/low, displayed in colorful blocks直观显示
+       ********************************************************/
+      document.getElementById("searchButton").addEventListener("click", function() {
+        const stockSymbol = document.getElementById("stockSymbolInput").value.trim();
+        if (!stockSymbol) {
+          alert("请输入股票代码");
+          return;
+        }
+        
+        // 显示加载状态
+        document.getElementById("companyName").textContent = "加载中...";
+        
+        // 发送请求获取股票数据
+        fetch(`/get_stock_details?symbol=${stockSymbol}`)
+          .then(response => response.json())
+          .then(data => {
+            if (data.error) {
+              alert(data.error);
+              return;
+            }
+            
+            // Update company information
+            document.getElementById("companyName").textContent = data.name || `${stockSymbol} Corporation`;
+            document.getElementById("currentPrice").textContent = `$${data.price.toFixed(2)}`;
+            
+            // Update price change
+            const priceChangeElement = document.getElementById("priceChange");
+            const priceChange = data.change;
+            const priceChangePercent = data.changePercent;
+            priceChangeElement.textContent = `${priceChange >= 0 ? "+" : ""}${priceChange.toFixed(2)} (${priceChangePercent >= 0 ? "+" : ""}${priceChangePercent.toFixed(2)}%)`;
+            priceChangeElement.style.color = priceChange >= 0 ? "green" : "red";
+            
+            // Update trading information
+            document.getElementById("openPrice").textContent = `$${data.open.toFixed(2)}`;
+            document.getElementById("highPrice").textContent = `$${data.high.toFixed(2)}`;
+            document.getElementById("lowPrice").textContent = `$${data.low.toFixed(2)}`;
+            document.getElementById("volume").textContent = data.volume.toLocaleString();
+            document.getElementById("previousClose").textContent = `$${data.previous_close.toFixed(2)}`;
+            
+            // Automatically fill in the stock code and reference price in the order form
+            orderStockSymbol.value = stockSymbol;
+            orderPrice.value = data.price.toFixed(2);
+            
+            // Get early warning information
+            fetch("/get_alert_levels", {
+              method: "POST",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify({ stock: stockSymbol })
+            })
+            .then(res => res.json())
+            .then(alertData => {
+              const { valuation, liquidity } = alertData;
+              
+              // Update early warning information display
+              updateAlertBox("valuationBox", valuation, "Valuation");
+              updateAlertBox("liquidityBox", liquidity, "Liquidity");
+            })
+            .catch(err => {
+              console.error("Failed to get early warning information:", err);
+            });
+          })
+          .catch(error => {
+            console.error("Failed to get stock data:", error);
+            alert("Failed to get stock data. Please try again later.");
+          });
+      });
+
+      function updateAlertBox(boxId, level, label) {
+        const box = document.getElementById(boxId);
+        
+        // Set color
+        let color = "#FFC107"; // Default yellow (medium)
+        if (level === "Low") {
+          color = "#4CAF50"; // Green
+        } else if (level === "High") {
+          color = "#F44336"; // Red
+        }
+        
+        box.style.backgroundColor = color;
+        box.textContent = label;
+        
+        // Update text
+        const textElement = box.nextElementSibling;
+        if (textElement) {
+          textElement.textContent = level;
+        }
+      }
+
+      // Process alert setting form
+      document.getElementById("setAlarmBtn").addEventListener("click", function() {
+        const stock = document.getElementById("stockSymbolSelect").value;
+        const price = document.getElementById("targetPrice").value;
+        const email = document.getElementById("emailNotification").value;
+        const type = document.getElementById("alertType").value;
+        
+        if (!stock || !price || !email || !type) {
+          alert("Please fill in all fields");
+          return;
+        }
+        
+        // Validate email format
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        if (!emailRegex.test(email)) {
+          alert("Please enter a valid email address");
+          return;
+        }
+        
+        // Add code to send to backend
+        // Example:
+        alert(`Alert set: ${stock} at ${price} notify ${email}`);
+        
+        // In actual projects, you should send it to the backend API
+        /*
+        fetch("/api/set_price_alert", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ stock, targetPrice: price, email, alertType: type })
         })
         .then(response => response.json())
         .then(data => {
           if (data.success) {
-            alert("Order has been successfully cancelled!");
-            statusCell.textContent = "Cancelled";
-            button.disabled = true;
+            alert("Alert set successfully!");
+            resetAlarmForm();
           } else {
-            alert("Order cancellation failed: " + data.message);
+            alert("Failed to set alert: " + data.message);
           }
         })
         .catch(error => {
           console.error("Error:", error);
-          alert("Order cancellation failed: " + error);
+          alert("Error occurred when setting alert");
         });
         */
-        
-        alert(`Order #${orderId} has been successfully cancelled!`);
-      }
-    }
-    
-    // Set fundamental data tab functionality
-    function setupFinancialDataTabs() {
-      const tabs = {
-        basicDataTab: {
-          button: document.getElementById("basicDataTab"),
-          content: document.getElementById("basicDataContent")
-        },
-        balanceSheetTab: {
-          button: document.getElementById("balanceSheetTab"),
-          content: document.getElementById("balanceSheetContent")
-        },
-        incomeStatementTab: {
-          button: document.getElementById("incomeStatementTab"),
-          content: document.getElementById("incomeStatementContent")
-        }
-      };
-      
-      // Bind click event to each tab button
-      Object.keys(tabs).forEach(tabId => {
-        tabs[tabId].button.addEventListener("click", function() {
-          // Hide all content
-          Object.keys(tabs).forEach(key => {
-            tabs[key].content.style.display = "none";
-            tabs[key].button.style.backgroundColor = "#f1f1f1";
-            tabs[key].button.style.color = "#333";
-            tabs[key].button.classList.remove("active");
-          });
-          
-          // Display the currently selected content
-          tabs[tabId].content.style.display = "block";
-          tabs[tabId].button.style.backgroundColor = "#4285f4";
-          tabs[tabId].button.style.color = "white";
-          tabs[tabId].button.classList.add("active");
-        });
       });
-    }
-    
-    // Get stock financial data
-    function fetchFinancialData(stockSymbol) {
-      // In actual projects, here should call backend API to get financial data
-      // Simulate data
-      const dummyData = {
-        basicData: {
-          marketCap: "$1,234,567,890",
-          peRatio: "25.4",
-          pbRatio: "3.2",
-          dividendYield: "1.8%",
-          revenue: "$45,678,900",
-          netIncome: "$5,678,900",
-          operatingCashFlow: "$7,890,123"
-        },
-        balanceSheet: {
-          currentAssets: "$12,345,678",
-          nonCurrentAssets: "$23,456,789",
-          currentLiabilities: "$8,765,432",
-          nonCurrentLiabilities: "$15,678,901",
-          totalAssets: "$35,802,467",
-          totalLiabilities: "$24,444,333",
-          shareholdersEquity: "$11,358,134"
-        },
-        incomeStatement: {
-          revenue: "$45,678,900",
-          costOfRevenue: "$25,678,900",
-          grossProfit: "$20,000,000",
-          operatingIncome: "$12,345,678",
-          incomeBeforeTax: "$11,234,567",
-          netIncome: "$9,876,543",
-          eps: "$3.45"
-        }
+
+      document.getElementById("resetAlarmBtn").addEventListener("click", function() {
+        document.getElementById("stockSymbolSelect").value = "";
+        document.getElementById("targetPrice").value = "";
+        document.getElementById("emailNotification").value = "";
+        document.getElementById("alertType").value = "";
+      });
+      
+      /********************************************************
+       * 8. Order information: real-time and limit order switching
+       ********************************************************/
+      // Get order type buttons
+      const realtimeOrderBtn = document.getElementById("realtimeOrderBtn");
+      const limitOrderBtn = document.getElementById("limitOrderBtn");
+      
+      // Get related content areas
+      const realtimeOrderInfo = document.getElementById("realtimeOrderInfo");
+      const limitOrderInfo = document.getElementById("limitOrderInfo");
+      const realtimeOrderTable = document.getElementById("realtimeOrderTable");
+      const limitOrderTable = document.getElementById("limitOrderTable");
+      
+      // Real-time order button click event
+      realtimeOrderBtn.addEventListener("click", function() {
+        // Update button style
+        realtimeOrderBtn.classList.add("active");
+        realtimeOrderBtn.style.backgroundColor = "#4285f4";
+        realtimeOrderBtn.style.color = "white";
+        limitOrderBtn.classList.remove("active");
+        limitOrderBtn.style.backgroundColor = "#f1f1f1";
+        limitOrderBtn.style.color = "#333";
+        
+        // Show/hide related content
+        realtimeOrderInfo.style.display = "block";
+        limitOrderInfo.style.display = "none";
+        realtimeOrderTable.style.display = "block";
+        limitOrderTable.style.display = "none";
+      });
+      
+      // Limit order button click event
+      limitOrderBtn.addEventListener("click", function() {
+        // Update button style
+        limitOrderBtn.classList.add("active");
+        limitOrderBtn.style.backgroundColor = "#4285f4";
+        limitOrderBtn.style.color = "white";
+        realtimeOrderBtn.classList.remove("active");
+        realtimeOrderBtn.style.backgroundColor = "#f1f1f1";
+        realtimeOrderBtn.style.color = "#333";
+        
+        // Show/hide related content
+        limitOrderInfo.style.display = "block";
+        realtimeOrderInfo.style.display = "none";
+        limitOrderTable.style.display = "block";
+        realtimeOrderTable.style.display = "none";
+      });
+      
+      /********************************************************
+       * 9. Real-time price page order interface
+       ********************************************************/
+      // Get buttons and input fields of the order interface
+      const realOrderTypeBtn = document.getElementById("realOrderTypeBtn");
+      const limitOrderTypeBtn = document.getElementById("limitOrderTypeBtn");
+      const buyBtn = document.getElementById("buyBtn");
+      const sellBtn = document.getElementById("sellBtn");
+      const orderStockSymbol = document.getElementById("orderStockSymbol");
+      const orderPrice = document.getElementById("orderPrice");
+      const orderQuantity = document.getElementById("orderQuantity");
+      const placeOrderBtn = document.getElementById("placeOrderBtn");
+      const viewOrdersBtn = document.getElementById("viewOrdersBtn");
+      
+      // Maintain order state
+      let orderState = {
+        orderType: "realtime", // "realtime" or "limit"
+        tradeType: "buy",      // "buy" or "sell"
       };
       
-      // Update fundamental data
-      document.getElementById("marketCapValue").textContent = dummyData.basicData.marketCap;
-      document.getElementById("peRatio").textContent = dummyData.basicData.peRatio;
-      document.getElementById("pbRatio").textContent = dummyData.basicData.pbRatio;
-      document.getElementById("dividendYield").textContent = dummyData.basicData.dividendYield;
-      document.getElementById("revenueValue").textContent = dummyData.basicData.revenue;
-      document.getElementById("netIncomeValue").textContent = dummyData.basicData.netIncome;
-      document.getElementById("operatingCashFlowValue").textContent = dummyData.basicData.operatingCashFlow;
+      // Search button click event - automatically fill in the stock code and reference price in the order form
+      document.getElementById("searchButton").addEventListener("click", function() {
+        const stockSymbol = document.getElementById("stockSymbolInput").value.trim();
+        if (stockSymbol) {
+          orderStockSymbol.value = stockSymbol;
+          
+          // Try to get the current price as a reference
+          const currentPriceText = document.getElementById("currentPrice").textContent;
+          if (currentPriceText) {
+            const priceMatch = currentPriceText.match(/\$(\d+(\.\d+)?)/);
+            if (priceMatch && priceMatch[1]) {
+              orderPrice.value = priceMatch[1];
+            }
+          }
+        }
+      });
       
-      // Update balance sheet data
-      document.getElementById("currentAssetsValue").textContent = dummyData.balanceSheet.currentAssets;
-      document.getElementById("nonCurrentAssetsValue").textContent = dummyData.balanceSheet.nonCurrentAssets;
-      document.getElementById("currentLiabilitiesValue").textContent = dummyData.balanceSheet.currentLiabilities;
-      document.getElementById("nonCurrentLiabilitiesValue").textContent = dummyData.balanceSheet.nonCurrentLiabilities;
-      document.getElementById("totalAssetsValue").textContent = dummyData.balanceSheet.totalAssets;
-      document.getElementById("totalLiabilitiesValue").textContent = dummyData.balanceSheet.totalLiabilities;
-      document.getElementById("shareholdersEquityValue").textContent = dummyData.balanceSheet.shareholdersEquity;
+      // Real-time order button click event
+      realOrderTypeBtn.addEventListener("click", function() {
+        // Update button style
+        realOrderTypeBtn.classList.add("active");
+        realOrderTypeBtn.style.backgroundColor = "#4285f4";
+        realOrderTypeBtn.style.color = "white";
+        limitOrderTypeBtn.classList.remove("active");
+        limitOrderTypeBtn.style.backgroundColor = "#f1f1f1";
+        limitOrderTypeBtn.style.color = "#333";
+        
+        // Update order state
+        orderState.orderType = "realtime";
+      });
       
-      // Update profit statement data
-      document.getElementById("revenueIncomeValue").textContent = dummyData.incomeStatement.revenue;
-      document.getElementById("costOfRevenueValue").textContent = dummyData.incomeStatement.costOfRevenue;
-      document.getElementById("grossProfitValue").textContent = dummyData.incomeStatement.grossProfit;
-      document.getElementById("operatingIncomeValue").textContent = dummyData.incomeStatement.operatingIncome;
-      document.getElementById("incomeBeforeTaxValue").textContent = dummyData.incomeStatement.incomeBeforeTax;
-      document.getElementById("netIncomeStatementValue").textContent = dummyData.incomeStatement.netIncome;
-      document.getElementById("epsValue").textContent = dummyData.incomeStatement.eps;
-    }
+      // Limit order button click event
+      limitOrderTypeBtn.addEventListener("click", function() {
+        // Update button style
+        limitOrderTypeBtn.classList.add("active");
+        limitOrderTypeBtn.style.backgroundColor = "#4285f4";
+        limitOrderTypeBtn.style.color = "white";
+        realOrderTypeBtn.classList.remove("active");
+        realOrderTypeBtn.style.backgroundColor = "#f1f1f1";
+        realOrderTypeBtn.style.color = "#333";
+        
+        // Update order state
+        orderState.orderType = "limit";
+      });
+      
+      // Buy button click event
+      buyBtn.addEventListener("click", function() {
+        // Update button style
+        buyBtn.classList.add("active");
+        buyBtn.style.backgroundColor = "#4CAF50";
+        buyBtn.style.color = "white";
+        sellBtn.classList.remove("active");
+        sellBtn.style.backgroundColor = "#f1f1f1";
+        sellBtn.style.color = "#333";
+        
+        // Update order state
+        orderState.tradeType = "buy";
+      });
+      
+      // Sell button click event
+      sellBtn.addEventListener("click", function() {
+        // Update button style
+        sellBtn.classList.add("active");
+        sellBtn.style.backgroundColor = "#F44336";
+        sellBtn.style.color = "white";
+        buyBtn.classList.remove("active");
+        buyBtn.style.backgroundColor = "#f1f1f1";
+        buyBtn.style.color = "#333";
+        
+        // Update order state
+        orderState.tradeType = "sell";
+      });
+      
+      // Place order button click event
+      placeOrderBtn.addEventListener("click", function() {
+        const stockSymbol = orderStockSymbol.value.trim();
+        const price = orderPrice.value.trim();
+        const quantity = orderQuantity.value.trim();
+        
+        // Validate input
+        if (!stockSymbol || !price || !quantity) {
+          alert("Please fill in all required fields");
+          return;
+        }
+        
+        if (isNaN(price) || parseFloat(price) <= 0) {
+          alert("Please enter a valid price");
+          return;
+        }
+        
+        if (isNaN(quantity) || parseInt(quantity) <= 0) {
+          alert("Please enter a valid quantity");
+          return;
+        }
+        
+        // Simulate order success, in actual projects, send request to backend
+        const orderTypeName = orderState.orderType === "realtime" ? "Real-time order" : "Limit order";
+        const tradeTypeName = orderState.tradeType === "buy" ? "Buy" : "Sell";
+        
+        alert(`Order successful: ${orderTypeName} ${tradeTypeName} ${stockSymbol} ${quantity} shares, price $${price}`);
+        
+        // Jump to order information page and display the corresponding type of order
+        showSectionInMain("orders");
+        
+        // Display the corresponding type of order list based on the order type
+        if (orderState.orderType === "realtime") {
+          // Display real-time order
+          realtimeOrderBtn.click();
+          
+          // Add new order to real-time order table
+          addNewOrder(
+            "realtime", 
+            stockSymbol, 
+            orderState.tradeType === "buy" ? "Buy" : "Sell", 
+            price, 
+            quantity
+          );
+        } else {
+          // Display limit order
+          limitOrderBtn.click();
+          
+          // Add new order to limit order table
+          addNewOrder(
+            "limit", 
+            stockSymbol, 
+            orderState.tradeType === "buy" ? "Buy" : "Sell", 
+            price, 
+            quantity
+          );
+        }
+        
+        // In actual projects, should call backend API and handle response
+        /*
+        fetch("/api/place_order", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            stockSymbol: stockSymbol,
+            price: parseFloat(price),
+            quantity: parseInt(quantity),
+            orderType: orderState.orderType,
+            tradeType: orderState.tradeType
+          })
+        })
+        .then(response => response.json())
+        .then(data => {
+          if (data.success) {
+            alert("Order successful!");
+            showSectionInMain("orders");
+          } else {
+            alert("Order failed: " + data.message);
+          }
+        })
+        .catch(error => {
+          console.error("Error:", error);
+          alert("Order failed: " + error);
+        });
+        */
+      });
+      
+      // View order button click event - jump to order information page
+      viewOrdersBtn.addEventListener("click", function() {
+        showSectionInMain("orders");
+      });
+      
+      // Add new order to table
+      function addNewOrder(type, stockSymbol, tradeType, price, quantity) {
+        // Generate random order ID
+        const orderId = Math.floor(Math.random() * 1000) + 3000;
+        
+        // Get current time
+        const now = new Date();
+        const year = now.getFullYear();
+        const month = String(now.getMonth() + 1).padStart(2, '0');
+        const day = String(now.getDate()).padStart(2, '0');
+        const hours = String(now.getHours()).padStart(2, '0');
+        const minutes = String(now.getMinutes()).padStart(2, '0');
+        const seconds = String(now.getSeconds()).padStart(2, '0');
+        const orderTime = `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`;
+        
+        // Create new row
+        const newRow = document.createElement("tr");
+        newRow.innerHTML = `
+          <td>${orderId}</td>
+          <td>${stockSymbol}</td>
+          <td>${tradeType}</td>
+          <td>${price}</td>
+          <td>${quantity}</td>
+          <td>${type === "realtime" ? "待成交" : "挂单中"}</td>
+          <td>${orderTime}</td>
+          <td><button class="cancel-btn" style="background-color: #f44336; color: white; border: none; border-radius: 4px; padding: 5px 10px; cursor: pointer;">撤销</button></td>
+        `;
+        
+        // Add to corresponding table
+        if (type === "realtime") {
+          document.querySelector("#realtimeOrderTable tbody").prepend(newRow);
+        } else {
+          document.querySelector("#limitOrderTable tbody").prepend(newRow);
+        }
+        
+        // Bind event to cancel button
+        newRow.querySelector(".cancel-btn").addEventListener("click", function() {
+          cancelOrder(this);
+        });
+      }
+      
+      // 初始化：为现有的撤销按钮添加点击事件
+      document.addEventListener("DOMContentLoaded", function() {
+        // Bind event to all cancel buttons
+        document.querySelectorAll(".cancel-btn").forEach(btn => {
+          btn.addEventListener("click", function() {
+            cancelOrder(this);
+          });
+        });
+        
+        // Initialize: bind click event to existing cancel buttons
+        setupFinancialDataTabs();
+      });
+      
+      // Cancel order function
+      function cancelOrder(button) {
+        // Get current row
+        const row = button.closest("tr");
+        
+        // Get order ID and status
+        const orderId = row.cells[0].textContent;
+        const statusCell = row.cells[5];
+        
+        // Confirm whether to cancel
+        if (confirm(`Are you sure you want to cancel order #${orderId}?`)) {
+          // Update status to "已取消"
+          statusCell.textContent = "Cancelled";
+          
+          // Disable cancel button
+          button.disabled = true;
+          
+          // In actual projects, should call backend API
+          /*
+          fetch("/api/cancel_order", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ orderId: orderId })
+          })
+          .then(response => response.json())
+          .then(data => {
+            if (data.success) {
+              alert("Order has been successfully cancelled!");
+              statusCell.textContent = "Cancelled";
+              button.disabled = true;
+            } else {
+              alert("Order cancellation failed: " + data.message);
+            }
+          })
+          .catch(error => {
+            console.error("Error:", error);
+            alert("Order cancellation failed: " + error);
+          });
+          */
+          
+          alert(`Order #${orderId} has been successfully cancelled!`);
+        }
+      }
+      
+      // Set fundamental data tab functionality
+      function setupFinancialDataTabs() {
+        const tabs = {
+          basicDataTab: {
+            button: document.getElementById("basicDataTab"),
+            content: document.getElementById("basicDataContent")
+          },
+          balanceSheetTab: {
+            button: document.getElementById("balanceSheetTab"),
+            content: document.getElementById("balanceSheetContent")
+          },
+          incomeStatementTab: {
+            button: document.getElementById("incomeStatementTab"),
+            content: document.getElementById("incomeStatementContent")
+          }
+        };
+        
+        // Bind click event to each tab button
+        Object.keys(tabs).forEach(tabId => {
+          tabs[tabId].button.addEventListener("click", function() {
+            // Hide all content
+            Object.keys(tabs).forEach(key => {
+              tabs[key].content.style.display = "none";
+              tabs[key].button.style.backgroundColor = "#f1f1f1";
+              tabs[key].button.style.color = "#333";
+              tabs[key].button.classList.remove("active");
+            });
+            
+            // Display the currently selected content
+            tabs[tabId].content.style.display = "block";
+            tabs[tabId].button.style.backgroundColor = "#4285f4";
+            tabs[tabId].button.style.color = "white";
+            tabs[tabId].button.classList.add("active");
+          });
+        });
+      }
+      
+      // Get stock financial data
+      function fetchFinancialData(stockSymbol) {
+        // In actual projects, here should call backend API to get financial data
+        // Simulate data
+        const dummyData = {
+          basicData: {
+            marketCap: "$1,234,567,890",
+            peRatio: "25.4",
+            pbRatio: "3.2",
+            dividendYield: "1.8%",
+            revenue: "$45,678,900",
+            netIncome: "$5,678,900",
+            operatingCashFlow: "$7,890,123"
+          },
+          balanceSheet: {
+            currentAssets: "$12,345,678",
+            nonCurrentAssets: "$23,456,789",
+            currentLiabilities: "$8,765,432",
+            nonCurrentLiabilities: "$15,678,901",
+            totalAssets: "$35,802,467",
+            totalLiabilities: "$24,444,333",
+            shareholdersEquity: "$11,358,134"
+          },
+          incomeStatement: {
+            revenue: "$45,678,900",
+            costOfRevenue: "$25,678,900",
+            grossProfit: "$20,000,000",
+            operatingIncome: "$12,345,678",
+            incomeBeforeTax: "$11,234,567",
+            netIncome: "$9,876,543",
+            eps: "$3.45"
+          }
+        };
+        
+        // Update fundamental data
+        document.getElementById("marketCapValue").textContent = dummyData.basicData.marketCap;
+        document.getElementById("peRatio").textContent = dummyData.basicData.peRatio;
+        document.getElementById("pbRatio").textContent = dummyData.basicData.pbRatio;
+        document.getElementById("dividendYield").textContent = dummyData.basicData.dividendYield;
+        document.getElementById("revenueValue").textContent = dummyData.basicData.revenue;
+        document.getElementById("netIncomeValue").textContent = dummyData.basicData.netIncome;
+        document.getElementById("operatingCashFlowValue").textContent = dummyData.basicData.operatingCashFlow;
+        
+        // Update balance sheet data
+        document.getElementById("currentAssetsValue").textContent = dummyData.balanceSheet.currentAssets;
+        document.getElementById("nonCurrentAssetsValue").textContent = dummyData.balanceSheet.nonCurrentAssets;
+        document.getElementById("currentLiabilitiesValue").textContent = dummyData.balanceSheet.currentLiabilities;
+        document.getElementById("nonCurrentLiabilitiesValue").textContent = dummyData.balanceSheet.nonCurrentLiabilities;
+        document.getElementById("totalAssetsValue").textContent = dummyData.balanceSheet.totalAssets;
+        document.getElementById("totalLiabilitiesValue").textContent = dummyData.balanceSheet.totalLiabilities;
+        document.getElementById("shareholdersEquityValue").textContent = dummyData.balanceSheet.shareholdersEquity;
+        
+        // Update profit statement data
+        document.getElementById("revenueIncomeValue").textContent = dummyData.incomeStatement.revenue;
+        document.getElementById("costOfRevenueValue").textContent = dummyData.incomeStatement.costOfRevenue;
+        document.getElementById("grossProfitValue").textContent = dummyData.incomeStatement.grossProfit;
+        document.getElementById("operatingIncomeValue").textContent = dummyData.incomeStatement.operatingIncome;
+        document.getElementById("incomeBeforeTaxValue").textContent = dummyData.incomeStatement.incomeBeforeTax;
+        document.getElementById("netIncomeStatementValue").textContent = dummyData.incomeStatement.netIncome;
+        document.getElementById("epsValue").textContent = dummyData.incomeStatement.eps;
+      }
 
-    function clearChat() {
-      const chatWindow = document.getElementById('chatWindow');
-      chatWindow.innerHTML = '';
-      document.getElementById('chatInput').value = '';
-    }
+      function clearChat() {
+        const chatWindow = document.getElementById('chatWindow');
+        chatWindow.innerHTML = '';
+        document.getElementById('chatInput').value = '';
+      }
 
-    // 添加标题点击效果
-    document.getElementById('aiTitle').addEventListener('click', function() {
-      this.style.transform = 'scale(1.1)';
-      setTimeout(() => {
-        this.style.transform = 'scale(1)';
-      }, 200);
-    });
-  </script>
+      // Add title click effect
+      document.getElementById('aiTitle').addEventListener('click', function() {
+        this.style.transform = 'scale(1.1)';
+        setTimeout(() => {
+          this.style.transform = 'scale(1)';
+        }, 200);
+      });
+
+      /********************************************************
+       * 初始化Chart.js插件
+       ********************************************************/
+      // 注册Chart.js标注插件
+      Chart.register(window.ChartAnnotation);
+      
+      // 导航逻辑
+      function showContent(contentId) {
+        document.querySelectorAll("body > div").forEach(div => {
+          div.style.display = "none";
+        });
+        document.getElementById(contentId).style.display = "block";
+      }
+      function showSectionInMain(id) {
+        document.querySelectorAll("#main .content").forEach(content => {
+          content.style.display = "none";
+        });
+        document.getElementById(id).style.display = "block";
+      }
+
+      function toggleViewMode(mode) {
+        if (mode === 'full') {
+          isShowingPrediction = false;
+          document.getElementById('fullHistoryBtn').classList.add('active');
+          document.getElementById('predictionFocusBtn').classList.remove('active');
+        } else {
+          isShowingPrediction = true;
+          document.getElementById('fullHistoryBtn').classList.remove('active');
+          document.getElementById('predictionFocusBtn').classList.add('active');
+        }
+        updateChartDisplay();
+      }
+    </script>
+  </div>
 </body>
 </html>

@@ -1,18 +1,41 @@
+"""
+Stock API Module
+Provides interfaces for retrieving stock data from external services
+"""
 from alpha_vantage.timeseries import TimeSeries
 from flask import jsonify
 
 class StockAPI:
+    """
+    Interface for fetching stock market data using Alpha Vantage API
+    """
+    
     def __init__(self, api_key='CWL9SQIO1FD94H98'):
+        """
+        Initialize the Stock API with an Alpha Vantage API key
+        
+        Args:
+            api_key (str): Alpha Vantage API key for authentication
+        """
         self.ts = TimeSeries(key=api_key)
     
     def get_stock_details(self, symbol):
+        """
+        Get real-time stock data for a given symbol
+        
+        Args:
+            symbol (str): Stock ticker symbol
+            
+        Returns:
+            dict: Formatted stock data including price, change, volume, etc.
+        """
         try:
-            # 获取实时数据
+            # Get real-time data from Alpha Vantage
             data, meta_data = self.ts.get_quote_endpoint(symbol=symbol)
             
-            # 格式化返回数据
+            # Format the response data
             return {
-                'name': f"{symbol}",  # Alpha Vantage API不直接提供公司名称
+                'name': f"{symbol}",  # Alpha Vantage API doesn't provide company name directly
                 'price': float(data['05. price']),
                 'change': float(data['09. change']),
                 'changePercent': float(data['10. change percent'].strip('%')),
@@ -27,6 +50,15 @@ class StockAPI:
             return {'error': str(e)}
     
     def get_monthly_data(self, symbol):
+        """
+        Get monthly historical data for a given symbol
+        
+        Args:
+            symbol (str): Stock ticker symbol
+            
+        Returns:
+            dict: Monthly historical data and metadata
+        """
         try:
             data, meta_data = self.ts.get_monthly(symbol=symbol)
             return {'data': data, 'meta_data': meta_data}
@@ -34,9 +66,19 @@ class StockAPI:
             return {'error': str(e)}
     
     def get_company_fundamentals(self, symbol):
+        """
+        Get company fundamental data (simulated)
+        
+        In a production environment, this should fetch real data from a financial API
+        
+        Args:
+            symbol (str): Stock ticker symbol
+            
+        Returns:
+            dict: Company fundamental data including financial metrics, performance, etc.
+        """
         try:
-            # 这里模拟返回公司基本面数据
-            # 实际项目中应该从真实API获取这些数据
+            # This is mock data - in a real project, this would fetch from a financial data API
             return {
                 'CompanyInfo': {
                     'Symbol': symbol,

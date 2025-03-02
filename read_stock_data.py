@@ -1,3 +1,7 @@
+"""
+Stock Data Visualization Module
+Reads stock data from database and generates Monte Carlo prediction visualizations
+"""
 import pandas as pd
 import numpy as np
 from sqlalchemy import create_engine
@@ -5,204 +9,216 @@ import matplotlib.pyplot as plt
 from matplotlib.dates import DateFormatter
 from datetime import timedelta
 import matplotlib.gridspec as gridspec
-from matplotlib import rcParams
 
-# ===================== 数据库连接及数据读取 ===================== #
-db_user = 'root'           # 替换为你的MySQL用户名
-db_password = 'Cyy-20030611'  # 替换为你的MySQL密码
-db_host = 'localhost'      # 如果MySQL在本机，保持不变
-db_port = '3306'           # 默认MySQL端口
-db_name = 'stock_data'     # 替换为你的数据库名
+# ===================== Database Connection ===================== #
+DB_CONFIG = {
+    'user': 'root',
+    'password': 'Cyy-20030611',
+    'host': 'localhost',
+    'port': '3306',
+    'database': 'stock_data'
+}
 
-# 创建数据库连接字符串
-connection_string = f"mysql+mysqlconnector://{db_user}:{db_password}@{db_host}:{db_port}/{db_name}?charset=utf8"
+# Create database connection string
+connection_string = f"mysql+mysqlconnector://{DB_CONFIG['user']}:{DB_CONFIG['password']}@{DB_CONFIG['host']}:{DB_CONFIG['port']}/{DB_CONFIG['database']}?charset=utf8"
 engine = create_engine(connection_string, echo=False)
 
-# 读取 market_data 表中2018年以后的数据
+# Read market data after 2018 from the database
 query_market = "SELECT * FROM market_data WHERE Date >= '2018-01-01'"
 df_market = pd.read_sql(query_market, engine)
 df_market['Date'] = pd.to_datetime(df_market['Date'])
 
-# ===================== 蒙特卡洛模拟预测方法 ===================== #
+# ===================== Monte Carlo Prediction Function ===================== #
 def monte_carlo_prediction(ticker_data, future_days=365, simulations=1000):
     """
-    使用蒙特卡洛模拟方法预测股价
+    Predict stock prices using Monte Carlo simulation
     
-    ticker_data: DataFrame, 必须包含['Date', 'Close']
-    future_days: 预测天数，默认为365天（一年）
-    simulations: 模拟次数
+    Args:
+        ticker_data (DataFrame): Data containing ['Date', 'Close'] columns
+        future_days (int): Number of days to predict into the future
+        simulations (int): Number of simulation paths to generate
     
-    返回: 预测价格（取所有模拟的平均值）
+    Returns:
+        ndarray: Predicted prices (average of all simulations)
     """
-    print("开始蒙特卡洛模拟...")
+    print("Starting Monte Carlo simulation...")
     
-    # 计算每日收益率（对数收益率）
+    # Calculate daily log returns
     close_prices = ticker_data['Close'].values
     log_returns = np.log(close_prices[1:] / close_prices[:-1])
     
-    # 计算参数：drift(μ)和volatility(σ)
+    # Calculate parameters: drift (μ) and volatility (σ)
     mu = np.mean(log_returns)
     sigma = np.std(log_returns)
     
-    # 生成随机收益率路径
-    np.random.seed(42)  # 设置随机种子，确保结果可复现
+    # Generate random return paths
+    np.random.seed(42)  # Set random seed for reproducibility
     
-    # 预测多条路径
+    # Initialize simulation arrays
     simulated_paths = np.zeros((simulations, future_days))
-    S0 = close_prices[-1]  # 最后一个已知价格
+    S0 = close_prices[-1]  # Last known price
     
-    # 模拟多条路径
+    # Run Monte Carlo simulation
     for i in range(simulations):
-        # 生成随机正态分布噪声
+        # Generate random normal distribution noise
         rand = np.random.normal(0, 1, future_days)
-        # 计算每日价格: S_t = S_{t-1} * exp(drift + volatility * random)
+        # Calculate daily returns
         daily_returns = np.exp(mu + sigma * rand)
         
-        # 初始化价格路径
+        # Initialize price path
         price_path = np.zeros(future_days)
         price_path[0] = S0 * daily_returns[0]
         
-        # 生成整个价格路径
+        # Generate the entire price path
         for t in range(1, future_days):
             price_path[t] = price_path[t-1] * daily_returns[t]
             
         simulated_paths[i] = price_path
     
-    # 计算所有路径的均值作为预测
+    # Calculate mean prediction across all simulations
     prediction = np.mean(simulated_paths, axis=0)
-    print("蒙特卡洛模拟完成!")
+    print("Monte Carlo simulation completed!")
     
     return prediction
 
-# ===================== 主流程：对每只股票进行预测 ===================== #
-future_days = 365  # 预测未来365天（一年）
-mc_predictions = {}
+# ===================== Main Process: Predict for Each Stock ===================== #
+def generate_predictions_visualization():
+    """
+    Generate and visualize price predictions for all stocks in the dataset
+    """
+    future_days = 365  # Predict for one year
+    mc_predictions = {}
 
-# 设置更好的可视化风格
-plt.style.use('ggplot')
-colors = plt.cm.tab10.colors  # 使用matplotlib的tab10调色板
+    # Set better visualization style
+    plt.style.use('ggplot')
+    colors = plt.cm.tab10.colors  # Use matplotlib's tab10 color palette
 
-# 按 Ticker 分组，对每只股票分别预测
-unique_tickers = df_market['Ticker'].unique()
+    # Group by ticker and predict for each stock
+    unique_tickers = df_market['Ticker'].unique()
 
-for ticker in unique_tickers:
-    ticker_data = df_market[df_market['Ticker'] == ticker].sort_values('Date').dropna(subset=['Close'])
-    
-    # 数据不足时跳过
-    if len(ticker_data) < 50:
-        print(f"{ticker} 数据太少，跳过...")
-        continue
-    
-    print(f"\n===== 预测 {ticker} =====")
-    
-    # 蒙特卡洛模拟预测
-    mc_future_prices = monte_carlo_prediction(
-        ticker_data=ticker_data,
-        future_days=future_days,
-        simulations=1000
-    )
-    mc_predictions[ticker] = mc_future_prices
-
-# ===================== 改进的可视化展示 ===================== #
-# 使用GridSpec实现更灵活的布局
-plt.figure(figsize=(15, 12))
-gs = gridspec.GridSpec(2, 1, height_ratios=[3, 1])
-
-# Price subplot
-ax1 = plt.subplot(gs[0])
-# Volume subplot
-ax2 = plt.subplot(gs[1])
-
-# 记录最后一个历史日期，用于绘制分隔线
-last_date = None
-
-# 用于图例的股票列表
-legend_stocks = []
-
-for idx, ticker in enumerate(unique_tickers):
-    if ticker not in mc_predictions:
-        continue
+    for ticker in unique_tickers:
+        ticker_data = df_market[df_market['Ticker'] == ticker].sort_values('Date').dropna(subset=['Close'])
         
-    # 获取该股票的数据
-    ticker_data = df_market[df_market['Ticker'] == ticker].sort_values('Date')
-    dates_hist = ticker_data['Date']
-    close_hist = ticker_data['Close']
-    volume_hist = ticker_data['Volume']
-    
-    # 最后一个历史日期
-    last_date = dates_hist.iloc[-1]
-    
-    # 生成未来日期 - 确保是每天一个数据点
-    future_dates = [last_date + timedelta(days=i+1) for i in range(future_days)]
-    
-    # 获取预测结果
-    mc_pred = mc_predictions[ticker]
-    
-    # 使用相同的颜色
-    color = colors[idx % len(colors)]
-    
-    # 绘制历史价格
-    ax1.plot(dates_hist, close_hist, color=color, linewidth=2)
-    
-    # 绘制蒙特卡洛预测 - 使用与历史数据相同的线型
-    ax1.plot(future_dates, mc_pred, color=color, linewidth=2,
-             drawstyle='steps-post')
-    
-    # 在预测起点添加标记
-    ax1.scatter(last_date, close_hist.iloc[-1], color=color, 
-                marker='o', s=100, zorder=5)
-    
-    # 绘制成交量
-    ax2.bar(dates_hist, volume_hist, alpha=0.3, color=color)
-    
-    # 添加到图例列表
-    legend_stocks.append(ticker)
+        # Skip stocks with insufficient data
+        if len(ticker_data) < 50:
+            print(f"{ticker} has insufficient data, skipping...")
+            continue
+        
+        print(f"\n===== Predicting {ticker} =====")
+        
+        # Perform Monte Carlo simulation
+        mc_future_prices = monte_carlo_prediction(
+            ticker_data=ticker_data,
+            future_days=future_days,
+            simulations=1000
+        )
+        mc_predictions[ticker] = mc_future_prices
 
-# 添加垂直分隔线，区分历史数据和预测数据
-if last_date:
-    # 在股价图中添加垂直线
-    ax1.axvline(x=last_date, color='black', linestyle='-', linewidth=1.5, alpha=0.7)
-    # 在成交量图中添加垂直线
-    ax2.axvline(x=last_date, color='black', linestyle='-', linewidth=1.5, alpha=0.7)
+    # ===================== Visualization ===================== #
+    # Use GridSpec for more flexible layout
+    plt.figure(figsize=(15, 12))
+    gs = gridspec.GridSpec(2, 1, height_ratios=[3, 1])
+
+    # Create subplots
+    ax1 = plt.subplot(gs[0])  # Price subplot
+    ax2 = plt.subplot(gs[1])  # Volume subplot
+
+    # Track the last historical date for drawing separator
+    last_date = None
+
+    # For legend
+    legend_stocks = []
+
+    for idx, ticker in enumerate(unique_tickers):
+        if ticker not in mc_predictions:
+            continue
+            
+        # Get stock data
+        ticker_data = df_market[df_market['Ticker'] == ticker].sort_values('Date')
+        dates_hist = ticker_data['Date']
+        close_hist = ticker_data['Close']
+        volume_hist = ticker_data['Volume']
+        
+        # Last historical date
+        last_date = dates_hist.iloc[-1]
+        
+        # Generate future dates - one data point per day
+        future_dates = [last_date + timedelta(days=i+1) for i in range(future_days)]
+        
+        # Get prediction results
+        mc_pred = mc_predictions[ticker]
+        
+        # Use consistent color
+        color = colors[idx % len(colors)]
+        
+        # Plot historical prices
+        ax1.plot(dates_hist, close_hist, color=color, linewidth=2)
+        
+        # Plot Monte Carlo predictions with same line style
+        ax1.plot(future_dates, mc_pred, color=color, linewidth=2,
+                drawstyle='steps-post')
+        
+        # Add marker at prediction start point
+        ax1.scatter(last_date, close_hist.iloc[-1], color=color, 
+                  marker='o', s=100, zorder=5)
+        
+        # Plot volume
+        ax2.bar(dates_hist, volume_hist, alpha=0.3, color=color)
+        
+        # Add to legend list
+        legend_stocks.append(ticker)
+
+    # Add vertical separator line between historical data and predictions
+    if last_date:
+        # Add vertical line to price chart
+        ax1.axvline(x=last_date, color='black', linestyle='-', linewidth=1.5, alpha=0.7)
+        # Add vertical line to volume chart
+        ax2.axvline(x=last_date, color='black', linestyle='-', linewidth=1.5, alpha=0.7)
+        
+        # Add text label
+        ax1.text(last_date, ax1.get_ylim()[1]*0.95, ' Prediction Start', 
+               verticalalignment='top', horizontalalignment='left',
+               backgroundcolor='white', fontsize=10)
+
+    # Set main chart style
+    ax1.set_title('US Tech Stocks Price One-Year Prediction\n(Monte Carlo Simulation)', 
+            fontsize=16, pad=20)
+    ax1.set_ylabel('Price (USD)', fontsize=12)
+    ax1.grid(True, linestyle='--', alpha=0.7)
+
+    # Simplify legend - show only ticker symbols
+    handles = [plt.Line2D([0], [0], color=colors[i % len(colors)], linewidth=2) 
+             for i in range(len(legend_stocks))]
+    ax1.legend(handles, legend_stocks, title='Stock Tickers', 
+             bbox_to_anchor=(1.05, 1), loc='upper left', fontsize=10)
+
+    # Set volume chart style
+    ax2.set_xlabel('Date', fontsize=12)
+    ax2.set_ylabel('Volume', fontsize=12)
+    ax2.grid(True, linestyle='--', alpha=0.7)
+
+    # Format date axis
+    for ax in [ax1, ax2]:
+        ax.xaxis.set_major_formatter(DateFormatter('%Y-%m-%d'))
+        for label in ax.get_xticklabels():
+            label.set_rotation(45)
+            label.set_ha('right')
+
+    # Add watermark
+    plt.figtext(0.99, 0.01, 'Data Source: Yahoo Finance / Analysis: Monte Carlo Simulation', 
+          ha='right', va='bottom', alpha=0.5, fontsize=8)
+
+    # Adjust layout
+    plt.tight_layout()
+
+    # Save chart
+    plt.savefig('stock_prediction_monte_carlo_1year.png', 
+          dpi=300, bbox_inches='tight')
+    print("\nThe prediction visualization chart has been saved as 'stock_prediction_monte_carlo_1year.png'")
     
-    # 添加文本标签
-    ax1.text(last_date, ax1.get_ylim()[1]*0.95, ' Prediction Start', 
-             verticalalignment='top', horizontalalignment='left',
-             backgroundcolor='white', fontsize=10)
+    return plt
 
-# 设置主图样式
-ax1.set_title('US Tech Stocks Price One-Year Prediction\n(Monte Carlo Simulation)', 
-          fontsize=16, pad=20)
-ax1.set_ylabel('Price (USD)', fontsize=12)
-ax1.grid(True, linestyle='--', alpha=0.7)
-
-# 简化图例 - 只显示股票代码
-handles = [plt.Line2D([0], [0], color=colors[i % len(colors)], linewidth=2) 
-           for i in range(len(legend_stocks))]
-ax1.legend(handles, legend_stocks, title='Stock Tickers', 
-           bbox_to_anchor=(1.05, 1), loc='upper left', fontsize=10)
-
-# 设置成交量图样式
-ax2.set_xlabel('Date', fontsize=12)
-ax2.set_ylabel('Volume', fontsize=12)
-ax2.grid(True, linestyle='--', alpha=0.7)
-
-# 格式化日期轴
-for ax in [ax1, ax2]:
-    ax.xaxis.set_major_formatter(DateFormatter('%Y-%m-%d'))
-    for label in ax.get_xticklabels():
-        label.set_rotation(45)
-        label.set_ha('right')
-
-# 添加水印
-plt.figtext(0.99, 0.01, 'Data Source: Yahoo Finance / Analysis: Monte Carlo Simulation', 
-        ha='right', va='bottom', alpha=0.5, fontsize=8)
-
-# 自动调整布局
-plt.tight_layout()
-
-# 保存图表
-plt.savefig('stock_prediction_monte_carlo_1year.png', 
-        dpi=300, bbox_inches='tight')
-print("\nThe prediction visualization chart has been saved as 'stock_prediction_monte_carlo_1year.png'")
-plt.show()
+# Execute visualization if this file is run directly
+if __name__ == "__main__":
+    plt = generate_predictions_visualization()
+    plt.show()
