@@ -10,13 +10,17 @@ class StockAPI:
     Interface for fetching stock market data using Alpha Vantage API
     """
     
-    def __init__(self, api_key='CWL9SQIO1FD94H98'):
+    def __init__(self, api_key=None):
         """
         Initialize the Stock API with an Alpha Vantage API key
         
         Args:
             api_key (str): Alpha Vantage API key for authentication
         """
+        # Default demo API key - replace with your own for production use
+        if api_key is None:
+            api_key = 'CWL9SQIO1FD94H98'  # Demo API key with rate limits
+            
         self.ts = TimeSeries(key=api_key)
     
     def get_stock_details(self, symbol):
